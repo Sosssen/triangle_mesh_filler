@@ -12,9 +12,24 @@ namespace triangle_mesh_filler
 {
     public partial class Form1 : Form
     {
+
+        private Bitmap drawArea;
         public Form1()
         {
             InitializeComponent();
+
+            Rectangle screen = Screen.PrimaryScreen.WorkingArea;
+            int w = (int)(screen.Width / 1.5);
+            int h = (int)(screen.Height / 1.5);
+            this.Size = new Size(w, h);
+
+            drawArea = new Bitmap(Canvas.Width, Canvas.Height);
+            Canvas.Image = drawArea;
+
+            using (Graphics g = Graphics.FromImage(drawArea))
+            {
+                g.Clear(Color.White);
+            }
         }
 
     }

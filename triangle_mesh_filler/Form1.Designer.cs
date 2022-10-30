@@ -29,13 +29,35 @@ namespace triangle_mesh_filler
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.Canvas = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // Canvas
+            // 
+            this.Canvas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Canvas.Location = new System.Drawing.Point(0, 0);
+            this.Canvas.Name = "Canvas";
+            this.Canvas.Size = new System.Drawing.Size(800, 450);
+            this.Canvas.TabIndex = 0;
+            this.Canvas.TabStop = false;
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.Canvas);
+            this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.PictureBox Canvas;
     }
 }
 
