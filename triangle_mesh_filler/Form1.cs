@@ -16,6 +16,7 @@ namespace triangle_mesh_filler
 
         private List<MyPoint> points = new();
         private int radius = 2;
+        private List<List<MyPoint>> polygons = new();
         
 
         private DirectBitmap drawArea;
@@ -26,7 +27,8 @@ namespace triangle_mesh_filler
             InitializeComponent();
 
             Rectangle screen = Screen.PrimaryScreen.WorkingArea;
-            int w = (int)(screen.Width / 1.5);
+            // int w = (int)(screen.Width / 1.5);
+            int w = (int)(screen.Height / 1.5);
             int h = (int)(screen.Height / 1.5);
             this.Size = new Size(w, h);
 
@@ -40,6 +42,8 @@ namespace triangle_mesh_filler
 
             string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphere.obj");
 
+            int vn_counter = 0;
+
             foreach (string line in lines)
             {
                 // Debug.WriteLine(line);
@@ -52,8 +56,38 @@ namespace triangle_mesh_filler
                 {
                     points.Add(new MyPoint(Convert.ToDouble(words[1]), Convert.ToDouble(words[2]), Convert.ToDouble(words[3]), 0, 0, 0));
                 }
+                // TODO: how to add normal vectors to points?
+                //if (words[0] == "vn")
+                //{
+                //    points[vn_counter].nx = Convert.ToDouble(words[1]);
+                //    points[vn_counter].ny = Convert.ToDouble(words[2]);
+                //    points[vn_counter].nz = Convert.ToDouble(words[3]);
+                //    vn_counter++;
+                //    Debug.WriteLine($"vncounter: {vn_counter}");
+                //}
                 
             }
+            Debug.WriteLine(points.Count);
+            foreach (string line in lines)
+            {
+
+                string[] words = line.Split();
+
+                if (words[0] == "f")
+                {
+                    List<MyPoint> polygon = new();
+                    foreach (var word in words)
+                    {
+                        if (word == "f") continue;         
+                        var numbers = word.Split("//");
+                        polygon.Add(points[Convert.ToInt32(numbers[0]) - 1]);
+                    }
+                    polygons.Add(polygon);
+                    
+                }
+            }
+
+
 
             double minX = double.MaxValue;
             double minY = double.MaxValue;
@@ -114,7 +148,16 @@ namespace triangle_mesh_filler
                     g.DrawEllipse(pen, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
                     g.FillEllipse(sbBlack, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
                 }
+
+                foreach (var polygon in polygons)
+                {
+                    for (int i = 0; i < polygon.Count; i++)
+                    {
+                        g.DrawLine(pen, (int)polygon[i].x, (int)polygon[i].y, (int)polygon[(i + 1) % (int)polygon.Count].x, (int)polygon[(i + 1) % polygon.Count].y);
+                    }
+                }
             }
+
 
             for (int i = 0; i < Canvas.Height; i++)
             {
