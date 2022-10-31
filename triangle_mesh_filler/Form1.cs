@@ -18,7 +18,7 @@ namespace triangle_mesh_filler
         private int radius = 2;
         
 
-        private Bitmap drawArea;
+        private DirectBitmap drawArea;
         private Pen pen = new(Color.Black, 1);
         private SolidBrush sbBlack = new(Color.Black);
         public Form1()
@@ -30,10 +30,10 @@ namespace triangle_mesh_filler
             int h = (int)(screen.Height / 1.5);
             this.Size = new Size(w, h);
 
-            drawArea = new Bitmap(Canvas.Width, Canvas.Height);
-            Canvas.Image = drawArea;
+            drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
+            Canvas.Image = drawArea.Bitmap;
 
-            using (Graphics g = Graphics.FromImage(drawArea))
+            using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
             {
                 g.Clear(Color.White);
             }
@@ -105,7 +105,7 @@ namespace triangle_mesh_filler
             }
 
 
-            using (Graphics g = Graphics.FromImage(drawArea))
+            using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
             {
                 foreach (var point in points)
                 {
@@ -114,6 +114,11 @@ namespace triangle_mesh_filler
                     g.DrawEllipse(pen, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
                     g.FillEllipse(sbBlack, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
                 }
+            }
+
+            for (int i = 0; i < Canvas.Height; i++)
+            {
+                drawArea.SetPixel(100, i, Color.Red);
             }
 
             //foreach (var point in points)
@@ -155,6 +160,51 @@ namespace triangle_mesh_filler
         {
             this.src = src;
             this.dst = dst;
+        }
+    }
+
+    public class DirectBitmap : IDisposable
+    {
+        public Bitmap Bitmap { get; private set; }
+        public Int32[] Bits { get; private set; }
+        public bool Disposed { get; private set; }
+        public int Height { get; private set; }
+        public int Width { get; private set; }
+
+        protected System.Runtime.InteropServices.GCHandle BitsHandle { get; private set; }
+
+        public DirectBitmap(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Bits = new Int32[width * height];
+            BitsHandle = System.Runtime.InteropServices.GCHandle.Alloc(Bits, System.Runtime.InteropServices.GCHandleType.Pinned);
+            Bitmap = new Bitmap(width, height, width * 4, System.Drawing.Imaging.PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
+        }
+
+        public void SetPixel(int x, int y, Color colour)
+        {
+            int index = x + (y * Width);
+            int col = colour.ToArgb();
+
+            Bits[index] = col;
+        }
+
+        public Color GetPixel(int x, int y)
+        {
+            int index = x + (y * Width);
+            int col = Bits[index];
+            Color result = Color.FromArgb(col);
+
+            return result;
+        }
+
+        public void Dispose()
+        {
+            if (Disposed) return;
+            Disposed = true;
+            Bitmap.Dispose();
+            BitsHandle.Free();
         }
     }
 }
