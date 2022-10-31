@@ -28,6 +28,11 @@ namespace triangle_mesh_filler
         private Pen penRed = new(Color.Red, 1);
         private SolidBrush sbRed = new(Color.Red);
         private int radius = 2;
+
+        private Random rand = new();
+
+        double kd = 0.5;
+        double ks = 0.5;
         public Form1()
         {
             InitializeComponent();
@@ -64,19 +69,23 @@ namespace triangle_mesh_filler
                 Debug.WriteLine($"src: {edge.src.x}, {edge.src.y} dst: {edge.dst.x}, {edge.dst.y}");
             }
 
-            foreach (var polygon in polygonsByEdges)
+            //foreach (var polygon in polygonsByEdges)
+            //{
+            //    fillPolygon(polygon);
+            //}
+            for (int i = 0; i < polygons.Count; i++)
             {
-                fillPolygon(polygon);
+                fillPolygon(polygonsByEdges[i], polygons[i]);
             }
             // fillPolygon(polygonsByEdges[0]);
 
-            drawShape();
+            // drawShape();
         }
 
         public void loadShape()
         {
 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphereAVG.obj");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphere.obj");
 
             foreach (string line in lines)
             {
@@ -220,8 +229,11 @@ namespace triangle_mesh_filler
             }
         }
 
-        public void fillPolygon(List<Edge> edges)
+        public void fillPolygon(List<Edge> edges, List<MyPoint> points)
         {
+            // Color color = Color.FromArgb(rand.Next() % 255, rand.Next() % 255, rand.Next() % 255);
+            Color color = Color.Red;
+            // Find min and max of starting y
             int minY = int.MaxValue;
             int maxY = int.MinValue;
 
@@ -233,6 +245,7 @@ namespace triangle_mesh_filler
 
             Debug.WriteLine($"minY = {minY}, maxY = {maxY}");
 
+            // Create EAT and ET
             List<StructForFillingPolygon> EAT = new();
             List<StructForFillingPolygon>[] ET = new List<StructForFillingPolygon>[maxY - minY + 1];
 
@@ -241,6 +254,7 @@ namespace triangle_mesh_filler
                 ET[i] = new();
             }
 
+            // Add all edges to ET
             foreach (var edge in edges)
             {
 
@@ -255,6 +269,7 @@ namespace triangle_mesh_filler
             //    }
             //}
 
+            // Count how many "buckets" are in ET
             int y = minY;
             int counter = 0;
 
@@ -266,8 +281,15 @@ namespace triangle_mesh_filler
                 }
             }
 
+            double area = getArea(points[0], points[1], points[2]);
+            points[0].color = Color.Red;
+            points[1].color = Color.Green;
+            points[2].color = Color.Blue;
+
+            // do this while ET and EAT are not empy
             while (counter > 0 || EAT.Count > 0)
             {
+                // move lists from ET to EAT
                 if (y - minY < ET.Length && ET[y - minY].Count > 0)
                 {
                     counter--;
@@ -277,27 +299,50 @@ namespace triangle_mesh_filler
                     }
                     ET[y - minY] = new();
                 }
+                // Sort EAT by x
                 EAT.Sort((el1, el2) => el1.x.CompareTo(el2.x));
                 //foreach (var s in EAT)
                 //{
                 //    Debug.WriteLine($"{s.x}");
                 //}
-                for (int i = (int)EAT[0].x; i <= (int)EAT[EAT.Count - 1].x; i++)
+                // TODO: it's a work aroung!! how to make this work properly?
+                // Set pixels between edges
+                for (int i = (int)EAT[0].x; i <= (int)EAT[^1].x; i++)
                 // for (int i = (int)EAT[0].x; i <= (int)EAT[1].x; i++)
                 {
-                    drawArea.SetPixel(i, y, Color.Red);
+                    Color newColor = getColor(points, area, new MyPoint(i, y, 0, 0, 0, 0));
+                    drawArea.SetPixel(i, y, newColor);
                 }
 
-                EAT.RemoveAll(el => el.ymax == y);
+                // Delete elements from EAT where ymax = y
+                EAT.RemoveAll(el => el.ymax <= y);
 
+                // Increase y by one
                 y++;
 
+                // Change x for every edge
                 foreach (var s in EAT)
                 {
-                    s.x = s.x + s.mInverse;
+                    s.x += s.mInverse;
                 }
             }
             
+        }
+
+        public double getArea(MyPoint A, MyPoint B, MyPoint C)
+        {
+            return Math.Abs(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) / 2.0;
+        }
+
+        public Color getColor(List<MyPoint> points, double area, MyPoint p)
+        {
+            double alfa = getArea(p, points[1], points[2]) / area;
+            double beta = getArea(p, points[0], points[2]) / area;
+            double gamma = getArea(p, points[0], points[1]) / area;
+
+            return Color.FromArgb((int)(alfa * points[0].color.R + beta * points[1].color.R + gamma * points[2].color.R) % 255,
+                (int)(alfa * points[0].color.G + beta * points[1].color.G + gamma * points[2].color.G) % 255,
+                (int)(alfa * points[0].color.B + beta * points[1].color.B + gamma * points[2].color.B) % 255);
         }
 
     }
@@ -324,6 +369,7 @@ namespace triangle_mesh_filler
         public double nx;
         public double ny;
         public double nz;
+        public Color color;
 
         public MyPoint(double x, double y, double z, double nx, double ny, double nz)
         {
