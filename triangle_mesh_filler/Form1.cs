@@ -18,13 +18,16 @@ namespace triangle_mesh_filler
         private List<double> normalVectorsX = new();
         private List<double> normalVectorsY = new();
         private List<double> normalVectorsZ = new();
-        private int radius = 2;
         private List<List<MyPoint>> polygons = new();
+        private List<List<Edge>> polygonsByEdges = new();
         
 
         private DirectBitmap drawArea;
         private Pen pen = new(Color.Black, 1);
         private SolidBrush sbBlack = new(Color.Black);
+        private Pen penRed = new(Color.Red, 1);
+        private SolidBrush sbRed = new(Color.Red);
+        private int radius = 2;
         public Form1()
         {
             InitializeComponent();
@@ -56,6 +59,18 @@ namespace triangle_mesh_filler
 
             loadShape();
 
+            foreach (var edge in polygonsByEdges[0])
+            {
+                Debug.WriteLine($"src: {edge.src.x}, {edge.src.y} dst: {edge.dst.x}, {edge.dst.y}");
+            }
+
+            foreach (var polygon in polygonsByEdges)
+            {
+                fillPolygon(polygon);
+            }
+            // fillPolygon(polygonsByEdges[0]);
+
+            drawShape();
         }
 
         public void loadShape()
@@ -100,6 +115,23 @@ namespace triangle_mesh_filler
                     polygons.Add(polygon);
 
                 }
+            }
+
+            foreach (var polygon in polygons)
+            {
+                List<Edge> edges = new();
+                for (int i = 0; i < polygon.Count; i++)
+                {
+                    if (polygon[i].y <= polygon[(i + 1) % polygon.Count].y)
+                    {
+                        edges.Add(new Edge(polygon[i], polygon[(i + 1) % polygon.Count]));
+                    }
+                    else
+                    {
+                        edges.Add(new Edge(polygon[(i + 1) % polygon.Count], polygon[i]));
+                    }
+                }
+                polygonsByEdges.Add(edges);
             }
 
 
@@ -149,7 +181,6 @@ namespace triangle_mesh_filler
                 point.y += minDim * 0.1;
             }
 
-            drawShape();
            
         }
 
@@ -158,7 +189,7 @@ namespace triangle_mesh_filler
 
             using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
             {
-                g.Clear(Color.White);
+                // g.Clear(Color.White);
 
                 foreach (var point in points)
                 {
@@ -174,9 +205,115 @@ namespace triangle_mesh_filler
                         g.DrawLine(pen, (int)polygon[i].x, (int)polygon[i].y, (int)polygon[(i + 1) % (int)polygon.Count].x, (int)polygon[(i + 1) % polygon.Count].y);
                     }
                 }
+
+                // HIGHLIGHT FIRST TRIANGLE
+                //for (int i = 0; i < polygons[0].Count; i++)
+                //{
+                //    var point = polygons[0][i];
+                //    g.DrawEllipse(penRed, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
+                //    g.FillEllipse(sbRed, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
+                //}
+                //for (int i = 0; i < polygonsByEdges[0].Count; i++)
+                //{
+                //    g.DrawLine(penRed, (int)polygonsByEdges[0][i].src.x, (int)polygonsByEdges[0][i].src.y, (int)polygonsByEdges[0][i].dst.x, (int)polygonsByEdges[0][i].dst.y);
+                //}
             }
         }
 
+        public void fillPolygon(List<Edge> edges)
+        {
+            int minY = int.MaxValue;
+            int maxY = int.MinValue;
+
+            foreach (var edge in edges)
+            {
+                if ((int)edge.src.y < minY) minY = (int)edge.src.y;
+                if ((int)edge.src.y > maxY) maxY = (int)edge.src.y;
+            }
+
+            Debug.WriteLine($"minY = {minY}, maxY = {maxY}");
+
+            List<StructForFillingPolygon> EAT = new();
+            List<StructForFillingPolygon>[] ET = new List<StructForFillingPolygon>[maxY - minY + 1];
+
+            for (int i = 0; i < ET.Length; i++)
+            {
+                ET[i] = new();
+            }
+
+            foreach (var edge in edges)
+            {
+
+                ET[(int)edge.src.y - minY].Add(new StructForFillingPolygon((int)edge.dst.y, (int)edge.src.x, (edge.src.x - edge.dst.x) / (edge.src.y - edge.dst.y)));
+            }
+
+            //for (int i = 0; i < ET.Length; i++)
+            //{
+            //    foreach (var s in ET[i])
+            //    {
+            //        Debug.WriteLine($"{i}. ymax: {s.ymax}, x: {s.x}, 1/m: {s.mInverse}");
+            //    }
+            //}
+
+            int y = minY;
+            int counter = 0;
+
+            for (int i = 0; i < ET.Length; i++)
+            {
+                if (ET[i].Count != 0)
+                {
+                    counter++;
+                }
+            }
+
+            while (counter > 0 || EAT.Count > 0)
+            {
+                if (y - minY < ET.Length && ET[y - minY].Count > 0)
+                {
+                    counter--;
+                    foreach (var s in ET[y - minY])
+                    {
+                        EAT.Add(s);
+                    }
+                    ET[y - minY] = new();
+                }
+                EAT.Sort((el1, el2) => el1.x.CompareTo(el2.x));
+                //foreach (var s in EAT)
+                //{
+                //    Debug.WriteLine($"{s.x}");
+                //}
+                for (int i = (int)EAT[0].x; i <= (int)EAT[EAT.Count - 1].x; i++)
+                // for (int i = (int)EAT[0].x; i <= (int)EAT[1].x; i++)
+                {
+                    drawArea.SetPixel(i, y, Color.Red);
+                }
+
+                EAT.RemoveAll(el => el.ymax == y);
+
+                y++;
+
+                foreach (var s in EAT)
+                {
+                    s.x = s.x + s.mInverse;
+                }
+            }
+            
+        }
+
+    }
+
+    public class StructForFillingPolygon
+    {
+        public int ymax;
+        public double x;
+        public double mInverse;
+
+        public StructForFillingPolygon(int ymax, double x, double mInverse)
+        {
+            this.ymax = ymax;
+            this.x = x;
+            this.mInverse = mInverse;
+        }
     }
 
     public class MyPoint
