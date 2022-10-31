@@ -15,6 +15,9 @@ namespace triangle_mesh_filler
     {
 
         private List<MyPoint> points = new();
+        private List<double> normalVectorsX = new();
+        private List<double> normalVectorsY = new();
+        private List<double> normalVectorsZ = new();
         private int radius = 2;
         private List<List<MyPoint>> polygons = new();
         
@@ -26,11 +29,22 @@ namespace triangle_mesh_filler
         {
             InitializeComponent();
 
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MinimizeBox = false;
+            this.MaximizeBox = false;
+
             Rectangle screen = Screen.PrimaryScreen.WorkingArea;
-            // int w = (int)(screen.Width / 1.5);
-            int w = (int)(screen.Height / 1.5);
+            int w = (int)(screen.Width / 2.0);
+            // int w = (int)(screen.Height / 1.5);
             int h = (int)(screen.Height / 1.5);
             this.Size = new Size(w, h);
+
+            tableLayoutPanel1.ColumnStyles[0].SizeType = SizeType.Absolute;
+            tableLayoutPanel1.ColumnStyles[0].Width = tableLayoutPanel1.Height;
+            Canvas.Width = tableLayoutPanel1.Height;
+            Canvas.Height = Canvas.Width;
+
+            Debug.WriteLine($"Canva size: {Canvas.Width}, {Canvas.Height}");
 
             drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             Canvas.Image = drawArea.Bitmap;
@@ -40,31 +54,22 @@ namespace triangle_mesh_filler
                 g.Clear(Color.White);
             }
 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphere.obj");
-
-            int vn_counter = 0;
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphereAVG.obj");
 
             foreach (string line in lines)
             {
-                // Debug.WriteLine(line);
                 string[] words = line.Split();
-                //foreach (string word in words)
-                //{
-                //    Debug.WriteLine(word);
-                //}
+
                 if (words[0] == "v")
                 {
                     points.Add(new MyPoint(Convert.ToDouble(words[1]), Convert.ToDouble(words[2]), Convert.ToDouble(words[3]), 0, 0, 0));
                 }
-                // TODO: how to add normal vectors to points?
-                //if (words[0] == "vn")
-                //{
-                //    points[vn_counter].nx = Convert.ToDouble(words[1]);
-                //    points[vn_counter].ny = Convert.ToDouble(words[2]);
-                //    points[vn_counter].nz = Convert.ToDouble(words[3]);
-                //    vn_counter++;
-                //    Debug.WriteLine($"vncounter: {vn_counter}");
-                //}
+                else if (words[0] == "vn")
+                {
+                    normalVectorsX.Add(Convert.ToDouble(words[1]));
+                    normalVectorsY.Add(Convert.ToDouble(words[2]));
+                    normalVectorsZ.Add(Convert.ToDouble(words[3]));
+                }
                 
             }
             Debug.WriteLine(points.Count);
@@ -80,7 +85,11 @@ namespace triangle_mesh_filler
                     {
                         if (word == "f") continue;         
                         var numbers = word.Split("//");
-                        polygon.Add(points[Convert.ToInt32(numbers[0]) - 1]);
+                        var point = points[Convert.ToInt32(numbers[0]) - 1];
+                        point.nx = normalVectorsX[Convert.ToInt32(numbers[1]) - 1];
+                        point.ny = normalVectorsY[Convert.ToInt32(numbers[1]) - 1];
+                        point.nz = normalVectorsZ[Convert.ToInt32(numbers[1]) - 1];
+                        polygon.Add(point);
                     }
                     polygons.Add(polygon);
                     
