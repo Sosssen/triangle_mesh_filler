@@ -54,6 +54,13 @@ namespace triangle_mesh_filler
                 g.Clear(Color.White);
             }
 
+            loadShape();
+
+        }
+
+        public void loadShape()
+        {
+
             string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphereAVG.obj");
 
             foreach (string line in lines)
@@ -70,9 +77,8 @@ namespace triangle_mesh_filler
                     normalVectorsY.Add(Convert.ToDouble(words[2]));
                     normalVectorsZ.Add(Convert.ToDouble(words[3]));
                 }
-                
+
             }
-            Debug.WriteLine(points.Count);
             foreach (string line in lines)
             {
 
@@ -83,7 +89,7 @@ namespace triangle_mesh_filler
                     List<MyPoint> polygon = new();
                     foreach (var word in words)
                     {
-                        if (word == "f") continue;         
+                        if (word == "f") continue;
                         var numbers = word.Split("//");
                         var point = points[Convert.ToInt32(numbers[0]) - 1];
                         point.nx = normalVectorsX[Convert.ToInt32(numbers[1]) - 1];
@@ -92,7 +98,7 @@ namespace triangle_mesh_filler
                         polygon.Add(point);
                     }
                     polygons.Add(polygon);
-                    
+
                 }
             }
 
@@ -116,8 +122,6 @@ namespace triangle_mesh_filler
                 if (point.y > maxY) maxY = point.y;
             }
 
-            // Debug.WriteLine($"minx {minX}, miny {minY}");
-
             foreach (var point in points)
             {
                 point.x -= minX;
@@ -129,8 +133,6 @@ namespace triangle_mesh_filler
                 if (point.x > maxX) maxX = point.x;
                 if (point.y > maxY) maxY = point.y;
             }
-
-            //Debug.WriteLine($"max: {maxX}, {maxY}");
 
             double max = maxX >= maxY ? maxX : maxY;
             double minDim = Canvas.Width <= Canvas.Height ? Canvas.Width : Canvas.Height;
@@ -147,13 +149,20 @@ namespace triangle_mesh_filler
                 point.y += minDim * 0.1;
             }
 
+            drawShape();
+           
+        }
+
+        public void drawShape()
+        {
 
             using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
             {
+                g.Clear(Color.White);
+
                 foreach (var point in points)
                 {
 
-                    // drawArea.SetPixel((int)point.x, (int)point.y, Color.Black);
                     g.DrawEllipse(pen, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
                     g.FillEllipse(sbBlack, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
                 }
@@ -166,19 +175,6 @@ namespace triangle_mesh_filler
                     }
                 }
             }
-
-
-            for (int i = 0; i < Canvas.Height; i++)
-            {
-                drawArea.SetPixel(100, i, Color.Red);
-            }
-
-            //foreach (var point in points)
-            //{
-            //    Debug.WriteLine($"point: {point.x}, {point.y}, {point.z}");
-            //}
-
-
         }
 
     }
