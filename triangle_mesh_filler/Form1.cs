@@ -23,11 +23,11 @@ namespace triangle_mesh_filler
         
 
         private DirectBitmap drawArea;
-        private Pen pen = new(Color.Black, 1);
+        private Pen pen = new(Color.Black, 2);
         private SolidBrush sbBlack = new(Color.Black);
         private Pen penRed = new(Color.Red, 1);
         private SolidBrush sbRed = new(Color.Red);
-        private int radius = 2;
+        private int radius = 3;
 
         private Random rand = new();
 
@@ -64,28 +64,44 @@ namespace triangle_mesh_filler
 
             loadShape();
 
-            foreach (var edge in polygonsByEdges[0])
-            {
-                Debug.WriteLine($"src: {edge.src.x}, {edge.src.y} dst: {edge.dst.x}, {edge.dst.y}");
-            }
+            //foreach (var edge in polygonsByEdges[0])
+            //{
+            //    Debug.WriteLine($"src: {edge.src.x}, {edge.src.y} dst: {edge.dst.x}, {edge.dst.y}");
+            //}
 
             //foreach (var polygon in polygonsByEdges)
             //{
             //    fillPolygon(polygon);
             //}
-            for (int i = 0; i < polygons.Count; i++)
-            {
-                fillPolygon(polygonsByEdges[i], polygons[i]);
-            }
+            //for (int i = 0; i < polygons.Count; i++)
+            //{
+            //    fillPolygon(polygonsByEdges[i], polygons[i]);
+            //}
             // fillPolygon(polygonsByEdges[0]);
 
-            // drawShape();
+            Debug.WriteLine($"all: {polygonsByEdges.Count}");
+
+            int counter = 0;
+
+            foreach (var polygon in polygonsByEdges)
+            {
+                initEdgeTable();
+                // Debug.WriteLine($"counter: {counter}");
+                foreach (var edge in polygon)
+                {
+                    storeEdgeInTable((int)edge.src.x, (int)edge.src.y, (int)edge.dst.x, (int)edge.dst.y);
+                }
+                counter++;
+                ScanlineFill();
+            }
+
+            drawShape();
         }
 
         public void loadShape()
         {
 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphere.obj");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphereAVG.obj");
 
             foreach (string line in lines)
             {
@@ -229,104 +245,328 @@ namespace triangle_mesh_filler
             }
         }
 
-        public void fillPolygon(List<Edge> edges, List<MyPoint> points)
+        //public void fillPolygon(List<Edge> edges, List<MyPoint> points)
+        //{
+        //    // Color color = Color.FromArgb(rand.Next() % 255, rand.Next() % 255, rand.Next() % 255);
+        //    Color color = Color.Red;
+        //    // Find min and max of starting y
+        //    int minY = int.MaxValue;
+        //    int maxY = int.MinValue;
+
+        //    foreach (var edge in edges)
+        //    {
+        //        if ((int)edge.src.y < minY) minY = (int)edge.src.y;
+        //        if ((int)edge.src.y > maxY) maxY = (int)edge.src.y;
+        //    }
+
+        //    Debug.WriteLine($"minY = {minY}, maxY = {maxY}");
+
+        //    // Create EAT and ET
+        //    List<StructForFillingPolygon> EAT = new();
+        //    List<StructForFillingPolygon>[] ET = new List<StructForFillingPolygon>[maxY - minY + 1];
+
+        //    for (int i = 0; i < ET.Length; i++)
+        //    {
+        //        ET[i] = new();
+        //    }
+
+        //    // Add all edges to ET
+        //    foreach (var edge in edges)
+        //    {
+
+        //        ET[(int)edge.src.y - minY].Add(new StructForFillingPolygon((int)edge.dst.y, (int)edge.src.x, (edge.src.x - edge.dst.x) / (edge.src.y - edge.dst.y)));
+        //    }
+
+        //    //for (int i = 0; i < ET.Length; i++)
+        //    //{
+        //    //    foreach (var s in ET[i])
+        //    //    {
+        //    //        Debug.WriteLine($"{i}. ymax: {s.ymax}, x: {s.x}, 1/m: {s.mInverse}");
+        //    //    }
+        //    //}
+
+        //    // Count how many "buckets" are in ET
+        //    int y = minY;
+        //    int counter = 0;
+
+        //    for (int i = 0; i < ET.Length; i++)
+        //    {
+        //        if (ET[i].Count != 0)
+        //        {
+        //            counter++;
+        //        }
+        //    }
+
+        //    double area = getArea(points[0], points[1], points[2]);
+        //    points[0].color = Color.Red;
+        //    points[1].color = Color.Green;
+        //    points[2].color = Color.Blue;
+
+        //    // do this while ET and EAT are not empy
+        //    while (counter > 0 || EAT.Count > 0)
+        //    {
+        //        // move lists from ET to EAT
+        //        if (y - minY < ET.Length && ET[y - minY].Count > 0)
+        //        {
+        //            counter--;
+        //            foreach (var s in ET[y - minY])
+        //            {
+        //                EAT.Add(s);
+        //            }
+        //            ET[y - minY] = new();
+        //        }
+        //        // Sort EAT by x
+        //        EAT.Sort((el1, el2) => el1.x.CompareTo(el2.x));
+        //        //foreach (var s in EAT)
+        //        //{
+        //        //    Debug.WriteLine($"{s.x}");
+        //        //}
+        //        // TODO: it's a work aroung!! how to make this work properly?
+        //        // Set pixels between edges
+        //        for (int i = (int)EAT[0].x; i <= (int)EAT[^1].x; i++)
+        //        // for (int i = (int)EAT[0].x; i <= (int)EAT[1].x; i++)
+        //        {
+        //            Color newColor = getColor(points, area, new MyPoint(i, y, 0, 0, 0, 0));
+        //            drawArea.SetPixel(i, y, newColor);
+        //        }
+
+        //        // Delete elements from EAT where ymax = y
+        //        EAT.RemoveAll(el => el.ymax <= y);
+
+        //        // Increase y by one
+        //        y++;
+
+        //        // Change x for every edge
+        //        foreach (var s in EAT)
+        //        {
+        //            s.x += s.mInverse;
+        //        }
+        //    }
+
+        //}
+
+        private static int maxVer = 4;
+        private static int maxHt = 1000;
+
+        public class EdgeBucket
         {
-            // Color color = Color.FromArgb(rand.Next() % 255, rand.Next() % 255, rand.Next() % 255);
-            Color color = Color.Red;
-            // Find min and max of starting y
-            int minY = int.MaxValue;
-            int maxY = int.MinValue;
+            public int ymax;
+            public double xofymin;
+            public double slopeinverse;
+        }
 
-            foreach (var edge in edges)
+        public class EdgeTableTuple
+        {
+            public int countEdgeBucket;
+            public EdgeBucket[] buckets = new EdgeBucket[maxVer];
+        }
+
+        public static EdgeTableTuple[] EdgeTable = new EdgeTableTuple[maxHt];
+        public static EdgeTableTuple ActiveEdgeTuple = new();
+
+        public void initEdgeTable()
+        {
+            // Debug.WriteLine("AAAAAAAAAA");
+            for (int i = 0; i < maxHt; i++)
             {
-                if ((int)edge.src.y < minY) minY = (int)edge.src.y;
-                if ((int)edge.src.y > maxY) maxY = (int)edge.src.y;
-            }
-
-            Debug.WriteLine($"minY = {minY}, maxY = {maxY}");
-
-            // Create EAT and ET
-            List<StructForFillingPolygon> EAT = new();
-            List<StructForFillingPolygon>[] ET = new List<StructForFillingPolygon>[maxY - minY + 1];
-
-            for (int i = 0; i < ET.Length; i++)
-            {
-                ET[i] = new();
-            }
-
-            // Add all edges to ET
-            foreach (var edge in edges)
-            {
-
-                ET[(int)edge.src.y - minY].Add(new StructForFillingPolygon((int)edge.dst.y, (int)edge.src.x, (edge.src.x - edge.dst.x) / (edge.src.y - edge.dst.y)));
-            }
-
-            //for (int i = 0; i < ET.Length; i++)
-            //{
-            //    foreach (var s in ET[i])
-            //    {
-            //        Debug.WriteLine($"{i}. ymax: {s.ymax}, x: {s.x}, 1/m: {s.mInverse}");
-            //    }
-            //}
-
-            // Count how many "buckets" are in ET
-            int y = minY;
-            int counter = 0;
-
-            for (int i = 0; i < ET.Length; i++)
-            {
-                if (ET[i].Count != 0)
+                EdgeTable[i] = new();
+                EdgeTable[i].countEdgeBucket = 0;
+                for (int j = 0; j < maxVer; j++)
                 {
-                    counter++;
+                    EdgeTable[i].buckets[j] = new();
+                    // Debug.WriteLine("poszlo");
                 }
             }
-
-            double area = getArea(points[0], points[1], points[2]);
-            points[0].color = Color.Red;
-            points[1].color = Color.Green;
-            points[2].color = Color.Blue;
-
-            // do this while ET and EAT are not empy
-            while (counter > 0 || EAT.Count > 0)
+            for (int i = 0; i < maxVer; i++)
             {
-                // move lists from ET to EAT
-                if (y - minY < ET.Length && ET[y - minY].Count > 0)
+                ActiveEdgeTuple.buckets[i] = new();
+            }
+            ActiveEdgeTuple.countEdgeBucket = 0;
+        }
+
+        void insertionSort(EdgeTableTuple ett)
+        {
+            int i, j;
+            EdgeBucket temp = new();
+
+            for (i = 1; i < ett.countEdgeBucket; i++)
+            {
+                temp.ymax = ett.buckets[i].ymax;
+                temp.xofymin = ett.buckets[i].xofymin;
+                temp.slopeinverse = ett.buckets[i].slopeinverse;
+                j = i - 1;
+                while ((j >= 0) &&  (temp.xofymin < ett.buckets[j].xofymin))
                 {
-                    counter--;
-                    foreach (var s in ET[y - minY])
+                    ett.buckets[j + 1].ymax = ett.buckets[j].ymax;
+                    ett.buckets[j + 1].xofymin = ett.buckets[j].xofymin;
+                    ett.buckets[j + 1].slopeinverse = ett.buckets[j].slopeinverse;
+                    j--;
+                }
+                ett.buckets[j + 1].ymax = temp.ymax;
+                ett.buckets[j + 1].xofymin = temp.xofymin;
+                ett.buckets[j + 1].slopeinverse = temp.slopeinverse;
+            }
+        }
+
+        public void storeEdgeInTuple(EdgeTableTuple receiver, int ym, int xm, double slopInv)
+        {
+            receiver.buckets[receiver.countEdgeBucket].ymax = ym;
+            receiver.buckets[receiver.countEdgeBucket].xofymin = (double)xm;
+            receiver.buckets[receiver.countEdgeBucket].slopeinverse = slopInv;
+
+            insertionSort(receiver);
+
+            receiver.countEdgeBucket++;
+
+        }
+
+        public void storeEdgeInTable(int x1, int y1, int x2, int y2)
+        {
+            double m, minv;
+            int ymaxTS, xwithyminTS, scanline;
+
+            if (x2 == x1)
+            {
+                minv = 0.0;
+            }
+            else
+            {
+                m = ((double)(y2 - y1)) / ((double)(x2 - x1));
+                if (y2 == y1) return;
+
+                minv = (double)(1.0 / m);
+            }
+
+            if (y1 > y2)
+            {
+                scanline = y2;
+                ymaxTS = y1;
+                xwithyminTS = x2;
+            }
+            else
+            {
+                scanline = y1;
+                ymaxTS = y2;
+                xwithyminTS = x1;
+            }
+
+            // Debug.WriteLine($"scanline: {scanline}");
+            storeEdgeInTuple(EdgeTable[scanline], ymaxTS, xwithyminTS, minv);
+        }
+
+        public void removeEdgeByYmax(EdgeTableTuple Tup, int yy)
+        {
+            int i, j;
+            for (i = 0; i < Tup.countEdgeBucket; i++)
+            {
+                if (Tup.buckets[i].ymax == yy)
+                {
+                    for (j = i; j < Tup.countEdgeBucket - 1; j++)
                     {
-                        EAT.Add(s);
+                        Tup.buckets[j].ymax = Tup.buckets[j + 1].ymax;
+                        Tup.buckets[j].xofymin = Tup.buckets[j + 1].xofymin;
+                        Tup.buckets[j].slopeinverse = Tup.buckets[j + 1].slopeinverse;
                     }
-                    ET[y - minY] = new();
-                }
-                // Sort EAT by x
-                EAT.Sort((el1, el2) => el1.x.CompareTo(el2.x));
-                //foreach (var s in EAT)
-                //{
-                //    Debug.WriteLine($"{s.x}");
-                //}
-                // TODO: it's a work aroung!! how to make this work properly?
-                // Set pixels between edges
-                for (int i = (int)EAT[0].x; i <= (int)EAT[^1].x; i++)
-                // for (int i = (int)EAT[0].x; i <= (int)EAT[1].x; i++)
-                {
-                    Color newColor = getColor(points, area, new MyPoint(i, y, 0, 0, 0, 0));
-                    drawArea.SetPixel(i, y, newColor);
-                }
-
-                // Delete elements from EAT where ymax = y
-                EAT.RemoveAll(el => el.ymax <= y);
-
-                // Increase y by one
-                y++;
-
-                // Change x for every edge
-                foreach (var s in EAT)
-                {
-                    s.x += s.mInverse;
+                    Tup.countEdgeBucket--;
+                    i--;
                 }
             }
-            
+        }
+
+        public void updatexbyslopeinv(EdgeTableTuple Tup)
+        {
+            int i;
+
+            for (i = 0; i < Tup.countEdgeBucket; i++)
+            {
+                Tup.buckets[i].xofymin = Tup.buckets[i].xofymin + Tup.buckets[i].slopeinverse;
+            }
+        }
+
+        public void ScanlineFill()
+        {
+            int i, j, x1, ymax1, x2, ymax2, coordCount;
+            int FillFlag = 0;
+
+            for (i = 0; i < maxHt; i++)
+            {
+                for (j = 0; j < EdgeTable[i].countEdgeBucket; j++)
+                {
+                    storeEdgeInTuple(ActiveEdgeTuple, EdgeTable[i].buckets[j].ymax, (int)EdgeTable[i].buckets[j].xofymin, EdgeTable[i].buckets[j].slopeinverse);
+                }
+
+                removeEdgeByYmax(ActiveEdgeTuple, i);
+
+                insertionSort(ActiveEdgeTuple);
+
+                j = 0;
+                FillFlag = 0;
+                coordCount = 0;
+                x1 = 0;
+                x2 = 0;
+                ymax1 = 0;
+                ymax2 = 0;
+                while (j < ActiveEdgeTuple.countEdgeBucket)
+                {
+                    if (coordCount % 2 == 0)
+                    {
+                        x1 = (int)(ActiveEdgeTuple.buckets[j].xofymin);
+                        ymax1 = ActiveEdgeTuple.buckets[j].ymax;
+                        if (x1 == x2)
+                        {
+                            if (((x1 == ymax1) && (x2 != ymax2)) ||((x1 != ymax1) && (x2 == ymax2)))
+                            {
+                                x2 = x1;
+                                ymax2 = ymax1;
+                            }
+                            else
+                            {
+                                coordCount++;
+                            }
+                        }
+                        else
+                        {
+                            coordCount++;
+                        }
+                    }
+                    else
+                    {
+                        x2 = (int)ActiveEdgeTuple.buckets[j].xofymin;
+                        ymax2 = ActiveEdgeTuple.buckets[j].ymax;
+
+                        FillFlag = 0;
+
+                        if (x1 == x2)
+                        {
+                            if (((x1 == ymax1) && (x2 != ymax2)) || ((x1 != ymax1) && (x2 == ymax2)))
+                            {
+                                x1 = x2;
+                                ymax1 = ymax2;
+                            }
+                            else
+                            {
+                                coordCount++;
+                                FillFlag = 1;
+                            }
+                        }
+                        else
+                        {
+                            coordCount++;
+                            FillFlag = 1;
+                        }
+
+                        if(FillFlag == 1)
+                        {
+                            for (int k = x1; k <= x2; k++)
+                            {
+                                drawArea.SetPixel(k, i, Color.Red);
+                            }
+                        }
+                    }
+                    j++;
+                }
+                updatexbyslopeinv(ActiveEdgeTuple);
+            }
         }
 
         public double getArea(MyPoint A, MyPoint B, MyPoint C)
