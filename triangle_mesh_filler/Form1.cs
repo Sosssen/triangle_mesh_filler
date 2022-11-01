@@ -85,6 +85,17 @@ namespace triangle_mesh_filler
 
             foreach (var polygon in polygonsByEdges)
             {
+                minY = int.MaxValue;
+                maxY = int.MinValue;
+
+                foreach (var edge in polygon)
+                {
+                    if (edge.src.y < minY) minY = (int)edge.src.y;
+                    if (edge.src.y > maxY) maxY = (int)edge.src.y;
+                    if (edge.dst.y < minY) minY = (int)edge.dst.y;
+                    if (edge.dst.y > maxY) maxY = (int)edge.dst.y;
+                }
+
                 initEdgeTable();
                 // Debug.WriteLine($"counter: {counter}");
                 foreach (var edge in polygon)
@@ -347,6 +358,8 @@ namespace triangle_mesh_filler
 
         private static int maxVer = 4;
         private static int maxHt = 1000;
+        private static int minY;
+        private static int maxY;
 
         public class EdgeBucket
         {
@@ -361,11 +374,13 @@ namespace triangle_mesh_filler
             public EdgeBucket[] buckets = new EdgeBucket[maxVer];
         }
 
-        public static EdgeTableTuple[] EdgeTable = new EdgeTableTuple[maxHt];
+        public static EdgeTableTuple[] EdgeTable;
         public static EdgeTableTuple ActiveEdgeTuple = new();
 
         public void initEdgeTable()
         {
+            maxHt = maxY - minY + 1;
+            EdgeTable = new EdgeTableTuple[maxHt];
             // Debug.WriteLine("AAAAAAAAAA");
             for (int i = 0; i < maxHt; i++)
             {
@@ -451,7 +466,7 @@ namespace triangle_mesh_filler
             }
 
             // Debug.WriteLine($"scanline: {scanline}");
-            storeEdgeInTuple(EdgeTable[scanline], ymaxTS, xwithyminTS, minv);
+            storeEdgeInTuple(EdgeTable[scanline - minY], ymaxTS, xwithyminTS, minv);
         }
 
         public void removeEdgeByYmax(EdgeTableTuple Tup, int yy)
@@ -495,7 +510,7 @@ namespace triangle_mesh_filler
                     storeEdgeInTuple(ActiveEdgeTuple, EdgeTable[i].buckets[j].ymax, (int)EdgeTable[i].buckets[j].xofymin, EdgeTable[i].buckets[j].slopeinverse);
                 }
 
-                removeEdgeByYmax(ActiveEdgeTuple, i);
+                removeEdgeByYmax(ActiveEdgeTuple, i + minY);
 
                 insertionSort(ActiveEdgeTuple);
 
@@ -559,7 +574,7 @@ namespace triangle_mesh_filler
                         {
                             for (int k = x1; k <= x2; k++)
                             {
-                                drawArea.SetPixel(k, i, Color.Red);
+                                drawArea.SetPixel(k, i + minY, Color.Red);
                             }
                         }
                     }
