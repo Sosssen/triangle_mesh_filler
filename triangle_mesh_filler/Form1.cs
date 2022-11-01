@@ -37,6 +37,9 @@ namespace triangle_mesh_filler
         {
             InitializeComponent();
 
+            this.Text = "Triangle Mesh Filler";
+            this.Icon = Properties.Resources.tmf_icon;
+
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
             this.MaximizeBox = false;
