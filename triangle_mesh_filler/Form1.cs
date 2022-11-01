@@ -46,7 +46,6 @@ namespace triangle_mesh_filler
 
             Rectangle screen = Screen.PrimaryScreen.WorkingArea;
             int w = (int)(screen.Width / 2.0);
-            // int w = (int)(screen.Height / 1.5);
             int h = (int)(screen.Height / 1.5);
             this.Size = new Size(w, h);
 
@@ -65,22 +64,7 @@ namespace triangle_mesh_filler
                 g.Clear(Color.White);
             }
 
-            loadShape();
-
-            //foreach (var edge in polygonsByEdges[0])
-            //{
-            //    Debug.WriteLine($"src: {edge.src.x}, {edge.src.y} dst: {edge.dst.x}, {edge.dst.y}");
-            //}
-
-            //foreach (var polygon in polygonsByEdges)
-            //{
-            //    fillPolygon(polygon);
-            //}
-            //for (int i = 0; i < polygons.Count; i++)
-            //{
-            //    fillPolygon(polygonsByEdges[i], polygons[i]);
-            //}
-            // fillPolygon(polygonsByEdges[0]);
+            LoadShape();
 
             Debug.WriteLine($"all: {polygonsByEdges.Count}");
 
@@ -99,20 +83,20 @@ namespace triangle_mesh_filler
                     if (edge.dst.y > maxY) maxY = (int)edge.dst.y;
                 }
 
-                initEdgeTable();
+                InitEdgeTable();
                 // Debug.WriteLine($"counter: {counter}");
                 foreach (var edge in polygon)
                 {
-                    storeEdgeInTable((int)edge.src.x, (int)edge.src.y, (int)edge.dst.x, (int)edge.dst.y);
+                    StoreEdgeInTable((int)edge.src.x, (int)edge.src.y, (int)edge.dst.x, (int)edge.dst.y);
                 }
                 counter++;
                 ScanlineFill();
             }
 
-            drawShape();
+            DrawShape();
         }
 
-        public void loadShape()
+        public void LoadShape()
         {
 
             string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphereAVG.obj");
@@ -223,143 +207,29 @@ namespace triangle_mesh_filler
            
         }
 
-        public void drawShape()
+        public void DrawShape()
         {
 
-            using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
+            using Graphics g = Graphics.FromImage(drawArea.Bitmap);
+            // g.Clear(Color.White);
+
+            foreach (var point in points)
             {
-                // g.Clear(Color.White);
 
-                foreach (var point in points)
+                g.DrawEllipse(pen, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
+                g.FillEllipse(sbBlack, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
+            }
+
+            foreach (var polygon in polygons)
+            {
+                for (int i = 0; i < polygon.Count; i++)
                 {
-
-                    g.DrawEllipse(pen, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
-                    g.FillEllipse(sbBlack, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
+                    g.DrawLine(pen, (int)polygon[i].x, (int)polygon[i].y, (int)polygon[(i + 1) % (int)polygon.Count].x, (int)polygon[(i + 1) % polygon.Count].y);
                 }
-
-                foreach (var polygon in polygons)
-                {
-                    for (int i = 0; i < polygon.Count; i++)
-                    {
-                        g.DrawLine(pen, (int)polygon[i].x, (int)polygon[i].y, (int)polygon[(i + 1) % (int)polygon.Count].x, (int)polygon[(i + 1) % polygon.Count].y);
-                    }
-                }
-
-                // HIGHLIGHT FIRST TRIANGLE
-                //for (int i = 0; i < polygons[0].Count; i++)
-                //{
-                //    var point = polygons[0][i];
-                //    g.DrawEllipse(penRed, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
-                //    g.FillEllipse(sbRed, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
-                //}
-                //for (int i = 0; i < polygonsByEdges[0].Count; i++)
-                //{
-                //    g.DrawLine(penRed, (int)polygonsByEdges[0][i].src.x, (int)polygonsByEdges[0][i].src.y, (int)polygonsByEdges[0][i].dst.x, (int)polygonsByEdges[0][i].dst.y);
-                //}
             }
         }
 
-        //public void fillPolygon(List<Edge> edges, List<MyPoint> points)
-        //{
-        //    // Color color = Color.FromArgb(rand.Next() % 255, rand.Next() % 255, rand.Next() % 255);
-        //    Color color = Color.Red;
-        //    // Find min and max of starting y
-        //    int minY = int.MaxValue;
-        //    int maxY = int.MinValue;
-
-        //    foreach (var edge in edges)
-        //    {
-        //        if ((int)edge.src.y < minY) minY = (int)edge.src.y;
-        //        if ((int)edge.src.y > maxY) maxY = (int)edge.src.y;
-        //    }
-
-        //    Debug.WriteLine($"minY = {minY}, maxY = {maxY}");
-
-        //    // Create EAT and ET
-        //    List<StructForFillingPolygon> EAT = new();
-        //    List<StructForFillingPolygon>[] ET = new List<StructForFillingPolygon>[maxY - minY + 1];
-
-        //    for (int i = 0; i < ET.Length; i++)
-        //    {
-        //        ET[i] = new();
-        //    }
-
-        //    // Add all edges to ET
-        //    foreach (var edge in edges)
-        //    {
-
-        //        ET[(int)edge.src.y - minY].Add(new StructForFillingPolygon((int)edge.dst.y, (int)edge.src.x, (edge.src.x - edge.dst.x) / (edge.src.y - edge.dst.y)));
-        //    }
-
-        //    //for (int i = 0; i < ET.Length; i++)
-        //    //{
-        //    //    foreach (var s in ET[i])
-        //    //    {
-        //    //        Debug.WriteLine($"{i}. ymax: {s.ymax}, x: {s.x}, 1/m: {s.mInverse}");
-        //    //    }
-        //    //}
-
-        //    // Count how many "buckets" are in ET
-        //    int y = minY;
-        //    int counter = 0;
-
-        //    for (int i = 0; i < ET.Length; i++)
-        //    {
-        //        if (ET[i].Count != 0)
-        //        {
-        //            counter++;
-        //        }
-        //    }
-
-        //    double area = getArea(points[0], points[1], points[2]);
-        //    points[0].color = Color.Red;
-        //    points[1].color = Color.Green;
-        //    points[2].color = Color.Blue;
-
-        //    // do this while ET and EAT are not empy
-        //    while (counter > 0 || EAT.Count > 0)
-        //    {
-        //        // move lists from ET to EAT
-        //        if (y - minY < ET.Length && ET[y - minY].Count > 0)
-        //        {
-        //            counter--;
-        //            foreach (var s in ET[y - minY])
-        //            {
-        //                EAT.Add(s);
-        //            }
-        //            ET[y - minY] = new();
-        //        }
-        //        // Sort EAT by x
-        //        EAT.Sort((el1, el2) => el1.x.CompareTo(el2.x));
-        //        //foreach (var s in EAT)
-        //        //{
-        //        //    Debug.WriteLine($"{s.x}");
-        //        //}
-        //        // TODO: it's a work aroung!! how to make this work properly?
-        //        // Set pixels between edges
-        //        for (int i = (int)EAT[0].x; i <= (int)EAT[^1].x; i++)
-        //        // for (int i = (int)EAT[0].x; i <= (int)EAT[1].x; i++)
-        //        {
-        //            Color newColor = getColor(points, area, new MyPoint(i, y, 0, 0, 0, 0));
-        //            drawArea.SetPixel(i, y, newColor);
-        //        }
-
-        //        // Delete elements from EAT where ymax = y
-        //        EAT.RemoveAll(el => el.ymax <= y);
-
-        //        // Increase y by one
-        //        y++;
-
-        //        // Change x for every edge
-        //        foreach (var s in EAT)
-        //        {
-        //            s.x += s.mInverse;
-        //        }
-        //    }
-
-        //}
-
-        private static int maxVer = 4;
+        private static readonly int maxVer = 4;
         private static int maxHt = 1000;
         private static int minY;
         private static int maxY;
@@ -377,14 +247,17 @@ namespace triangle_mesh_filler
             public EdgeBucket[] buckets = new EdgeBucket[maxVer];
         }
 
-        public static EdgeTableTuple[] EdgeTable;
+        private static EdgeTableTuple[] edgeTable;
+#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static EdgeTableTuple ActiveEdgeTuple = new();
 
-        public void initEdgeTable()
+        public static EdgeTableTuple[] EdgeTable { get => edgeTable; set => edgeTable = value; }
+#pragma warning restore CA2211 // Non-constant fields should not be visible
+
+        public static void InitEdgeTable()
         {
             maxHt = maxY - minY + 1;
             EdgeTable = new EdgeTableTuple[maxHt];
-            // Debug.WriteLine("AAAAAAAAAA");
             for (int i = 0; i < maxHt; i++)
             {
                 EdgeTable[i] = new();
@@ -392,7 +265,6 @@ namespace triangle_mesh_filler
                 for (int j = 0; j < maxVer; j++)
                 {
                     EdgeTable[i].buckets[j] = new();
-                    // Debug.WriteLine("poszlo");
                 }
             }
             for (int i = 0; i < maxVer; i++)
@@ -402,7 +274,7 @@ namespace triangle_mesh_filler
             ActiveEdgeTuple.countEdgeBucket = 0;
         }
 
-        void insertionSort(EdgeTableTuple ett)
+        static void InsertionSort(EdgeTableTuple ett)
         {
             int i, j;
             EdgeBucket temp = new();
@@ -426,19 +298,19 @@ namespace triangle_mesh_filler
             }
         }
 
-        public void storeEdgeInTuple(EdgeTableTuple receiver, int ym, int xm, double slopInv)
+        public static void StoreEdgeInTuple(EdgeTableTuple receiver, int ym, int xm, double slopInv)
         {
             receiver.buckets[receiver.countEdgeBucket].ymax = ym;
             receiver.buckets[receiver.countEdgeBucket].xofymin = (double)xm;
             receiver.buckets[receiver.countEdgeBucket].slopeinverse = slopInv;
 
-            insertionSort(receiver);
+            InsertionSort(receiver);
 
             receiver.countEdgeBucket++;
 
         }
 
-        public void storeEdgeInTable(int x1, int y1, int x2, int y2)
+        public static void StoreEdgeInTable(int x1, int y1, int x2, int y2)
         {
             double m, minv;
             int ymaxTS, xwithyminTS, scanline;
@@ -468,11 +340,10 @@ namespace triangle_mesh_filler
                 xwithyminTS = x1;
             }
 
-            // Debug.WriteLine($"scanline: {scanline}");
-            storeEdgeInTuple(EdgeTable[scanline - minY], ymaxTS, xwithyminTS, minv);
+            StoreEdgeInTuple(EdgeTable[scanline - minY], ymaxTS, xwithyminTS, minv);
         }
 
-        public void removeEdgeByYmax(EdgeTableTuple Tup, int yy)
+        public static void RemoveEdgeByYmax(EdgeTableTuple Tup, int yy)
         {
             int i, j;
             for (i = 0; i < Tup.countEdgeBucket; i++)
@@ -491,7 +362,7 @@ namespace triangle_mesh_filler
             }
         }
 
-        public void updatexbyslopeinv(EdgeTableTuple Tup)
+        public static void Updatexbyslopeinv(EdgeTableTuple Tup)
         {
             int i;
 
@@ -504,21 +375,18 @@ namespace triangle_mesh_filler
         public void ScanlineFill()
         {
             int i, j, x1, ymax1, x2, ymax2, coordCount;
-            int FillFlag = 0;
-
             for (i = 0; i < maxHt; i++)
             {
                 for (j = 0; j < EdgeTable[i].countEdgeBucket; j++)
                 {
-                    storeEdgeInTuple(ActiveEdgeTuple, EdgeTable[i].buckets[j].ymax, (int)EdgeTable[i].buckets[j].xofymin, EdgeTable[i].buckets[j].slopeinverse);
+                    StoreEdgeInTuple(ActiveEdgeTuple, EdgeTable[i].buckets[j].ymax, (int)EdgeTable[i].buckets[j].xofymin, EdgeTable[i].buckets[j].slopeinverse);
                 }
 
-                removeEdgeByYmax(ActiveEdgeTuple, i + minY);
+                RemoveEdgeByYmax(ActiveEdgeTuple, i + minY);
 
-                insertionSort(ActiveEdgeTuple);
+                InsertionSort(ActiveEdgeTuple);
 
                 j = 0;
-                FillFlag = 0;
                 coordCount = 0;
                 x1 = 0;
                 x2 = 0;
@@ -552,7 +420,7 @@ namespace triangle_mesh_filler
                         x2 = (int)ActiveEdgeTuple.buckets[j].xofymin;
                         ymax2 = ActiveEdgeTuple.buckets[j].ymax;
 
-                        FillFlag = 0;
+                        int FillFlag = 0;
 
                         if (x1 == x2)
                         {
@@ -583,20 +451,20 @@ namespace triangle_mesh_filler
                     }
                     j++;
                 }
-                updatexbyslopeinv(ActiveEdgeTuple);
+                Updatexbyslopeinv(ActiveEdgeTuple);
             }
         }
 
-        public double getArea(MyPoint A, MyPoint B, MyPoint C)
+        public static double GetArea(MyPoint A, MyPoint B, MyPoint C)
         {
             return Math.Abs(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) / 2.0;
         }
 
-        public Color getColor(List<MyPoint> points, double area, MyPoint p)
+        public static Color GetColor(List<MyPoint> points, double area, MyPoint p)
         {
-            double alfa = getArea(p, points[1], points[2]) / area;
-            double beta = getArea(p, points[0], points[2]) / area;
-            double gamma = getArea(p, points[0], points[1]) / area;
+            double alfa = GetArea(p, points[1], points[2]) / area;
+            double beta = GetArea(p, points[0], points[2]) / area;
+            double gamma = GetArea(p, points[0], points[1]) / area;
 
             return Color.FromArgb((int)(alfa * points[0].color.R + beta * points[1].color.R + gamma * points[2].color.R) % 255,
                 (int)(alfa * points[0].color.G + beta * points[1].color.G + gamma * points[2].color.G) % 255,
@@ -688,7 +556,9 @@ namespace triangle_mesh_filler
             return result;
         }
 
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
         public void Dispose()
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         {
             if (Disposed) return;
             Disposed = true;
