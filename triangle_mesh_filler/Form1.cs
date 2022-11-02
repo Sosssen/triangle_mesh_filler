@@ -25,14 +25,15 @@ namespace triangle_mesh_filler
         private DirectBitmap drawArea;
         private Pen pen = new(Color.Black, 2);
         private SolidBrush sbBlack = new(Color.Black);
+        private int radius = 3;
         private Pen penRed = new(Color.Red, 1);
         private SolidBrush sbRed = new(Color.Red);
-        private int radius = 3;
-
+        private SolidBrush sbYellow = new(Color.Yellow);
         private Random rand = new();
 
         double kd = 0.5;
         double ks = 0.5;
+        Sun sun;
         public Form1()
         {
             InitializeComponent();
@@ -94,6 +95,9 @@ namespace triangle_mesh_filler
             }
 
             DrawShape();
+
+            sun = new Sun(Canvas.Width / 2, Canvas.Height / 2, 100.0, 10);
+            DrawSun();
         }
 
         public void LoadShape()
@@ -454,21 +458,17 @@ namespace triangle_mesh_filler
                 Updatexbyslopeinv(ActiveEdgeTuple);
             }
         }
-
-        public static double GetArea(MyPoint A, MyPoint B, MyPoint C)
+        
+        public void DrawSun()
         {
-            return Math.Abs(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) / 2.0;
-        }
+            int x = (int)sun.x;
+            int y = (int)sun.y;
 
-        public static Color GetColor(List<MyPoint> points, double area, MyPoint p)
-        {
-            double alfa = GetArea(p, points[1], points[2]) / area;
-            double beta = GetArea(p, points[0], points[2]) / area;
-            double gamma = GetArea(p, points[0], points[1]) / area;
+            using Graphics g = Graphics.FromImage(drawArea.Bitmap);
 
-            return Color.FromArgb((int)(alfa * points[0].color.R + beta * points[1].color.R + gamma * points[2].color.R) % 255,
-                (int)(alfa * points[0].color.G + beta * points[1].color.G + gamma * points[2].color.G) % 255,
-                (int)(alfa * points[0].color.B + beta * points[1].color.B + gamma * points[2].color.B) % 255);
+            g.FillEllipse(sbYellow, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
+            g.DrawEllipse(pen, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
+
         }
 
     }
@@ -564,6 +564,22 @@ namespace triangle_mesh_filler
             Disposed = true;
             Bitmap.Dispose();
             BitsHandle.Free();
+        }
+    }
+
+    public class Sun
+    {
+        public double x;
+        public double y;
+        public double z;
+        public int radius;
+
+        public Sun(double x, double y, double z, int radius)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.radius = radius;
         }
     }
 }
