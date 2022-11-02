@@ -33,8 +33,8 @@ namespace triangle_mesh_filler
         private Random rand = new();
 
         double kd = 0.5;
-        double ks = 0.3;
-        int m = 100;
+        double ks = 0.5;
+        int m = 30;
         Sun sun;
         public Form1()
         {
@@ -76,7 +76,7 @@ namespace triangle_mesh_filler
             }
             Debug.WriteLine($"zMax: {zMax}");
 
-            sun = new Sun(Canvas.Width / 2, Canvas.Height / 2, 1000.0, 20);
+            sun = new Sun(Canvas.Width / 2 + 200.0, Canvas.Height / 2 + 400.0, 1000, 20);
 
             Debug.WriteLine($"all: {polygons.Count}");
 
@@ -89,6 +89,7 @@ namespace triangle_mesh_filler
 
             
             DrawSun();
+
         }
 
         public void LoadShape()
@@ -552,7 +553,7 @@ namespace triangle_mesh_filler
                 List<double> color = new(){ 0, 0, 0 };
                 for (int i = 0; i < color.Count; i++)
                 {
-                    color[i] = kd * colorOfLight[i] * colorOfObject[i] * cosNL + ks * colorOfLight[i] * colorOfObject[i] * Math.Pow(cosVR, 1);
+                    color[i] = kd * colorOfLight[i] * colorOfObject[i] * cosNL + ks * colorOfLight[i] * colorOfObject[i] * Math.Pow(cosVR, m);
                 }
                 // Debug.WriteLine($"color: {color[0]}, {color[1]}, {color[2]}");
                 colors.Add(Color.FromArgb(Math.Min((int)(color[0] * 255), 255), Math.Min((int)(color[1] * 255), 255), Math.Min((int)(color[2] * 255), 255)));
@@ -567,8 +568,13 @@ namespace triangle_mesh_filler
 
             using Graphics g = Graphics.FromImage(drawArea.Bitmap);
 
-            g.FillEllipse(sbYellow, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
-            g.DrawEllipse(pen, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
+            Bitmap sunImage = new Bitmap(@"C:\Users\Sosna\Desktop\sun.png");
+            g.DrawImage(sunImage, x - 100, y - 100, 200, 200);
+
+            //g.FillEllipse(sbYellow, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
+            //g.DrawEllipse(pen, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
+
+            
 
         }
 
