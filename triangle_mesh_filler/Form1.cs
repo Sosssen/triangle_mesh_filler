@@ -18,8 +18,9 @@ namespace triangle_mesh_filler
         private List<double> normalVectorsX = new();
         private List<double> normalVectorsY = new();
         private List<double> normalVectorsZ = new();
-        private List<List<MyPoint>> polygons = new();
-        private List<List<Edge>> polygonsByEdges = new();
+        //private List<List<MyPoint>> polygons = new();
+        //private List<List<Edge>> polygonsByEdges = new();
+        private List<Polygon> polygons = new();
         
 
         private DirectBitmap drawArea;
@@ -67,31 +68,13 @@ namespace triangle_mesh_filler
 
             LoadShape();
 
-            Debug.WriteLine($"all: {polygonsByEdges.Count}");
+            Debug.WriteLine($"all: {polygons.Count}");
 
             int counter = 0;
 
-            foreach (var polygon in polygonsByEdges)
-            {
-                minY = int.MaxValue;
-                maxY = int.MinValue;
-
-                foreach (var edge in polygon)
-                {
-                    if (edge.src.y < minY) minY = (int)edge.src.y;
-                    if (edge.src.y > maxY) maxY = (int)edge.src.y;
-                    if (edge.dst.y < minY) minY = (int)edge.dst.y;
-                    if (edge.dst.y > maxY) maxY = (int)edge.dst.y;
-                }
-
-                InitEdgeTable();
-                // Debug.WriteLine($"counter: {counter}");
-                foreach (var edge in polygon)
-                {
-                    StoreEdgeInTable((int)edge.src.x, (int)edge.src.y, (int)edge.dst.x, (int)edge.dst.y);
-                }
-                counter++;
-                ScanlineFill();
+            foreach (var polygon in polygons)
+            {   
+                ScanlineFill(polygon);
             }
 
             DrawShape();
@@ -128,7 +111,8 @@ namespace triangle_mesh_filler
 
                 if (words[0] == "f")
                 {
-                    List<MyPoint> polygon = new();
+                    Polygon polygon = new();
+                    List<MyPoint> pointsP = new();
                     foreach (var word in words)
                     {
                         if (word == "f") continue;
@@ -137,29 +121,36 @@ namespace triangle_mesh_filler
                         point.nx = normalVectorsX[Convert.ToInt32(numbers[1]) - 1];
                         point.ny = normalVectorsY[Convert.ToInt32(numbers[1]) - 1];
                         point.nz = normalVectorsZ[Convert.ToInt32(numbers[1]) - 1];
-                        polygon.Add(point);
+                        pointsP.Add(point);
                     }
+                    polygon.points = pointsP;
+                    polygon.size = pointsP.Count;
+                    List<Edge> edges = new();
+                    for (int i = 0; i < polygon.size; i++)
+                    {
+                        edges.Add(new Edge(polygon.points[i], polygon.points[(i + 1) % polygon.size]));
+                    }
+                    polygon.edges = edges;
                     polygons.Add(polygon);
-
                 }
             }
 
-            foreach (var polygon in polygons)
-            {
-                List<Edge> edges = new();
-                for (int i = 0; i < polygon.Count; i++)
-                {
-                    if (polygon[i].y <= polygon[(i + 1) % polygon.Count].y)
-                    {
-                        edges.Add(new Edge(polygon[i], polygon[(i + 1) % polygon.Count]));
-                    }
-                    else
-                    {
-                        edges.Add(new Edge(polygon[(i + 1) % polygon.Count], polygon[i]));
-                    }
-                }
-                polygonsByEdges.Add(edges);
-            }
+            //foreach (var polygon in polygons)
+            //{
+            //    List<Edge> edges = new();
+            //    for (int i = 0; i < polygon.Count; i++)
+            //    {
+            //        if (polygon[i].y <= polygon[(i + 1) % polygon.Count].y)
+            //        {
+            //            edges.Add(new Edge(polygon[i], polygon[(i + 1) % polygon.Count]));
+            //        }
+            //        else
+            //        {
+            //            edges.Add(new Edge(polygon[(i + 1) % polygon.Count], polygon[i]));
+            //        }
+            //    }
+            //    polygonsByEdges.Add(edges);
+            //}
 
 
 
@@ -226,11 +217,16 @@ namespace triangle_mesh_filler
 
             foreach (var polygon in polygons)
             {
-                for (int i = 0; i < polygon.Count; i++)
+                for (int i = 0; i < polygon.size; i++)
                 {
-                    g.DrawLine(pen, (int)polygon[i].x, (int)polygon[i].y, (int)polygon[(i + 1) % (int)polygon.Count].x, (int)polygon[(i + 1) % polygon.Count].y);
+                    g.DrawLine(pen, (int)polygon.points[i].x, (int)polygon.points[i].y, (int)polygon.points[(i + 1) % (int)polygon.size].x, (int)polygon.points[(i + 1) % polygon.size].y);
                 }
             }
+            //foreach (var point in polygons[250].points)
+            //{
+            //    g.DrawEllipse(pen, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
+            //    g.FillEllipse(sbRed, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
+            //}
         }
 
         private static readonly int maxVer = 4;
@@ -376,8 +372,26 @@ namespace triangle_mesh_filler
             }
         }
 
-        public void ScanlineFill()
+        public void ScanlineFill(Polygon polygon)
         {
+            minY = int.MaxValue;
+            maxY = int.MinValue;
+
+            foreach (var edge in polygon.edges)
+            {
+                if (edge.src.y < minY) minY = (int)edge.src.y;
+                if (edge.src.y > maxY) maxY = (int)edge.src.y;
+                if (edge.dst.y < minY) minY = (int)edge.dst.y;
+                if (edge.dst.y > maxY) maxY = (int)edge.dst.y;
+            }
+
+            InitEdgeTable();
+
+            foreach (var edge in polygon.edges)
+            {
+                StoreEdgeInTable((int)edge.src.x, (int)edge.src.y, (int)edge.dst.x, (int)edge.dst.y);
+            }
+
             int i, j, x1, ymax1, x2, ymax2, coordCount;
             for (i = 0; i < maxHt; i++)
             {
@@ -517,6 +531,28 @@ namespace triangle_mesh_filler
         {
             this.src = src;
             this.dst = dst;
+        }
+    }
+
+    public class Polygon
+    {
+        public List<MyPoint> points;
+        public List<Edge> edges;
+        public int size;
+
+
+        public Polygon()
+        {
+            this.points = null;
+            this.edges = null;
+            this.size = 0;
+        }
+
+        public Polygon(List<MyPoint> points, List<Edge> edges, int size)
+        {
+            this.points = points;
+            this.edges = edges;
+            this.size = size;
         }
     }
 
