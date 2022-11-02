@@ -33,7 +33,8 @@ namespace triangle_mesh_filler
         private Random rand = new();
 
         double kd = 0.5;
-        double ks = 0.5;
+        double ks = 0.3;
+        int m = 100;
         Sun sun;
         public Form1()
         {
@@ -68,9 +69,16 @@ namespace triangle_mesh_filler
 
             LoadShape();
 
-            Debug.WriteLine($"all: {polygons.Count}");
+            double zMax = double.MinValue;
+            foreach (var point in points)
+            {
+                if (point.z > zMax) zMax = point.z;
+            }
+            Debug.WriteLine($"zMax: {zMax}");
 
-            int counter = 0;
+            sun = new Sun(Canvas.Width / 2, Canvas.Height / 2, 1000.0, 20);
+
+            Debug.WriteLine($"all: {polygons.Count}");
 
             foreach (var polygon in polygons)
             {   
@@ -79,7 +87,7 @@ namespace triangle_mesh_filler
 
             DrawShape();
 
-            sun = new Sun(Canvas.Width / 2, Canvas.Height / 2, 100.0, 10);
+            
             DrawSun();
         }
 
@@ -222,11 +230,6 @@ namespace triangle_mesh_filler
                     g.DrawLine(pen, (int)polygon.points[i].x, (int)polygon.points[i].y, (int)polygon.points[(i + 1) % (int)polygon.size].x, (int)polygon.points[(i + 1) % polygon.size].y);
                 }
             }
-            //foreach (var point in polygons[250].points)
-            //{
-            //    g.DrawEllipse(pen, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
-            //    g.FillEllipse(sbRed, (int)point.x - radius, (int)point.y - radius, 2 * radius, 2 * radius);
-            //}
         }
 
         private static readonly int maxVer = 4;
@@ -377,6 +380,9 @@ namespace triangle_mesh_filler
             minY = int.MaxValue;
             maxY = int.MinValue;
 
+            List<Color> verticesColors = FindColorsOfVertices(polygon);
+            double area = getArea(polygon.points[0], polygon.points[1], polygon.points[2]);
+
             foreach (var edge in polygon.edges)
             {
                 if (edge.src.y < minY) minY = (int)edge.src.y;
@@ -463,7 +469,8 @@ namespace triangle_mesh_filler
                         {
                             for (int k = x1; k <= x2; k++)
                             {
-                                drawArea.SetPixel(k, i + minY, Color.Red);
+                                Color color = FindColorOfPixel(polygon, verticesColors, new MyPoint(k, i + minY), area);
+                                drawArea.SetPixel(k, i + minY, color);
                             }
                         }
                     }
@@ -471,6 +478,86 @@ namespace triangle_mesh_filler
                 }
                 Updatexbyslopeinv(ActiveEdgeTuple);
             }
+
+            //for (int a = 0; a < polygon.size; a++)
+            //{
+            //    using SolidBrush sb = new SolidBrush(verticesColors[a]);
+            //    using Graphics g = Graphics.FromImage(drawArea.Bitmap);
+            //    g.FillEllipse(sb, (int)polygon.points[a].x - sun.radius, (int)polygon.points[a].y - sun.radius, 2 * sun.radius, 2 * sun.radius);
+            //}
+        }
+
+        public double getArea(MyPoint A, MyPoint B, MyPoint C)
+        {
+
+            return Math.Abs(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) / 2.0;
+        }
+
+        public Color FindColorOfPixel(Polygon polygon, List<Color> colors, MyPoint point, double area)
+        {
+            double alfa = getArea(polygon.points[1], polygon.points[2], point) / area;
+            double beta = getArea(polygon.points[0], polygon.points[2], point) / area;
+            double gamma = getArea(polygon.points[0], polygon.points[1], point) / area;
+
+            // Debug.WriteLine($"{alfa + beta + gamma}");
+
+            List<int> color = new() { 0, 0, 0 };
+            color[0] = Math.Min((int)(alfa * colors[0].R + beta * colors[1].R + gamma * colors[2].R), 255);
+            color[1] = Math.Min((int)(alfa * colors[0].G + beta * colors[1].G + gamma * colors[2].G), 255);
+            color[2] = Math.Min((int)(alfa * colors[0].B + beta * colors[1].B + gamma * colors[2].B), 255);
+
+            return Color.FromArgb(color[0], color[1], color[2]);
+            // return Color.FromArgb(0, 0, 0);
+        }
+
+        public List<Color> FindColorsOfVertices(Polygon polygon)
+        {
+            List<Color> colors = new();
+            List<double> colorOfLight = new() { 1, 1, 1 };
+            List<double> colorOfObject = new() { 1, 0, 0 };
+            
+
+            foreach (var point in polygon.points)
+            {
+                List<double> L = new() { 0, 0, 0 };
+                L[0] = (sun.x - point.x);
+                L[1] = (sun.y - point.y);
+                L[2] = (sun.z - point.z);
+                // Debug.WriteLine($"L: {L[0]}, {L[1]}, {L[2]}");
+                double lenL = Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2]);
+                for (int i = 0; i < L.Count; i++)
+                {
+                    L[i] /= lenL;
+                }
+                // Debug.WriteLine($"new length: {Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2])}");
+                List<double> N = new() { point.nx, point.ny, point.nz };
+                
+                double lenN = Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2]);
+                for (int i = 0; i < N.Count; i++)
+                {
+                    N[i] /= lenN;
+                }
+                // Debug.WriteLine($"normal vector length: {Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2])}");
+                double cosNL = L[0] * N[0] + L[1] * N[1] + L[2] * N[2];
+                cosNL = cosNL < 0 ? 0 : cosNL;
+                // Debug.WriteLine($"cosNL: {cosNL}");
+                List<double> V = new() { 0, 0, 1 };
+                List<double> R = new() { 0, 0, 0 };
+                for (int i = 0; i < R.Count; i++)
+                {
+                    R[i] = 2 * cosNL * N[i] - L[i];
+                }
+                double cosVR = V[0] * R[0] + V[1] * R[1] + V[2] * R[2];
+                cosVR = cosVR < 0 ? 0 : cosVR;
+                List<double> color = new(){ 0, 0, 0 };
+                for (int i = 0; i < color.Count; i++)
+                {
+                    color[i] = kd * colorOfLight[i] * colorOfObject[i] * cosNL + ks * colorOfLight[i] * colorOfObject[i] * Math.Pow(cosVR, 1);
+                }
+                // Debug.WriteLine($"color: {color[0]}, {color[1]}, {color[2]}");
+                colors.Add(Color.FromArgb(Math.Min((int)(color[0] * 255), 255), Math.Min((int)(color[1] * 255), 255), Math.Min((int)(color[2] * 255), 255)));
+            }
+            return colors;
         }
         
         public void DrawSun()
@@ -487,20 +574,6 @@ namespace triangle_mesh_filler
 
     }
 
-    public class StructForFillingPolygon
-    {
-        public int ymax;
-        public double x;
-        public double mInverse;
-
-        public StructForFillingPolygon(int ymax, double x, double mInverse)
-        {
-            this.ymax = ymax;
-            this.x = x;
-            this.mInverse = mInverse;
-        }
-    }
-
     public class MyPoint
     {
         public double x;
@@ -509,7 +582,6 @@ namespace triangle_mesh_filler
         public double nx;
         public double ny;
         public double nz;
-        public Color color;
 
         public MyPoint(double x, double y, double z, double nx, double ny, double nz)
         {
@@ -519,6 +591,16 @@ namespace triangle_mesh_filler
             this.nx = nx;
             this.ny = ny;
             this.nz = nz;
+        }
+
+        public MyPoint(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = 0;
+            this.nz = 0;
+            this.ny = 0;
+            this.nz = 0;
         }
     }
 
