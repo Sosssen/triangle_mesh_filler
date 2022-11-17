@@ -76,18 +76,20 @@ namespace triangle_mesh_filler
             }
             Debug.WriteLine($"zMax: {zMax}");
 
-            sun = new Sun(Canvas.Width / 2, Canvas.Height / 2, 1000.0, 20);
+            sun = new Sun(Canvas.Width / 2, Canvas.Height / 2, 700.0, 20);
 
             Debug.WriteLine($"all: {polygons.Count}");
 
+            DrawCanvas();
+        }
+
+        public void DrawCanvas()
+        {
             foreach (var polygon in polygons)
-            {   
+            {
                 ScanlineFill(polygon);
             }
-
             DrawShape();
-
-            
             DrawSun();
         }
 
@@ -489,15 +491,36 @@ namespace triangle_mesh_filler
 
         public double getArea(MyPoint A, MyPoint B, MyPoint C)
         {
+            int Ax = Convert.ToInt32(A.x);
+            int Ay = Convert.ToInt32(A.y);
+            int Bx = Convert.ToInt32(B.x);
+            int By = Convert.ToInt32(B.y);
+            int Cx = Convert.ToInt32(C.x);
+            int Cy = Convert.ToInt32(C.y);
+            return Math.Abs(Ax * (By - Cy) + Bx * (Cy - Ay) + Cx * (Ay - By)) / 2.0;
+            //return Math.Abs(Math.Round(A.x) * (Math.Round(B.y) - Math.Round(C.y)) + Math.Round(B.x) * (Math.Round(C.y) - Math.Round(A.y)) + Math.Round(C.x) * (Math.Round(A.y) - Math.Round(B.y))) / 2.0;
+            //double a = GetDistance(B, C);
+            //double b = GetDistance(A, C);
+            //double c = GetDistance(A, B);
+            //double s = (a + b + c) / 2.0;
+            //double tmp = s * (s - a) * (s - b) * (s - c);
+            //if (tmp <= 0) return 0;
+            //else return Math.Sqrt(tmp);
+        }
 
-            return Math.Abs(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) / 2.0;
+        public double GetDistance(MyPoint A, MyPoint B)
+        {
+            double ret  = Math.Sqrt((Math.Round(A.x) - Math.Round(B.x)) * (Math.Round(A.x) - Math.Round(B.x)) + (Math.Round(A.y) - Math.Round(B.y)) * (Math.Round(A.y) - Math.Round(B.y)));
+            return ret;
         }
 
         public Color FindColorOfPixel(Polygon polygon, List<Color> colors, MyPoint point, double area)
         {
             double alfa = getArea(polygon.points[1], polygon.points[2], point) / area;
             double beta = getArea(polygon.points[0], polygon.points[2], point) / area;
-            double gamma = getArea(polygon.points[0], polygon.points[1], point) / area;
+            // double gamma = getArea(polygon.points[0], polygon.points[1], point) / area;
+            double gamma = 1 - alfa - beta;
+            // if (gamma < 0) gamma = 0;
 
             // Debug.WriteLine($"{alfa + beta + gamma}");
 
@@ -621,6 +644,8 @@ namespace triangle_mesh_filler
         public List<MyPoint> points;
         public List<Edge> edges;
         public int size;
+        static int index = 0;
+        int polygonIndex;
 
 
         public Polygon()
@@ -628,6 +653,8 @@ namespace triangle_mesh_filler
             this.points = null;
             this.edges = null;
             this.size = 0;
+            this.polygonIndex = index;
+            Polygon.index++;
         }
 
         public Polygon(List<MyPoint> points, List<Edge> edges, int size)
@@ -635,6 +662,8 @@ namespace triangle_mesh_filler
             this.points = points;
             this.edges = edges;
             this.size = size;
+            this.polygonIndex = index;
+            Polygon.index++;
         }
     }
 
