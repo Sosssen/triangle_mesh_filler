@@ -21,9 +21,9 @@ namespace triangle_mesh_filler
         //private List<List<MyPoint>> polygons = new();
         //private List<List<Edge>> polygonsByEdges = new();
         private List<Polygon> polygons = new();
-        
 
-        private DirectBitmap drawArea;
+
+        private DirectBitmap drawArea = null;
         private Pen pen = new(Color.Black, 2);
         private SolidBrush sbBlack = new(Color.Black);
         private int radius = 3;
@@ -35,7 +35,9 @@ namespace triangle_mesh_filler
         double kd = 0.5;
         double ks = 0.3;
         int m = 100;
+        
         Sun sun;
+        bool clicked = false;
         public Form1()
         {
             InitializeComponent();
@@ -62,10 +64,7 @@ namespace triangle_mesh_filler
             drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             Canvas.Image = drawArea.Bitmap;
 
-            using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
-            {
-                g.Clear(Color.White);
-            }
+            
 
             LoadShape();
 
@@ -76,7 +75,7 @@ namespace triangle_mesh_filler
             }
             Debug.WriteLine($"zMax: {zMax}");
 
-            sun = new Sun(Canvas.Width / 2 + 200.0, Canvas.Height / 2 + 400.0, 700.0, 20);
+            sun = new Sun(0, 0, 700.0, 20);
 
             Debug.WriteLine($"all: {polygons.Count}");
 
@@ -85,12 +84,27 @@ namespace triangle_mesh_filler
 
         public void DrawCanvas()
         {
+            //if (drawArea != null) drawArea.Dispose();
+
+            //drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
+            //Canvas.Image = drawArea.Bitmap;
+
+            using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
+            {
+                g.Clear(Color.White);
+            }
+
+            Debug.WriteLine($"sun koords {sun.x}, {sun.y}");
+            
+
             foreach (var polygon in polygons)
             {
                 ScanlineFill(polygon);
             }
             DrawShape();
             DrawSun();
+            Canvas.Invalidate();
+            Canvas.Update();
         }
 
         public void LoadShape()
@@ -216,7 +230,6 @@ namespace triangle_mesh_filler
         {
 
             using Graphics g = Graphics.FromImage(drawArea.Bitmap);
-            // g.Clear(Color.White);
 
             foreach (var point in points)
             {
@@ -599,6 +612,35 @@ namespace triangle_mesh_filler
 
         }
 
+        private void Canvas_MouseDown(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine("mousedown");
+            sun.x = e.X;
+            sun.y = e.Y;
+            clicked = true;
+            DrawCanvas();
+            //for (int i = 0; i < 1000; i+= 10)
+            //{
+            //    sun.x = i;
+            //    sun.y = i;
+            //    DrawCanvas();
+            //}
+        }
+
+        private void Canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (clicked)
+            {
+                sun.x = e.X;
+                sun.y = e.Y;
+                DrawCanvas();
+            }
+        }
+
+        private void Canvas_MouseUp(object sender, MouseEventArgs e)
+        {
+            clicked = false;
+        }
     }
 
     public class MyPoint
