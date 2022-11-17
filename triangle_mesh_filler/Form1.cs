@@ -76,7 +76,7 @@ namespace triangle_mesh_filler
             }
             Debug.WriteLine($"zMax: {zMax}");
 
-            sun = new Sun(Canvas.Width / 2, Canvas.Height / 2, 700.0, 20);
+            sun = new Sun(Canvas.Width / 2 + 200.0, Canvas.Height / 2 + 400.0, 700.0, 20);
 
             Debug.WriteLine($"all: {polygons.Count}");
 
@@ -529,6 +529,10 @@ namespace triangle_mesh_filler
             color[1] = Math.Min((int)(alfa * colors[0].G + beta * colors[1].G + gamma * colors[2].G), 255);
             color[2] = Math.Min((int)(alfa * colors[0].B + beta * colors[1].B + gamma * colors[2].B), 255);
 
+            for (int i = 0; i < color.Count; i++)
+            {
+                if (color[i] < 0) color[i] = 0;
+            }
             return Color.FromArgb(color[0], color[1], color[2]);
             // return Color.FromArgb(0, 0, 0);
         }
@@ -590,8 +594,8 @@ namespace triangle_mesh_filler
 
             using Graphics g = Graphics.FromImage(drawArea.Bitmap);
 
-            g.FillEllipse(sbYellow, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
-            g.DrawEllipse(pen, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
+            Bitmap sunImage = new Bitmap(@"C:\Users\Sosna\Desktop\sun.png");
+            g.DrawImage(sunImage, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
 
         }
 
