@@ -32,46 +32,67 @@ namespace triangle_mesh_filler
         private SolidBrush sbYellow = new SolidBrush(Color.Yellow);
         private Random rand = new Random();
 
-        double kd = 0.5;
-        double ks = 0.3;
-        int m = 100;
-        
-        Sun sun;
-        bool clicked = false;
-        bool animating = false;
-        bool started = false;
+        private double kd = 1;
+        private double ks = 0.5;
+        private int m = 10;
+
+        private Sun sun = null;
+        private bool clicked = false;
+        private bool animating = false;
+
+        private ColorDialog cdObject = new ColorDialog();
+        private ColorDialog cdLight = new ColorDialog();
+        private List<double> colorObject = new List<double>() { 1, 0, 0 };
+        private List<double> colorLight = new List<double>() { 1, 1, 1 };
+        private Bitmap bmColorObject = null;
+        private Bitmap bmColorLight = null;
         public Form1()
         {
             InitializeComponent();
 
+            Configuration();
+
             // TODO: move everything from the start of program to separate function
+            
+
+            DrawCanvas();
+        }
+
+        public void Configuration()
+        {
+            // set title and icon
             this.Text = "Triangle Mesh Filler";
             this.Icon = Properties.Resources.tmf_icon;
 
+            // can't change size of form
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
             this.MaximizeBox = false;
 
+            // new size of form
             Rectangle screen = Screen.PrimaryScreen.WorkingArea;
             int w = (int)(screen.Width / 2.0);
             int h = (int)(screen.Height / 1.5);
             this.Size = new Size(w, h);
 
-
-            
+            // create canvas as square
             tableLayoutPanel1.ColumnStyles[0].SizeType = SizeType.Absolute;
             tableLayoutPanel1.ColumnStyles[0].Width = tableLayoutPanel1.Height;
             Canvas.Width = tableLayoutPanel1.Height;
             Canvas.Height = Canvas.Width;
             this.Size = new Size(tableLayoutPanel1.Height + this.Width / 2, this.Height);
 
+            // create new bitmap
             drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             Canvas.Image = drawArea.Bitmap;
 
+            // load shape from *.obj file
             LoadShape();
 
-            sun = new Sun(0, 0, 700.0, 20);
+            // create sun
+            sun = new Sun(200.0, 400.0, 700.0, 20);
 
+            // find maximum z-coordinate
             double zMax = double.MinValue;
             foreach (var point in points)
             {
@@ -79,6 +100,7 @@ namespace triangle_mesh_filler
             }
             Debug.WriteLine($"zMax: {zMax}");
 
+            // set values of sliders
             kd_slider.Value = (int)(kd * 100);
             ks_slider.Value = (int)(ks * 100);
             m_slider.Value = m;
@@ -90,18 +112,30 @@ namespace triangle_mesh_filler
 
             Debug.WriteLine($"Canva size: {Canvas.Width}, {Canvas.Height}");
 
-            
+            // set values of colors
+            cdObject.Color = Color.FromArgb((int)(colorObject[0] * 255.0), (int)(colorObject[1] * 255.0), (int)(colorObject[2] * 255.0));
+            cdLight.Color = Color.FromArgb((int)(colorLight[0] * 255.0), (int)(colorLight[1] * 255.0), (int)(colorLight[2] * 255.0));
 
-            
+            bmColorObject = new Bitmap(pictureBoxObjectColor.Width, pictureBoxObjectColor.Height);
+            pictureBoxObjectColor.Image = bmColorObject;
+            bmColorLight = new Bitmap(pictureBoxLightColor.Width, pictureBoxLightColor.Height);
+            pictureBoxLightColor.Image = bmColorLight;
 
-            // TODO: delete
-            
-
-           
+            FillWithColor(pictureBoxObjectColor, bmColorObject, cdObject.Color);
+            FillWithColor(pictureBoxLightColor, bmColorLight, cdLight.Color);
 
             Debug.WriteLine($"all: {polygons.Count}");
+        }
 
-            DrawCanvas();
+        public void FillWithColor(PictureBox pb, Bitmap bitmap, Color color)
+        {
+            using Graphics g = Graphics.FromImage(bitmap);
+            using SolidBrush sb = new SolidBrush(color);
+
+            g.FillRectangle(sb, 0, 0, bitmap.Width, bitmap.Height);
+
+            pb.Invalidate();
+            pb.Update();
         }
 
         public void DrawCanvas()
@@ -137,8 +171,9 @@ namespace triangle_mesh_filler
             {
                 Canvas.Invoke((MethodInvoker)delegate
                 {
-                // Running on the UI thread
-                Canvas.Update();
+                    // Running on the UI thread
+                    if (Canvas.IsDisposed) return;
+                    Canvas.Update();
                 });
             }
             else
@@ -578,8 +613,6 @@ namespace triangle_mesh_filler
         public List<Color> FindColorsOfVertices(Polygon polygon)
         {
             List<Color> colors = new List<Color>();
-            List<double> colorOfLight = new List<double>() { 1, 1, 1 };
-            List<double> colorOfObject = new List<double>() { 1, 0, 0 };
             
 
             foreach (var point in polygon.points)
@@ -617,7 +650,7 @@ namespace triangle_mesh_filler
                 List<double> color = new List<double>(){ 0, 0, 0 };
                 for (int i = 0; i < color.Count; i++)
                 {
-                    color[i] = kd * colorOfLight[i] * colorOfObject[i] * cosNL + ks * colorOfLight[i] * colorOfObject[i] * Math.Pow(cosVR, m);
+                    color[i] = kd * colorLight[i] * colorObject[i] * cosNL + ks * colorLight[i] * colorObject[i] * Math.Pow(cosVR, m);
                 }
                 // Debug.WriteLine($"color: {color[0]}, {color[1]}, {color[2]}");
                 colors.Add(Color.FromArgb(Math.Min((int)(color[0] * 255), 255), Math.Min((int)(color[1] * 255), 255), Math.Min((int)(color[2] * 255), 255)));
@@ -712,21 +745,40 @@ namespace triangle_mesh_filler
             var backgroundThread = new System.Threading.Thread(ts);
             backgroundThread.Start();
         }
+
         public void animationFunction()
         {
             double middleX = Canvas.Width / 2.0;
             double middleY = Canvas.Height / 2.0;
             double animationRadius = GetDistance(new MyPoint(middleX, middleY), new MyPoint(sun.x, sun.y));
 
+            int sign = sun.x < middleX ? -1 : 1;
+
             while (true)
             {
                 if (animating)
                 {
-                    sun.y += 10;
-                    if (sun.y - middleY > animationRadius) sun.y = middleY;
-                    double tempY = sun.y - middleY;
-                    double tempX = Math.Sqrt(animationRadius * animationRadius - tempY * tempY);
-                    sun.x = tempX + middleX;
+                    sun.y += sign * 30.0;
+                    if (sun.y - middleY >= animationRadius)
+                    {
+                        Debug.WriteLine("wchodze1");
+                        sun.y = middleY + animationRadius;
+                        sun.x = middleX;
+                        sign = -sign;
+                    }
+                    else if (sun.y - middleY <= -animationRadius)
+                    {
+                        Debug.WriteLine("wchodze2");
+                        sun.y = middleY - animationRadius;
+                        sun.x = middleX;
+                        sign = -sign;
+                    }
+                    else
+                    {
+                        double tempY = sun.y - middleY;
+                        double tempX = sign * Math.Sqrt(animationRadius * animationRadius - tempY * tempY);
+                        sun.x = tempX + middleX;
+                    }
                     DrawCanvas();
                 }
                 else
@@ -745,6 +797,31 @@ namespace triangle_mesh_filler
                 return true;
             }
             return false;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            animating = false;
+        }
+
+        private void ObjectColorButton_Click(object sender, EventArgs e)
+        {
+            cdObject.ShowDialog();
+            colorObject[0] = cdObject.Color.R / 255.0;
+            colorObject[1] = cdObject.Color.G / 255.0;
+            colorObject[2] = cdObject.Color.B / 255.0;
+            DrawCanvas();
+            FillWithColor(pictureBoxObjectColor, bmColorObject, cdObject.Color);
+        }
+
+        private void LightColorButton_Click(object sender, EventArgs e)
+        {
+            cdLight.ShowDialog();
+            colorLight[0] = cdLight.Color.R / 255.0;
+            colorLight[1] = cdLight.Color.G / 255.0;
+            colorLight[2] = cdLight.Color.B / 255.0;
+            DrawCanvas();
+            FillWithColor(pictureBoxLightColor, bmColorLight, cdLight.Color);
         }
     }
 
