@@ -42,6 +42,7 @@ namespace triangle_mesh_filler
         {
             InitializeComponent();
 
+            // TODO: move everything from the start of program to separate function
             this.Text = "Triangle Mesh Filler";
             this.Icon = Properties.Resources.tmf_icon;
 
@@ -54,19 +55,20 @@ namespace triangle_mesh_filler
             int h = (int)(screen.Height / 1.5);
             this.Size = new Size(w, h);
 
+
+            
             tableLayoutPanel1.ColumnStyles[0].SizeType = SizeType.Absolute;
             tableLayoutPanel1.ColumnStyles[0].Width = tableLayoutPanel1.Height;
             Canvas.Width = tableLayoutPanel1.Height;
             Canvas.Height = Canvas.Width;
-
-            Debug.WriteLine($"Canva size: {Canvas.Width}, {Canvas.Height}");
+            this.Size = new Size(tableLayoutPanel1.Height + this.Width / 2, this.Height);
 
             drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             Canvas.Image = drawArea.Bitmap;
 
-            
-
             LoadShape();
+
+            sun = new Sun(0, 0, 700.0, 20);
 
             double zMax = double.MinValue;
             foreach (var point in points)
@@ -75,7 +77,26 @@ namespace triangle_mesh_filler
             }
             Debug.WriteLine($"zMax: {zMax}");
 
-            sun = new Sun(0, 0, 700.0, 20);
+            kd_slider.Value = (int)(kd * 100);
+            ks_slider.Value = (int)(ks * 100);
+            m_slider.Value = m;
+            z_slider.Minimum = (int)(1.1 * zMax);
+            // z_slider.Maximum = 2000;
+            z_slider.Value = (int)sun.z;
+
+            Debug.WriteLine($"z_slider: {z_slider.Minimum}, {z_slider.Maximum}, {z_slider.Value}");
+
+
+            Debug.WriteLine($"Canva size: {Canvas.Width}, {Canvas.Height}");
+
+            
+
+            
+
+            // TODO: delete
+            
+
+           
 
             Debug.WriteLine($"all: {polygons.Count}");
 
@@ -640,6 +661,30 @@ namespace triangle_mesh_filler
         private void Canvas_MouseUp(object sender, MouseEventArgs e)
         {
             clicked = false;
+        }
+
+        private void kd_slider_ValueChanged(object sender, EventArgs e)
+        {
+            kd = kd_slider.Value / 100.0;
+            DrawCanvas();
+        }
+
+        private void ks_slider_ValueChanged(object sender, EventArgs e)
+        {
+            ks = ks_slider.Value / 100.0;
+            DrawCanvas();
+        }
+
+        private void m_slider_Scroll(object sender, EventArgs e)
+        {
+            m = m_slider.Value;
+            DrawCanvas();
+        }
+
+        private void z_slider_Scroll(object sender, EventArgs e)
+        {
+            sun.z = z_slider.Value;
+            DrawCanvas();
         }
     }
 
