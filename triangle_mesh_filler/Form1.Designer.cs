@@ -37,6 +37,9 @@ namespace triangle_mesh_filler
             this.m_slider = new System.Windows.Forms.TrackBar();
             this.ks_slider = new System.Windows.Forms.TrackBar();
             this.kd_slider = new System.Windows.Forms.TrackBar();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.DrawShapeCheckBox = new System.Windows.Forms.CheckBox();
+            this.AnimationCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -45,6 +48,7 @@ namespace triangle_mesh_filler
             ((System.ComponentModel.ISupportInitialize)(this.m_slider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ks_slider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kd_slider)).BeginInit();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // Canvas
@@ -80,6 +84,7 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel4, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(790, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -157,6 +162,44 @@ namespace triangle_mesh_filler
             this.kd_slider.TabIndex = 0;
             this.kd_slider.ValueChanged += new System.EventHandler(this.kd_slider_ValueChanged);
             // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(this.DrawShapeCheckBox, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.AnimationCheckBox, 0, 1);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 464);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(384, 456);
+            this.tableLayoutPanel4.TabIndex = 1;
+            // 
+            // DrawShapeCheckBox
+            // 
+            this.DrawShapeCheckBox.AutoSize = true;
+            this.DrawShapeCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DrawShapeCheckBox.Location = new System.Drawing.Point(3, 3);
+            this.DrawShapeCheckBox.Name = "DrawShapeCheckBox";
+            this.DrawShapeCheckBox.Size = new System.Drawing.Size(378, 222);
+            this.DrawShapeCheckBox.TabIndex = 0;
+            this.DrawShapeCheckBox.Text = "draw shape";
+            this.DrawShapeCheckBox.UseVisualStyleBackColor = true;
+            this.DrawShapeCheckBox.CheckedChanged += new System.EventHandler(this.DrawShapeCheckBox_CheckedChanged);
+            // 
+            // AnimationCheckBox
+            // 
+            this.AnimationCheckBox.AutoSize = true;
+            this.AnimationCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AnimationCheckBox.Location = new System.Drawing.Point(3, 231);
+            this.AnimationCheckBox.Name = "AnimationCheckBox";
+            this.AnimationCheckBox.Size = new System.Drawing.Size(378, 222);
+            this.AnimationCheckBox.TabIndex = 1;
+            this.AnimationCheckBox.Text = "animate sun";
+            this.AnimationCheckBox.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
@@ -175,6 +218,8 @@ namespace triangle_mesh_filler
             ((System.ComponentModel.ISupportInitialize)(this.m_slider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ks_slider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kd_slider)).EndInit();
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -189,6 +234,9 @@ namespace triangle_mesh_filler
         private System.Windows.Forms.TrackBar m_slider;
         private System.Windows.Forms.TrackBar ks_slider;
         private System.Windows.Forms.TrackBar kd_slider;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.CheckBox DrawShapeCheckBox;
+        private System.Windows.Forms.CheckBox AnimationCheckBox;
     }
 }
 

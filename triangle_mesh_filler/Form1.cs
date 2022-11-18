@@ -81,7 +81,6 @@ namespace triangle_mesh_filler
             ks_slider.Value = (int)(ks * 100);
             m_slider.Value = m;
             z_slider.Minimum = (int)(1.1 * zMax);
-            // z_slider.Maximum = 2000;
             z_slider.Value = (int)sun.z;
 
             Debug.WriteLine($"z_slider: {z_slider.Minimum}, {z_slider.Maximum}, {z_slider.Value}");
@@ -122,7 +121,10 @@ namespace triangle_mesh_filler
             {
                 ScanlineFill(polygon);
             }
-            DrawShape();
+            if(DrawShapeCheckBox.Checked)
+            {
+                DrawShape();
+            }
             DrawSun();
             Canvas.Invalidate();
             Canvas.Update();
@@ -613,7 +615,7 @@ namespace triangle_mesh_filler
                 List<double> color = new(){ 0, 0, 0 };
                 for (int i = 0; i < color.Count; i++)
                 {
-                    color[i] = kd * colorOfLight[i] * colorOfObject[i] * cosNL + ks * colorOfLight[i] * colorOfObject[i] * Math.Pow(cosVR, 1);
+                    color[i] = kd * colorOfLight[i] * colorOfObject[i] * cosNL + ks * colorOfLight[i] * colorOfObject[i] * Math.Pow(cosVR, m);
                 }
                 // Debug.WriteLine($"color: {color[0]}, {color[1]}, {color[2]}");
                 colors.Add(Color.FromArgb(Math.Min((int)(color[0] * 255), 255), Math.Min((int)(color[1] * 255), 255), Math.Min((int)(color[2] * 255), 255)));
@@ -684,6 +686,11 @@ namespace triangle_mesh_filler
         private void z_slider_Scroll(object sender, EventArgs e)
         {
             sun.z = z_slider.Value;
+            DrawCanvas();
+        }
+
+        private void DrawShapeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
             DrawCanvas();
         }
     }
