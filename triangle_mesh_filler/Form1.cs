@@ -14,23 +14,23 @@ namespace triangle_mesh_filler
     public partial class Form1 : Form
     {
 
-        private List<MyPoint> points = new();
-        private List<double> normalVectorsX = new();
-        private List<double> normalVectorsY = new();
-        private List<double> normalVectorsZ = new();
+        private List<MyPoint> points = new List<MyPoint>();
+        private List<double> normalVectorsX = new List<double>();
+        private List<double> normalVectorsY = new List<double>();
+        private List<double> normalVectorsZ = new List<double>();
         //private List<List<MyPoint>> polygons = new();
         //private List<List<Edge>> polygonsByEdges = new();
-        private List<Polygon> polygons = new();
+        private List<Polygon> polygons = new List<Polygon>();
 
 
         private DirectBitmap drawArea = null;
-        private Pen pen = new(Color.Black, 2);
-        private SolidBrush sbBlack = new(Color.Black);
+        private Pen pen = new Pen(Color.Black, 2);
+        private SolidBrush sbBlack = new SolidBrush(Color.Black);
         private int radius = 3;
-        private Pen penRed = new(Color.Red, 1);
-        private SolidBrush sbRed = new(Color.Red);
-        private SolidBrush sbYellow = new(Color.Yellow);
-        private Random rand = new();
+        private Pen penRed = new Pen(Color.Red, 1);
+        private SolidBrush sbRed = new SolidBrush(Color.Red);
+        private SolidBrush sbYellow = new SolidBrush(Color.Yellow);
+        private Random rand = new Random();
 
         double kd = 0.5;
         double ks = 0.3;
@@ -38,6 +38,8 @@ namespace triangle_mesh_filler
         
         Sun sun;
         bool clicked = false;
+        bool animating = false;
+        bool started = false;
         public Form1()
         {
             InitializeComponent();
@@ -104,10 +106,13 @@ namespace triangle_mesh_filler
 
         public void DrawCanvas()
         {
-            //if (drawArea != null) drawArea.Dispose();
+            //if (animating)
+            //{
+            //    if (drawArea != null) drawArea.Dispose();
 
-            //drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
-            //Canvas.Image = drawArea.Bitmap;
+            //    drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
+            //    Canvas.Image = drawArea.Bitmap;
+            //}
 
             using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
             {
@@ -126,8 +131,21 @@ namespace triangle_mesh_filler
                 DrawShape();
             }
             DrawSun();
+
             Canvas.Invalidate();
-            Canvas.Update();
+            if (this.IsHandleCreated)
+            {
+                Canvas.Invoke((MethodInvoker)delegate
+                {
+                // Running on the UI thread
+                Canvas.Update();
+                });
+            }
+            else
+            {
+                Canvas.Update();
+            }
+            
         }
 
         public void LoadShape()
@@ -158,8 +176,8 @@ namespace triangle_mesh_filler
 
                 if (words[0] == "f")
                 {
-                    Polygon polygon = new();
-                    List<MyPoint> pointsP = new();
+                    Polygon polygon = new Polygon();
+                    List<MyPoint> pointsP = new List<MyPoint>();
                     foreach (var word in words)
                     {
                         if (word == "f") continue;
@@ -172,7 +190,7 @@ namespace triangle_mesh_filler
                     }
                     polygon.points = pointsP;
                     polygon.size = pointsP.Count;
-                    List<Edge> edges = new();
+                    List<Edge> edges = new List<Edge>();
                     for (int i = 0; i < polygon.size; i++)
                     {
                         edges.Add(new Edge(polygon.points[i], polygon.points[(i + 1) % polygon.size]));
@@ -181,24 +199,6 @@ namespace triangle_mesh_filler
                     polygons.Add(polygon);
                 }
             }
-
-            //foreach (var polygon in polygons)
-            //{
-            //    List<Edge> edges = new();
-            //    for (int i = 0; i < polygon.Count; i++)
-            //    {
-            //        if (polygon[i].y <= polygon[(i + 1) % polygon.Count].y)
-            //        {
-            //            edges.Add(new Edge(polygon[i], polygon[(i + 1) % polygon.Count]));
-            //        }
-            //        else
-            //        {
-            //            edges.Add(new Edge(polygon[(i + 1) % polygon.Count], polygon[i]));
-            //        }
-            //    }
-            //    polygonsByEdges.Add(edges);
-            //}
-
 
 
             double minX = double.MaxValue;
@@ -288,9 +288,11 @@ namespace triangle_mesh_filler
             public EdgeBucket[] buckets = new EdgeBucket[maxVer];
         }
 
+        // TODO: move those tables to polygon - do not calculate it every frame
+
         private static EdgeTableTuple[] edgeTable;
 #pragma warning disable CA2211 // Non-constant fields should not be visible
-        public static EdgeTableTuple ActiveEdgeTuple = new();
+        public static EdgeTableTuple ActiveEdgeTuple = new EdgeTableTuple();
 
         public static EdgeTableTuple[] EdgeTable { get => edgeTable; set => edgeTable = value; }
 #pragma warning restore CA2211 // Non-constant fields should not be visible
@@ -301,16 +303,16 @@ namespace triangle_mesh_filler
             EdgeTable = new EdgeTableTuple[maxHt];
             for (int i = 0; i < maxHt; i++)
             {
-                EdgeTable[i] = new();
+                EdgeTable[i] = new EdgeTableTuple();
                 EdgeTable[i].countEdgeBucket = 0;
                 for (int j = 0; j < maxVer; j++)
                 {
-                    EdgeTable[i].buckets[j] = new();
+                    EdgeTable[i].buckets[j] = new EdgeBucket();
                 }
             }
             for (int i = 0; i < maxVer; i++)
             {
-                ActiveEdgeTuple.buckets[i] = new();
+                ActiveEdgeTuple.buckets[i] = new EdgeBucket();
             }
             ActiveEdgeTuple.countEdgeBucket = 0;
         }
@@ -318,7 +320,7 @@ namespace triangle_mesh_filler
         static void InsertionSort(EdgeTableTuple ett)
         {
             int i, j;
-            EdgeBucket temp = new();
+            EdgeBucket temp = new EdgeBucket();
 
             for (i = 1; i < ett.countEdgeBucket; i++)
             {
@@ -560,7 +562,7 @@ namespace triangle_mesh_filler
 
             // Debug.WriteLine($"{alfa + beta + gamma}");
 
-            List<int> color = new() { 0, 0, 0 };
+            List<int> color = new List<int>() { 0, 0, 0 };
             color[0] = Math.Min((int)(alfa * colors[0].R + beta * colors[1].R + gamma * colors[2].R), 255);
             color[1] = Math.Min((int)(alfa * colors[0].G + beta * colors[1].G + gamma * colors[2].G), 255);
             color[2] = Math.Min((int)(alfa * colors[0].B + beta * colors[1].B + gamma * colors[2].B), 255);
@@ -575,14 +577,14 @@ namespace triangle_mesh_filler
 
         public List<Color> FindColorsOfVertices(Polygon polygon)
         {
-            List<Color> colors = new();
-            List<double> colorOfLight = new() { 1, 1, 1 };
-            List<double> colorOfObject = new() { 1, 0, 0 };
+            List<Color> colors = new List<Color>();
+            List<double> colorOfLight = new List<double>() { 1, 1, 1 };
+            List<double> colorOfObject = new List<double>() { 1, 0, 0 };
             
 
             foreach (var point in polygon.points)
             {
-                List<double> L = new() { 0, 0, 0 };
+                List<double> L = new List<double>() { 0, 0, 0 };
                 L[0] = (sun.x - point.x);
                 L[1] = (sun.y - point.y);
                 L[2] = (sun.z - point.z);
@@ -593,7 +595,7 @@ namespace triangle_mesh_filler
                     L[i] /= lenL;
                 }
                 // Debug.WriteLine($"new length: {Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2])}");
-                List<double> N = new() { point.nx, point.ny, point.nz };
+                List<double> N = new List<double>() { point.nx, point.ny, point.nz };
                 
                 double lenN = Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2]);
                 for (int i = 0; i < N.Count; i++)
@@ -604,15 +606,15 @@ namespace triangle_mesh_filler
                 double cosNL = L[0] * N[0] + L[1] * N[1] + L[2] * N[2];
                 cosNL = cosNL < 0 ? 0 : cosNL;
                 // Debug.WriteLine($"cosNL: {cosNL}");
-                List<double> V = new() { 0, 0, 1 };
-                List<double> R = new() { 0, 0, 0 };
+                List<double> V = new List<double>() { 0, 0, 1 };
+                List<double> R = new List<double>() { 0, 0, 0 };
                 for (int i = 0; i < R.Count; i++)
                 {
                     R[i] = 2 * cosNL * N[i] - L[i];
                 }
                 double cosVR = V[0] * R[0] + V[1] * R[1] + V[2] * R[2];
                 cosVR = cosVR < 0 ? 0 : cosVR;
-                List<double> color = new(){ 0, 0, 0 };
+                List<double> color = new List<double>(){ 0, 0, 0 };
                 for (int i = 0; i < color.Count; i++)
                 {
                     color[i] = kd * colorOfLight[i] * colorOfObject[i] * cosNL + ks * colorOfLight[i] * colorOfObject[i] * Math.Pow(cosVR, m);
@@ -637,17 +639,12 @@ namespace triangle_mesh_filler
 
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("mousedown");
+            // TODO: same for every other object!!!
+            if (AnimationError()) return;
             sun.x = e.X;
             sun.y = e.Y;
             clicked = true;
             DrawCanvas();
-            //for (int i = 0; i < 1000; i+= 10)
-            //{
-            //    sun.x = i;
-            //    sun.y = i;
-            //    DrawCanvas();
-            //}
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
@@ -677,6 +674,7 @@ namespace triangle_mesh_filler
             DrawCanvas();
         }
 
+        // TODO: change it to ValueChanged as above
         private void m_slider_Scroll(object sender, EventArgs e)
         {
             m = m_slider.Value;
@@ -692,6 +690,61 @@ namespace triangle_mesh_filler
         private void DrawShapeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             DrawCanvas();
+        }
+
+        private void AnimationCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (AnimationCheckBox.Checked)
+            {
+                AnimateSun();
+            }
+            else
+            {
+                animating = false;
+            }
+        }
+
+        public void AnimateSun()
+        {
+            animating = true;
+
+            var ts = new System.Threading.ThreadStart(animationFunction);
+            var backgroundThread = new System.Threading.Thread(ts);
+            backgroundThread.Start();
+        }
+        public void animationFunction()
+        {
+            double middleX = Canvas.Width / 2.0;
+            double middleY = Canvas.Height / 2.0;
+            double animationRadius = GetDistance(new MyPoint(middleX, middleY), new MyPoint(sun.x, sun.y));
+
+            while (true)
+            {
+                if (animating)
+                {
+                    sun.y += 10;
+                    if (sun.y - middleY > animationRadius) sun.y = middleY;
+                    double tempY = sun.y - middleY;
+                    double tempX = Math.Sqrt(animationRadius * animationRadius - tempY * tempY);
+                    sun.x = tempX + middleX;
+                    DrawCanvas();
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+
+        public bool AnimationError()
+        {
+            if (animating)
+            {
+                MessageBox.Show("You can't do anything during animation.", "Animation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return true;
+            }
+            return false;
         }
     }
 

@@ -199,6 +199,7 @@ namespace triangle_mesh_filler
             this.AnimationCheckBox.TabIndex = 1;
             this.AnimationCheckBox.Text = "animate sun";
             this.AnimationCheckBox.UseVisualStyleBackColor = true;
+            this.AnimationCheckBox.CheckedChanged += new System.EventHandler(this.AnimationCheckBox_CheckedChanged);
             // 
             // Form1
             // 
