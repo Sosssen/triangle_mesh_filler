@@ -135,7 +135,7 @@ namespace triangle_mesh_filler
             this.z_slider.SmallChange = 10;
             this.z_slider.TabIndex = 3;
             this.z_slider.Value = 500;
-            this.z_slider.Scroll += new System.EventHandler(this.z_slider_Scroll);
+            this.z_slider.Scroll += new System.EventHandler(this.z_slider_ValueChanged);
             // 
             // m_slider
             // 
@@ -148,7 +148,7 @@ namespace triangle_mesh_filler
             this.m_slider.Size = new System.Drawing.Size(90, 449);
             this.m_slider.TabIndex = 2;
             this.m_slider.Value = 1;
-            this.m_slider.Scroll += new System.EventHandler(this.m_slider_Scroll);
+            this.m_slider.Scroll += new System.EventHandler(this.m_slider_ValueChanged);
             // 
             // ks_slider
             // 

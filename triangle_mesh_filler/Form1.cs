@@ -46,6 +46,9 @@ namespace triangle_mesh_filler
         private List<double> colorLight = new List<double>() { 1, 1, 1 };
         private Bitmap bmColorObject = null;
         private Bitmap bmColorLight = null;
+
+        private Bitmap image = null;
+        private Color[,] textureColors = null;
         public Form1()
         {
             InitializeComponent();
@@ -53,9 +56,10 @@ namespace triangle_mesh_filler
             Configuration();
 
             // TODO: move everything from the start of program to separate function
+
             
 
-            DrawCanvas();
+            // DrawCanvas();
         }
 
         public void Configuration()
@@ -85,6 +89,17 @@ namespace triangle_mesh_filler
             // create new bitmap
             drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             Canvas.Image = drawArea.Bitmap;
+
+            Size s = new Size(Canvas.Width, Canvas.Height);
+            image = new Bitmap(new Bitmap("C:\\Users\\Sosna\\Desktop\\img_files\\landscape.jpg"), s);
+            textureColors = new Color[Canvas.Width, Canvas.Height];
+            for (int i = 0; i < Canvas.Width; i++)
+            {
+                for (int j = 0; j < Canvas.Height; j++)
+                {
+                    textureColors[i, j] = image.GetPixel(i, j);
+                }
+            }
 
             // load shape from *.obj file
             LoadShape();
@@ -455,7 +470,8 @@ namespace triangle_mesh_filler
             minY = int.MaxValue;
             maxY = int.MinValue;
 
-            List<Color> verticesColors = FindColorsOfVertices(polygon);
+            List<Color> verticesColors = new List<Color>() { 0, 0, 0 };
+            // List<Color> verticesColors = FindColorsOfVertices(polygon);
             double area = getArea(polygon.points[0], polygon.points[1], polygon.points[2]);
 
             foreach (var edge in polygon.edges)
@@ -545,6 +561,8 @@ namespace triangle_mesh_filler
                             for (int k = x1; k <= x2; k++)
                             {
                                 Color color = FindColorOfPixel(polygon, verticesColors, new MyPoint(k, i + minY), area);
+                                // TODO: if drawing using texture, use below
+                                // Color color = textureColors[k, i + minY];
                                 drawArea.SetPixel(k, i + minY, color);
                             }
                         }
@@ -708,13 +726,13 @@ namespace triangle_mesh_filler
         }
 
         // TODO: change it to ValueChanged as above
-        private void m_slider_Scroll(object sender, EventArgs e)
+        private void m_slider_ValueChanged(object sender, EventArgs e)
         {
             m = m_slider.Value;
             DrawCanvas();
         }
 
-        private void z_slider_Scroll(object sender, EventArgs e)
+        private void z_slider_ValueChanged(object sender, EventArgs e)
         {
             sun.z = z_slider.Value;
             DrawCanvas();
