@@ -184,12 +184,19 @@ namespace triangle_mesh_filler
             Canvas.Invalidate();
             if (this.IsHandleCreated)
             {
-                Canvas.Invoke((MethodInvoker)delegate
+                try
                 {
+                    Canvas.Invoke((MethodInvoker)delegate
+                    {
                     // Running on the UI thread
                     if (Canvas.IsDisposed) return;
-                    Canvas.Update();
-                });
+                        Canvas.Update();
+                    });
+                }
+                catch
+                {
+                    Debug.WriteLine("Error while closing with animation.");
+                }
             }
             else
             {
@@ -201,7 +208,7 @@ namespace triangle_mesh_filler
         public void LoadShape()
         {
 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\hemisphereAVG.obj");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\objectAVG.obj");
 
             foreach (string line in lines)
             {
@@ -470,7 +477,13 @@ namespace triangle_mesh_filler
             minY = int.MaxValue;
             maxY = int.MinValue;
 
-            List<Color> verticesColors = new List<Color>() { 0, 0, 0 };
+            // List<Color> verticesColors = new List<Color>() { 0, 0, 0 };
+            List<double> colorA = new List<double>() { 0, 0, 0 };
+            List<double> colorB = new List<double>() { 0, 0, 0 };
+            List<double> colorC = new List<double>() { 0, 0, 0 };
+            colorA = CountColorForPoint(polygon.points[0]);
+            colorB = CountColorForPoint(polygon.points[1]);
+            colorC = CountColorForPoint(polygon.points[2]);
             // List<Color> verticesColors = FindColorsOfVertices(polygon);
             double area = getArea(polygon.points[0], polygon.points[1], polygon.points[2]);
 
@@ -560,7 +573,7 @@ namespace triangle_mesh_filler
                         {
                             for (int k = x1; k <= x2; k++)
                             {
-                                Color color = FindColorOfPixel(polygon, verticesColors, new MyPoint(k, i + minY), area);
+                                Color color = FindColorOfPixel(polygon, colorA, colorB, colorC, new MyPoint(k, i + minY), area);
                                 // TODO: if drawing using texture, use below
                                 // Color color = textureColors[k, i + minY];
                                 drawArea.SetPixel(k, i + minY, color);
@@ -605,7 +618,7 @@ namespace triangle_mesh_filler
             return ret;
         }
 
-        public Color FindColorOfPixel(Polygon polygon, List<Color> colors, MyPoint point, double area)
+        public Color FindColorOfPixel(Polygon polygon, List<double> colorA, List<double> colorB, List<double> colorC, MyPoint point, double area)
         {
             double alfa = getArea(polygon.points[1], polygon.points[2], point) / area;
             double beta = getArea(polygon.points[0], polygon.points[2], point) / area;
@@ -615,17 +628,62 @@ namespace triangle_mesh_filler
 
             // Debug.WriteLine($"{alfa + beta + gamma}");
 
-            List<int> color = new List<int>() { 0, 0, 0 };
-            color[0] = Math.Min((int)(alfa * colors[0].R + beta * colors[1].R + gamma * colors[2].R), 255);
-            color[1] = Math.Min((int)(alfa * colors[0].G + beta * colors[1].G + gamma * colors[2].G), 255);
-            color[2] = Math.Min((int)(alfa * colors[0].B + beta * colors[1].B + gamma * colors[2].B), 255);
+            List<double> color = new List<double>() { 0, 0, 0 };
+            color[0] = Math.Min(alfa * colorA[0] + beta * colorB[0] + gamma * colorC[0], 1.0) * 255.0;
+            color[1] = Math.Min(alfa * colorA[1] + beta * colorB[1] + gamma * colorC[1], 1.0) * 255.0;
+            color[2] = Math.Min(alfa * colorA[2] + beta * colorB[2] + gamma * colorC[2], 1.0) * 255.0;
+            //color[0] = Math.Min((int)(alfa * colors[0].R + beta * colors[1].R + gamma * colors[2].R), 255);
+            //color[1] = Math.Min((int)(alfa * colors[0].G + beta * colors[1].G + gamma * colors[2].G), 255);
+            //color[2] = Math.Min((int)(alfa * colors[0].B + beta * colors[1].B + gamma * colors[2].B), 255);
 
             for (int i = 0; i < color.Count; i++)
             {
-                if (color[i] < 0) color[i] = 0;
+                if (color[i] < 0.0 || Double.IsNaN(color[i])) color[i] = 0.0;
             }
-            return Color.FromArgb(color[0], color[1], color[2]);
+            return Color.FromArgb((int)color[0], (int)color[1], (int)color[2]);
             // return Color.FromArgb(0, 0, 0);
+        }
+
+        public List<double> CountColorForPoint(MyPoint point)
+        {
+            List<double> L = new List<double>() { 0, 0, 0 };
+            L[0] = (sun.x - point.x);
+            L[1] = (sun.y - point.y);
+            L[2] = (sun.z - point.z);
+            // Debug.WriteLine($"L: {L[0]}, {L[1]}, {L[2]}");
+            double lenL = Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2]);
+            for (int i = 0; i < L.Count; i++)
+            {
+                L[i] /= lenL;
+            }
+            // Debug.WriteLine($"new length: {Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2])}");
+            List<double> N = new List<double>() { point.nx, point.ny, point.nz };
+
+            double lenN = Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2]);
+            for (int i = 0; i < N.Count; i++)
+            {
+                N[i] /= lenN;
+            }
+            // Debug.WriteLine($"normal vector length: {Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2])}");
+            double cosNL = L[0] * N[0] + L[1] * N[1] + L[2] * N[2];
+            cosNL = cosNL < 0 ? 0 : cosNL;
+            // Debug.WriteLine($"cosNL: {cosNL}");
+            List<double> V = new List<double>() { 0, 0, 1 };
+            List<double> R = new List<double>() { 0, 0, 0 };
+            for (int i = 0; i < R.Count; i++)
+            {
+                R[i] = 2 * cosNL * N[i] - L[i];
+            }
+            double cosVR = V[0] * R[0] + V[1] * R[1] + V[2] * R[2];
+            cosVR = cosVR < 0 ? 0 : cosVR;
+            List<double> color = new List<double>() { 0, 0, 0 };
+            for (int i = 0; i < color.Count; i++)
+            {
+                color[i] = kd * colorLight[i] * colorObject[i] * cosNL + ks * colorLight[i] * colorObject[i] * Math.Pow(cosVR, m);
+                color[i] = Math.Min(color[i], 1.0);
+                if (color[i] < 0) color[i] = 0.0;
+            }
+            return color;
         }
 
         public List<Color> FindColorsOfVertices(Polygon polygon)
