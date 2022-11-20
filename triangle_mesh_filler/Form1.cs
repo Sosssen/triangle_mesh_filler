@@ -815,6 +815,11 @@ namespace triangle_mesh_filler
 
         private void kd_slider_ValueChanged(object sender, EventArgs e)
         {
+            if (AnimationError())
+            {
+                kd_slider.Value = (int)(kd * 100);
+                return;
+            }
             kd = kd_slider.Value / 100.0;
             kd_label.Text = "kd = " + kd.ToString();
             kd_label.Invalidate();
@@ -824,6 +829,11 @@ namespace triangle_mesh_filler
 
         private void ks_slider_ValueChanged(object sender, EventArgs e)
         {
+            if (AnimationError())
+            {
+                ks_slider.Value = (int)(ks * 100);
+                return;
+            } 
             ks = ks_slider.Value / 100.0;
             ks_label.Text = "ks = " + ks.ToString();
             ks_label.Invalidate();
@@ -833,6 +843,11 @@ namespace triangle_mesh_filler
 
         private void m_slider_ValueChanged(object sender, EventArgs e)
         {
+            if (AnimationError())
+            {
+                m_slider.Value = m;
+                return;
+            }
             m = m_slider.Value;
             m_label.Text = "m = " + m.ToString();
             m_label.Invalidate();
@@ -842,6 +857,11 @@ namespace triangle_mesh_filler
 
         private void z_slider_ValueChanged(object sender, EventArgs e)
         {
+            if (AnimationError())
+            {
+                z_slider.Value = (int)sun.z;
+                return;
+            }
             sun.z = z_slider.Value;
             z_label.Text = "z = " + sun.z.ToString();
             z_label.Invalidate();
@@ -1006,7 +1026,6 @@ namespace triangle_mesh_filler
 
         private void LoadTexture_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("aaaaa");
             OpenFileDialog ofd = new OpenFileDialog();
             DialogResult result = ofd.ShowDialog();
             if (result == DialogResult.OK)
@@ -1014,6 +1033,81 @@ namespace triangle_mesh_filler
                 string filename = ofd.FileName;
                 LoadTexture(filename);
             }
+        }
+
+        private void LoadShapeButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void LightColorButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void ObjectColorButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void LoadTextureButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void InterpolateColors_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void InterpolateVectors_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void LoadNormalMap_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void kd_slider_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void ks_slider_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void m_slider_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void z_slider_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void FillColor_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void FillTexture_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void DrawShapeCheckBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void NormalMapCheckbox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
         }
     }
 

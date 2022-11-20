@@ -61,7 +61,7 @@ namespace triangle_mesh_filler
             this.DrawShapeCheckBox = new System.Windows.Forms.CheckBox();
             this.FillTexture = new System.Windows.Forms.RadioButton();
             this.FillColor = new System.Windows.Forms.RadioButton();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.NormalMapCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -157,6 +157,7 @@ namespace triangle_mesh_filler
             this.InterpolateVectors.Text = "interpolate vectors";
             this.InterpolateVectors.UseVisualStyleBackColor = true;
             this.InterpolateVectors.Click += new System.EventHandler(this.InterpolateVectors_Click);
+            this.InterpolateVectors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.InterpolateVectors_MouseDown);
             // 
             // pictureBoxObjectColor
             // 
@@ -180,6 +181,7 @@ namespace triangle_mesh_filler
             this.InterpolateColors.Text = "interpolate colors";
             this.InterpolateColors.UseVisualStyleBackColor = true;
             this.InterpolateColors.Click += new System.EventHandler(this.InterpolateColors_Click);
+            this.InterpolateColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.InterpolateColors_MouseDown);
             // 
             // ObjectColorButton
             // 
@@ -191,6 +193,7 @@ namespace triangle_mesh_filler
             this.ObjectColorButton.Text = "pick color of object";
             this.ObjectColorButton.UseVisualStyleBackColor = true;
             this.ObjectColorButton.Click += new System.EventHandler(this.ObjectColorButton_Click);
+            this.ObjectColorButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ObjectColorButton_MouseDown);
             // 
             // LoadTextureButton
             // 
@@ -202,6 +205,7 @@ namespace triangle_mesh_filler
             this.LoadTextureButton.Text = "load texture";
             this.LoadTextureButton.UseVisualStyleBackColor = true;
             this.LoadTextureButton.Click += new System.EventHandler(this.LoadTexture_Click);
+            this.LoadTextureButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LoadTextureButton_MouseDown);
             // 
             // LoadNormalMap
             // 
@@ -212,6 +216,7 @@ namespace triangle_mesh_filler
             this.LoadNormalMap.TabIndex = 5;
             this.LoadNormalMap.Text = "load normal map";
             this.LoadNormalMap.UseVisualStyleBackColor = true;
+            this.LoadNormalMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LoadNormalMap_MouseDown);
             // 
             // tableLayoutPanel9
             // 
@@ -280,6 +285,7 @@ namespace triangle_mesh_filler
             this.kd_slider.Size = new System.Drawing.Size(90, 404);
             this.kd_slider.TabIndex = 0;
             this.kd_slider.ValueChanged += new System.EventHandler(this.kd_slider_ValueChanged);
+            this.kd_slider.MouseDown += new System.Windows.Forms.MouseEventHandler(this.kd_slider_MouseDown);
             // 
             // ks_slider
             // 
@@ -291,6 +297,7 @@ namespace triangle_mesh_filler
             this.ks_slider.Size = new System.Drawing.Size(90, 404);
             this.ks_slider.TabIndex = 1;
             this.ks_slider.ValueChanged += new System.EventHandler(this.ks_slider_ValueChanged);
+            this.ks_slider.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ks_slider_MouseDown);
             // 
             // m_slider
             // 
@@ -304,6 +311,7 @@ namespace triangle_mesh_filler
             this.m_slider.TabIndex = 2;
             this.m_slider.Value = 1;
             this.m_slider.ValueChanged += new System.EventHandler(this.m_slider_ValueChanged);
+            this.m_slider.MouseDown += new System.Windows.Forms.MouseEventHandler(this.m_slider_MouseDown);
             // 
             // z_slider
             // 
@@ -318,6 +326,7 @@ namespace triangle_mesh_filler
             this.z_slider.TabIndex = 3;
             this.z_slider.Value = 500;
             this.z_slider.ValueChanged += new System.EventHandler(this.z_slider_ValueChanged);
+            this.z_slider.MouseDown += new System.Windows.Forms.MouseEventHandler(this.z_slider_MouseDown);
             // 
             // label1
             // 
@@ -374,6 +383,7 @@ namespace triangle_mesh_filler
             this.LightColorButton.Text = "pick color of light";
             this.LightColorButton.UseVisualStyleBackColor = true;
             this.LightColorButton.Click += new System.EventHandler(this.LightColorButton_Click);
+            this.LightColorButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LightColorButton_MouseDown);
             // 
             // z_label
             // 
@@ -418,6 +428,7 @@ namespace triangle_mesh_filler
             this.LoadShapeButton.Text = "load shape";
             this.LoadShapeButton.UseVisualStyleBackColor = true;
             this.LoadShapeButton.Click += new System.EventHandler(this.LoadShapeButton_Click);
+            this.LoadShapeButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LoadShapeButton_MouseDown);
             // 
             // kd_label
             // 
@@ -438,7 +449,7 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel10.Controls.Add(this.DrawShapeCheckBox, 0, 2);
             this.tableLayoutPanel10.Controls.Add(this.FillTexture, 0, 1);
             this.tableLayoutPanel10.Controls.Add(this.FillColor, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.checkBox1, 0, 4);
+            this.tableLayoutPanel10.Controls.Add(this.NormalMapCheckbox, 0, 4);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel10.Location = new System.Drawing.Point(393, 464);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
@@ -474,6 +485,7 @@ namespace triangle_mesh_filler
             this.DrawShapeCheckBox.Text = "draw shape";
             this.DrawShapeCheckBox.UseVisualStyleBackColor = true;
             this.DrawShapeCheckBox.CheckedChanged += new System.EventHandler(this.DrawShapeCheckBox_CheckedChanged);
+            this.DrawShapeCheckBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DrawShapeCheckBox_MouseDown);
             // 
             // FillTexture
             // 
@@ -486,6 +498,7 @@ namespace triangle_mesh_filler
             this.FillTexture.Text = "fill with texture";
             this.FillTexture.UseVisualStyleBackColor = true;
             this.FillTexture.Click += new System.EventHandler(this.FillTexture_Click);
+            this.FillTexture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FillTexture_MouseDown);
             // 
             // FillColor
             // 
@@ -500,17 +513,19 @@ namespace triangle_mesh_filler
             this.FillColor.Text = "fill with color";
             this.FillColor.UseVisualStyleBackColor = true;
             this.FillColor.Click += new System.EventHandler(this.FillColor_Click);
+            this.FillColor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FillColor_MouseDown);
             // 
-            // checkBox1
+            // NormalMapCheckbox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox1.Location = new System.Drawing.Point(3, 367);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(379, 86);
-            this.checkBox1.TabIndex = 2;
-            this.checkBox1.Text = "use normal map";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.NormalMapCheckbox.AutoSize = true;
+            this.NormalMapCheckbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NormalMapCheckbox.Location = new System.Drawing.Point(3, 367);
+            this.NormalMapCheckbox.Name = "NormalMapCheckbox";
+            this.NormalMapCheckbox.Size = new System.Drawing.Size(379, 86);
+            this.NormalMapCheckbox.TabIndex = 2;
+            this.NormalMapCheckbox.Text = "use normal map";
+            this.NormalMapCheckbox.UseVisualStyleBackColor = true;
+            this.NormalMapCheckbox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NormalMapCheckbox_MouseDown);
             // 
             // Form1
             // 
@@ -573,7 +588,7 @@ namespace triangle_mesh_filler
         private System.Windows.Forms.Button LoadTextureButton;
         private System.Windows.Forms.Button LoadNormalMap;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox NormalMapCheckbox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
