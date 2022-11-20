@@ -815,25 +815,28 @@ namespace triangle_mesh_filler
         private void kd_slider_ValueChanged(object sender, EventArgs e)
         {
             kd = kd_slider.Value / 100.0;
+            kd_label.Text = "kd = " + kd.ToString();
             DrawCanvas();
         }
 
         private void ks_slider_ValueChanged(object sender, EventArgs e)
         {
             ks = ks_slider.Value / 100.0;
+            ks_label.Text = "ks = " + ks.ToString();
             DrawCanvas();
         }
 
-        // TODO: change it to ValueChanged as above
         private void m_slider_ValueChanged(object sender, EventArgs e)
         {
             m = m_slider.Value;
+            m_label.Text = "m = " + m.ToString();
             DrawCanvas();
         }
 
         private void z_slider_ValueChanged(object sender, EventArgs e)
         {
             sun.z = z_slider.Value;
+            z_label.Text = "z = " + sun.z.ToString();
             DrawCanvas();
         }
 
@@ -964,6 +967,8 @@ namespace triangle_mesh_filler
             fillingType = 1;
             DrawCanvas();
         }
+
+        
     }
 
     public class MyPoint
