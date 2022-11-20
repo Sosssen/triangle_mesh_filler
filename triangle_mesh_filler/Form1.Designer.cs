@@ -57,11 +57,12 @@ namespace triangle_mesh_filler
             this.LoadShapeButton = new System.Windows.Forms.Button();
             this.kd_label = new System.Windows.Forms.Label();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
-            this.AnimationCheckBox = new System.Windows.Forms.CheckBox();
             this.DrawShapeCheckBox = new System.Windows.Forms.CheckBox();
             this.FillTexture = new System.Windows.Forms.RadioButton();
             this.FillColor = new System.Windows.Forms.RadioButton();
             this.NormalMapCheckbox = new System.Windows.Forms.CheckBox();
+            this.AnimationCheckBox = new System.Windows.Forms.CheckBox();
+            this.DrawSunCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -445,42 +446,32 @@ namespace triangle_mesh_filler
             // 
             this.tableLayoutPanel10.ColumnCount = 1;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel10.Controls.Add(this.AnimationCheckBox, 0, 3);
             this.tableLayoutPanel10.Controls.Add(this.DrawShapeCheckBox, 0, 2);
             this.tableLayoutPanel10.Controls.Add(this.FillTexture, 0, 1);
             this.tableLayoutPanel10.Controls.Add(this.FillColor, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.NormalMapCheckbox, 0, 4);
+            this.tableLayoutPanel10.Controls.Add(this.NormalMapCheckbox, 0, 5);
+            this.tableLayoutPanel10.Controls.Add(this.AnimationCheckBox, 0, 4);
+            this.tableLayoutPanel10.Controls.Add(this.DrawSunCheckBox, 0, 3);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel10.Location = new System.Drawing.Point(393, 464);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
-            this.tableLayoutPanel10.RowCount = 5;
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel10.RowCount = 6;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tableLayoutPanel10.Size = new System.Drawing.Size(385, 456);
             this.tableLayoutPanel10.TabIndex = 8;
-            // 
-            // AnimationCheckBox
-            // 
-            this.AnimationCheckBox.AutoSize = true;
-            this.AnimationCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AnimationCheckBox.Location = new System.Drawing.Point(3, 276);
-            this.AnimationCheckBox.Name = "AnimationCheckBox";
-            this.AnimationCheckBox.Size = new System.Drawing.Size(379, 85);
-            this.AnimationCheckBox.TabIndex = 1;
-            this.AnimationCheckBox.Text = "animate sun";
-            this.AnimationCheckBox.UseVisualStyleBackColor = true;
-            this.AnimationCheckBox.CheckedChanged += new System.EventHandler(this.AnimationCheckBox_CheckedChanged);
             // 
             // DrawShapeCheckBox
             // 
             this.DrawShapeCheckBox.AutoSize = true;
             this.DrawShapeCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DrawShapeCheckBox.Location = new System.Drawing.Point(3, 185);
+            this.DrawShapeCheckBox.Location = new System.Drawing.Point(3, 155);
             this.DrawShapeCheckBox.Name = "DrawShapeCheckBox";
-            this.DrawShapeCheckBox.Size = new System.Drawing.Size(379, 85);
+            this.DrawShapeCheckBox.Size = new System.Drawing.Size(379, 70);
             this.DrawShapeCheckBox.TabIndex = 0;
             this.DrawShapeCheckBox.Text = "draw shape";
             this.DrawShapeCheckBox.UseVisualStyleBackColor = true;
@@ -491,9 +482,9 @@ namespace triangle_mesh_filler
             // 
             this.FillTexture.AutoSize = true;
             this.FillTexture.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FillTexture.Location = new System.Drawing.Point(3, 94);
+            this.FillTexture.Location = new System.Drawing.Point(3, 79);
             this.FillTexture.Name = "FillTexture";
-            this.FillTexture.Size = new System.Drawing.Size(379, 85);
+            this.FillTexture.Size = new System.Drawing.Size(379, 70);
             this.FillTexture.TabIndex = 1;
             this.FillTexture.Text = "fill with texture";
             this.FillTexture.UseVisualStyleBackColor = true;
@@ -507,7 +498,7 @@ namespace triangle_mesh_filler
             this.FillColor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FillColor.Location = new System.Drawing.Point(3, 3);
             this.FillColor.Name = "FillColor";
-            this.FillColor.Size = new System.Drawing.Size(379, 85);
+            this.FillColor.Size = new System.Drawing.Size(379, 70);
             this.FillColor.TabIndex = 0;
             this.FillColor.TabStop = true;
             this.FillColor.Text = "fill with color";
@@ -519,13 +510,40 @@ namespace triangle_mesh_filler
             // 
             this.NormalMapCheckbox.AutoSize = true;
             this.NormalMapCheckbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NormalMapCheckbox.Location = new System.Drawing.Point(3, 367);
+            this.NormalMapCheckbox.Location = new System.Drawing.Point(3, 383);
             this.NormalMapCheckbox.Name = "NormalMapCheckbox";
-            this.NormalMapCheckbox.Size = new System.Drawing.Size(379, 86);
+            this.NormalMapCheckbox.Size = new System.Drawing.Size(379, 70);
             this.NormalMapCheckbox.TabIndex = 2;
             this.NormalMapCheckbox.Text = "use normal map";
             this.NormalMapCheckbox.UseVisualStyleBackColor = true;
             this.NormalMapCheckbox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NormalMapCheckbox_MouseDown);
+            // 
+            // AnimationCheckBox
+            // 
+            this.AnimationCheckBox.AutoSize = true;
+            this.AnimationCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AnimationCheckBox.Location = new System.Drawing.Point(3, 307);
+            this.AnimationCheckBox.Name = "AnimationCheckBox";
+            this.AnimationCheckBox.Size = new System.Drawing.Size(379, 70);
+            this.AnimationCheckBox.TabIndex = 1;
+            this.AnimationCheckBox.Text = "animate sun";
+            this.AnimationCheckBox.UseVisualStyleBackColor = true;
+            this.AnimationCheckBox.CheckedChanged += new System.EventHandler(this.AnimationCheckBox_CheckedChanged);
+            // 
+            // DrawSunCheckBox
+            // 
+            this.DrawSunCheckBox.AutoSize = true;
+            this.DrawSunCheckBox.Checked = true;
+            this.DrawSunCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DrawSunCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DrawSunCheckBox.Location = new System.Drawing.Point(3, 231);
+            this.DrawSunCheckBox.Name = "DrawSunCheckBox";
+            this.DrawSunCheckBox.Size = new System.Drawing.Size(379, 70);
+            this.DrawSunCheckBox.TabIndex = 3;
+            this.DrawSunCheckBox.Text = "draw sun";
+            this.DrawSunCheckBox.UseVisualStyleBackColor = true;
+            this.DrawSunCheckBox.CheckedChanged += new System.EventHandler(this.DrawSunCheckBox_CheckedChanged);
+            this.DrawSunCheckBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DrawSunCheckBox_MouseDown);
             // 
             // Form1
             // 
@@ -593,6 +611,7 @@ namespace triangle_mesh_filler
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox DrawSunCheckBox;
     }
 }
 

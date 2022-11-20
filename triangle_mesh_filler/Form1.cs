@@ -36,6 +36,7 @@ namespace triangle_mesh_filler
         private double kd = 1;
         private double ks = 0.5;
         private int m = 10;
+        private double zMax;
 
         private Sun sun = null;
         private bool clicked = false;
@@ -101,24 +102,12 @@ namespace triangle_mesh_filler
 
             // load texture from file
             LoadTexture(@".\texture_files\wood.jpg");
-
-            // find maximum z-coordinate
-            double zMax = double.MinValue;
-            foreach (var point in points)
-            {
-                if (point.z > zMax) zMax = point.z;
-            }
-            Debug.WriteLine($"zMax: {zMax}");
-
-            // create sun
-            sun = new Sun(200.0, 400.0, zMax + 500.0, 20);
+            
 
             // set values of sliders
             kd_slider.Value = (int)(kd * 100);
             ks_slider.Value = (int)(ks * 100);
             m_slider.Value = m;
-            z_slider.Minimum = (int)(1.1 * zMax);
-            z_slider.Value = (int)sun.z;
 
             Debug.WriteLine($"z_slider: {z_slider.Minimum}, {z_slider.Maximum}, {z_slider.Value}");
 
@@ -177,11 +166,14 @@ namespace triangle_mesh_filler
             {
                 ScanlineFill(polygon);
             }
-            if(DrawShapeCheckBox.Checked)
+            if (DrawShapeCheckBox.Checked)
             {
                 DrawShape();
             }
-            DrawSun();
+            if (DrawSunCheckBox.Checked)
+            {
+                DrawSun();
+            }
 
             Canvas.Invalidate();
             if (this.IsHandleCreated)
@@ -314,7 +306,24 @@ namespace triangle_mesh_filler
                 point.y += minDim * 0.1;
             }
 
-           
+            zMax = double.MinValue;
+            foreach (var point in points)
+            {
+                if (point.z > zMax) zMax = point.z;
+            }
+            Debug.WriteLine($"zMax: {zMax}");
+
+            if (sun == null)
+            {
+                sun = new Sun(200.0, 400.0, zMax + 500.0, 100);
+            }
+            else
+            {
+                sun.z = zMax + 500.0;
+            }
+
+            z_slider.Minimum = (int)(1.1 * zMax);
+            z_slider.Value = (int)sun.z;
         }
 
         public void DrawShape()
@@ -1115,6 +1124,16 @@ namespace triangle_mesh_filler
         }
 
         private void NormalMapCheckbox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (AnimationError()) return;
+        }
+
+        private void DrawSunCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            DrawCanvas();
+        }
+
+        private void DrawSunCheckBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (AnimationError()) return;
         }
