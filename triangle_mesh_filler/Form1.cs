@@ -1000,6 +1000,8 @@ namespace triangle_mesh_filler
         private void FillColor_Click(object sender, EventArgs e)
         {
             fillingType = 0;
+            ObjectColorButton.Enabled = true;
+            LoadTextureButton.Enabled = false;
             colorObject[0] = cdObject.Color.R / 255.0;
             colorObject[1] = cdObject.Color.G / 255.0;
             colorObject[2] = cdObject.Color.B / 255.0;
@@ -1009,6 +1011,8 @@ namespace triangle_mesh_filler
         private void FillTexture_Click(object sender, EventArgs e)
         {
             fillingType = 1;
+            ObjectColorButton.Enabled = false;
+            LoadTextureButton.Enabled = true;
             DrawCanvas();
         }
 

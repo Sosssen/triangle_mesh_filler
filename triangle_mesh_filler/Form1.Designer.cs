@@ -199,6 +199,7 @@ namespace triangle_mesh_filler
             // LoadTextureButton
             // 
             this.LoadTextureButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LoadTextureButton.Enabled = false;
             this.LoadTextureButton.Location = new System.Drawing.Point(3, 155);
             this.LoadTextureButton.Name = "LoadTextureButton";
             this.LoadTextureButton.Size = new System.Drawing.Size(378, 70);
