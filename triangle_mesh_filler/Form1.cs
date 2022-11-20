@@ -55,8 +55,8 @@ namespace triangle_mesh_filler
         private Bitmap normalMap = null;
         private Color[,] normalMapColors = null;
 
-        private int interpolationType = 0;
-        private int fillingType = 0;
+        private int interpolationType = 1;
+        private int fillingType = 1;
         public Form1()
         {
             InitializeComponent();
@@ -105,10 +105,10 @@ namespace triangle_mesh_filler
             LoadShape(@".\obj_files\object.obj");
 
             // load texture from file
-            LoadTexture(@".\texture_files\wood.jpg");
+            LoadTexture(@".\texture_files\metal.jpg");
 
             // load normalmap from file
-            LoadNormalMap(shapeFileName);
+            LoadNormalMap(@".\nm_files\mecha.jpg");
 
             // Canvas.Image = normalMap;
 
@@ -325,7 +325,7 @@ namespace triangle_mesh_filler
 
             if (sun == null)
             {
-                sun = new Sun(200.0, 400.0, zMax + 500.0, 100);
+                sun = new Sun(100.0, 200.0, zMax + 500.0, 100);
             }
             else
             {
@@ -1285,7 +1285,7 @@ namespace triangle_mesh_filler
 
         private void NormalMapCheckbox_Click(object sender, EventArgs e)
         {
-            LoadShape(shapeFileName);
+            // LoadShape(shapeFileName);
             DrawCanvas();
         }
     }

@@ -150,11 +150,13 @@ namespace triangle_mesh_filler
             // InterpolateVectors
             // 
             this.InterpolateVectors.AutoSize = true;
+            this.InterpolateVectors.Checked = true;
             this.InterpolateVectors.Dock = System.Windows.Forms.DockStyle.Fill;
             this.InterpolateVectors.Location = new System.Drawing.Point(3, 307);
             this.InterpolateVectors.Name = "InterpolateVectors";
             this.InterpolateVectors.Size = new System.Drawing.Size(378, 70);
             this.InterpolateVectors.TabIndex = 4;
+            this.InterpolateVectors.TabStop = true;
             this.InterpolateVectors.Text = "interpolate vectors";
             this.InterpolateVectors.UseVisualStyleBackColor = true;
             this.InterpolateVectors.Click += new System.EventHandler(this.InterpolateVectors_Click);
@@ -172,13 +174,11 @@ namespace triangle_mesh_filler
             // InterpolateColors
             // 
             this.InterpolateColors.AutoSize = true;
-            this.InterpolateColors.Checked = true;
             this.InterpolateColors.Dock = System.Windows.Forms.DockStyle.Fill;
             this.InterpolateColors.Location = new System.Drawing.Point(3, 231);
             this.InterpolateColors.Name = "InterpolateColors";
             this.InterpolateColors.Size = new System.Drawing.Size(378, 70);
             this.InterpolateColors.TabIndex = 3;
-            this.InterpolateColors.TabStop = true;
             this.InterpolateColors.Text = "interpolate colors";
             this.InterpolateColors.UseVisualStyleBackColor = true;
             this.InterpolateColors.Click += new System.EventHandler(this.InterpolateColors_Click);
@@ -483,11 +483,13 @@ namespace triangle_mesh_filler
             // FillTexture
             // 
             this.FillTexture.AutoSize = true;
+            this.FillTexture.Checked = true;
             this.FillTexture.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FillTexture.Location = new System.Drawing.Point(3, 79);
             this.FillTexture.Name = "FillTexture";
             this.FillTexture.Size = new System.Drawing.Size(379, 70);
             this.FillTexture.TabIndex = 1;
+            this.FillTexture.TabStop = true;
             this.FillTexture.Text = "fill with texture";
             this.FillTexture.UseVisualStyleBackColor = true;
             this.FillTexture.Click += new System.EventHandler(this.FillTexture_Click);
@@ -496,13 +498,11 @@ namespace triangle_mesh_filler
             // FillColor
             // 
             this.FillColor.AutoSize = true;
-            this.FillColor.Checked = true;
             this.FillColor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FillColor.Location = new System.Drawing.Point(3, 3);
             this.FillColor.Name = "FillColor";
             this.FillColor.Size = new System.Drawing.Size(379, 70);
             this.FillColor.TabIndex = 0;
-            this.FillColor.TabStop = true;
             this.FillColor.Text = "fill with color";
             this.FillColor.UseVisualStyleBackColor = true;
             this.FillColor.Click += new System.EventHandler(this.FillColor_Click);
@@ -511,6 +511,8 @@ namespace triangle_mesh_filler
             // NormalMapCheckbox
             // 
             this.NormalMapCheckbox.AutoSize = true;
+            this.NormalMapCheckbox.Checked = true;
+            this.NormalMapCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NormalMapCheckbox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NormalMapCheckbox.Location = new System.Drawing.Point(3, 383);
             this.NormalMapCheckbox.Name = "NormalMapCheckbox";
