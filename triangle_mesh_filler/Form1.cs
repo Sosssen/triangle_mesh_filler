@@ -105,7 +105,7 @@ namespace triangle_mesh_filler
             }
 
             // load shape from *.obj file
-            LoadShape();
+            LoadShape(@"C:\Users\Sosna\Desktop\obj_files\objectAVG.obj");
 
             
 
@@ -212,10 +212,15 @@ namespace triangle_mesh_filler
             
         }
 
-        public void LoadShape()
+        public void LoadShape(string filename)
         {
 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Sosna\Desktop\obj_files\objectAVG.obj");
+            string[] lines = System.IO.File.ReadAllLines(filename);
+            points = new List<MyPoint>();
+            normalVectorsX = new List<double>();
+            normalVectorsY = new List<double>();
+            normalVectorsZ = new List<double>();
+            polygons = new List<Polygon>();
 
             foreach (string line in lines)
             {
@@ -976,7 +981,17 @@ namespace triangle_mesh_filler
             DrawCanvas();
         }
 
-        
+        private void LoadShapeButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                LoadShape(filename);
+                DrawCanvas();
+            }
+        }
     }
 
     public class MyPoint

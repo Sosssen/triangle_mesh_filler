@@ -40,10 +40,14 @@ namespace triangle_mesh_filler
             this.LoadTexture = new System.Windows.Forms.Button();
             this.LoadNormalMap = new System.Windows.Forms.Button();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
-            this.z_slider = new System.Windows.Forms.TrackBar();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.kd_slider = new System.Windows.Forms.TrackBar();
-            this.m_slider = new System.Windows.Forms.TrackBar();
             this.ks_slider = new System.Windows.Forms.TrackBar();
+            this.m_slider = new System.Windows.Forms.TrackBar();
+            this.z_slider = new System.Windows.Forms.TrackBar();
+            this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBoxLightColor = new System.Windows.Forms.PictureBox();
             this.LightColorButton = new System.Windows.Forms.Button();
@@ -58,20 +62,16 @@ namespace triangle_mesh_filler
             this.FillTexture = new System.Windows.Forms.RadioButton();
             this.FillColor = new System.Windows.Forms.RadioButton();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxObjectColor)).BeginInit();
             this.tableLayoutPanel9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.z_slider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kd_slider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.m_slider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ks_slider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.m_slider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.z_slider)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLightColor)).BeginInit();
             this.tableLayoutPanel10.SuspendLayout();
@@ -236,19 +236,38 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel9.Size = new System.Drawing.Size(385, 455);
             this.tableLayoutPanel9.TabIndex = 6;
             // 
-            // z_slider
+            // label4
             // 
-            this.z_slider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.z_slider.Location = new System.Drawing.Point(291, 48);
-            this.z_slider.Maximum = 2000;
-            this.z_slider.Minimum = 500;
-            this.z_slider.Name = "z_slider";
-            this.z_slider.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.z_slider.Size = new System.Drawing.Size(91, 404);
-            this.z_slider.SmallChange = 10;
-            this.z_slider.TabIndex = 3;
-            this.z_slider.Value = 500;
-            this.z_slider.ValueChanged += new System.EventHandler(this.z_slider_ValueChanged);
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Location = new System.Drawing.Point(291, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(91, 45);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "z";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Location = new System.Drawing.Point(195, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 45);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "m";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Location = new System.Drawing.Point(99, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(90, 45);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "ks";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // kd_slider
             // 
@@ -260,6 +279,17 @@ namespace triangle_mesh_filler
             this.kd_slider.Size = new System.Drawing.Size(90, 404);
             this.kd_slider.TabIndex = 0;
             this.kd_slider.ValueChanged += new System.EventHandler(this.kd_slider_ValueChanged);
+            // 
+            // ks_slider
+            // 
+            this.ks_slider.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ks_slider.Location = new System.Drawing.Point(99, 48);
+            this.ks_slider.Maximum = 100;
+            this.ks_slider.Name = "ks_slider";
+            this.ks_slider.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.ks_slider.Size = new System.Drawing.Size(90, 404);
+            this.ks_slider.TabIndex = 1;
+            this.ks_slider.ValueChanged += new System.EventHandler(this.ks_slider_ValueChanged);
             // 
             // m_slider
             // 
@@ -274,16 +304,30 @@ namespace triangle_mesh_filler
             this.m_slider.Value = 1;
             this.m_slider.ValueChanged += new System.EventHandler(this.m_slider_ValueChanged);
             // 
-            // ks_slider
+            // z_slider
             // 
-            this.ks_slider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ks_slider.Location = new System.Drawing.Point(99, 48);
-            this.ks_slider.Maximum = 100;
-            this.ks_slider.Name = "ks_slider";
-            this.ks_slider.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.ks_slider.Size = new System.Drawing.Size(90, 404);
-            this.ks_slider.TabIndex = 1;
-            this.ks_slider.ValueChanged += new System.EventHandler(this.ks_slider_ValueChanged);
+            this.z_slider.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.z_slider.Location = new System.Drawing.Point(291, 48);
+            this.z_slider.Maximum = 2000;
+            this.z_slider.Minimum = 500;
+            this.z_slider.Name = "z_slider";
+            this.z_slider.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.z_slider.Size = new System.Drawing.Size(91, 404);
+            this.z_slider.SmallChange = 10;
+            this.z_slider.TabIndex = 3;
+            this.z_slider.Value = 500;
+            this.z_slider.ValueChanged += new System.EventHandler(this.z_slider_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(90, 45);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "kd";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel3
             // 
@@ -372,6 +416,7 @@ namespace triangle_mesh_filler
             this.LoadShapeButton.TabIndex = 0;
             this.LoadShapeButton.Text = "load shape";
             this.LoadShapeButton.UseVisualStyleBackColor = true;
+            this.LoadShapeButton.Click += new System.EventHandler(this.LoadShapeButton_Click);
             // 
             // kd_label
             // 
@@ -466,50 +511,6 @@ namespace triangle_mesh_filler
             this.checkBox1.Text = "use normal map";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 45);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "kd";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(99, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(90, 45);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "ks";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(195, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 45);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "m";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(291, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 45);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "z";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
@@ -528,10 +529,10 @@ namespace triangle_mesh_filler
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxObjectColor)).EndInit();
             this.tableLayoutPanel9.ResumeLayout(false);
             this.tableLayoutPanel9.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.z_slider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kd_slider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.m_slider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ks_slider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.m_slider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.z_slider)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLightColor)).EndInit();
