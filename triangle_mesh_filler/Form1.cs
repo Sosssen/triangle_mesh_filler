@@ -14,6 +14,7 @@ namespace triangle_mesh_filler
     public partial class Form1 : Form
     {
         private bool isReady = false;
+        private string shapeFileName = @".\nm_files\bricks.jpg";
 
         private List<MyPoint> points = new List<MyPoint>();
         private List<double> normalVectorsX = new List<double>();
@@ -107,7 +108,7 @@ namespace triangle_mesh_filler
             LoadTexture(@".\texture_files\wood.jpg");
 
             // load normalmap from file
-            LoadNormalMap(@".\nm_files\bricks.jpg");
+            LoadNormalMap(shapeFileName);
 
             // Canvas.Image = normalMap;
 
@@ -333,6 +334,20 @@ namespace triangle_mesh_filler
 
             z_slider.Minimum = (int)(1.1 * zMax);
             z_slider.Value = (int)sun.z;
+
+            //if (NormalMapCheckbox.Checked && fillingType == 0)
+            //{
+            //    foreach (var polygon in polygons)
+            //    {
+            //        foreach (var point in polygon.points)
+            //        {
+            //            var result = ModifyNormalVector(point);
+            //            point.nx = result[0];
+            //            point.ny = result[1];
+            //            point.nz = result[2];
+            //        }
+            //    }
+            //}
         }
 
         public void DrawShape()
@@ -1069,8 +1084,8 @@ namespace triangle_mesh_filler
             DialogResult result = ofd.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string filename = ofd.FileName;
-                LoadShape(filename);
+                shapeFileName = ofd.FileName;
+                LoadShape(shapeFileName);
                 DrawCanvas();
             }
         }
@@ -1182,6 +1197,7 @@ namespace triangle_mesh_filler
                 string filename = ofd.FileName;
                 LoadNormalMap(filename);
             }
+            DrawCanvas();
         }
 
         private List<double> ModifyNormalVector(MyPoint point)
@@ -1249,17 +1265,8 @@ namespace triangle_mesh_filler
 
         private void NormalMapCheckbox_Click(object sender, EventArgs e)
         {
-            if (NormalMapCheckbox.Checked)
-            {
-                foreach (var point in points)
-                {
-                    var result = ModifyNormalVector(point);
-                    point.nx = result[0];
-                    point.ny = result[1];
-                    point.nz = result[2];
-                }
-                DrawCanvas();
-            }
+            LoadShape(shapeFileName);
+            DrawCanvas();
         }
     }
 
