@@ -40,12 +40,18 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.DrawShapeCheckBox = new System.Windows.Forms.CheckBox();
             this.AnimationCheckBox = new System.Windows.Forms.CheckBox();
-            this.ObjectColorButton = new System.Windows.Forms.Button();
-            this.LightColorButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.ObjectColorButton = new System.Windows.Forms.Button();
             this.pictureBoxObjectColor = new System.Windows.Forms.PictureBox();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.LightColorButton = new System.Windows.Forms.Button();
             this.pictureBoxLightColor = new System.Windows.Forms.PictureBox();
+            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.InterpolateVectors = new System.Windows.Forms.RadioButton();
+            this.InterpolateColors = new System.Windows.Forms.RadioButton();
+            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+            this.FillColor = new System.Windows.Forms.RadioButton();
+            this.FillTexture = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -56,9 +62,11 @@ namespace triangle_mesh_filler
             ((System.ComponentModel.ISupportInitialize)(this.kd_slider)).BeginInit();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
-            this.tableLayoutPanel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxObjectColor)).BeginInit();
+            this.tableLayoutPanel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLightColor)).BeginInit();
+            this.tableLayoutPanel7.SuspendLayout();
+            this.tableLayoutPanel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // Canvas
@@ -95,6 +103,8 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel4, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel7, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel8, 1, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(790, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -216,27 +226,6 @@ namespace triangle_mesh_filler
             this.AnimationCheckBox.UseVisualStyleBackColor = true;
             this.AnimationCheckBox.CheckedChanged += new System.EventHandler(this.AnimationCheckBox_CheckedChanged);
             // 
-            // ObjectColorButton
-            // 
-            this.ObjectColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ObjectColorButton.Location = new System.Drawing.Point(3, 3);
-            this.ObjectColorButton.Name = "ObjectColorButton";
-            this.ObjectColorButton.Size = new System.Drawing.Size(372, 48);
-            this.ObjectColorButton.TabIndex = 2;
-            this.ObjectColorButton.Text = "pick color of object";
-            this.ObjectColorButton.UseVisualStyleBackColor = true;
-            this.ObjectColorButton.Click += new System.EventHandler(this.ObjectColorButton_Click);
-            // 
-            // LightColorButton
-            // 
-            this.LightColorButton.Location = new System.Drawing.Point(3, 3);
-            this.LightColorButton.Name = "LightColorButton";
-            this.LightColorButton.Size = new System.Drawing.Size(372, 46);
-            this.LightColorButton.TabIndex = 3;
-            this.LightColorButton.Text = "pick color of light";
-            this.LightColorButton.UseVisualStyleBackColor = true;
-            this.LightColorButton.Click += new System.EventHandler(this.LightColorButton_Click);
-            // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 1;
@@ -251,6 +240,26 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel5.Size = new System.Drawing.Size(378, 108);
             this.tableLayoutPanel5.TabIndex = 4;
+            // 
+            // ObjectColorButton
+            // 
+            this.ObjectColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ObjectColorButton.Location = new System.Drawing.Point(3, 3);
+            this.ObjectColorButton.Name = "ObjectColorButton";
+            this.ObjectColorButton.Size = new System.Drawing.Size(372, 48);
+            this.ObjectColorButton.TabIndex = 2;
+            this.ObjectColorButton.Text = "pick color of object";
+            this.ObjectColorButton.UseVisualStyleBackColor = true;
+            this.ObjectColorButton.Click += new System.EventHandler(this.ObjectColorButton_Click);
+            // 
+            // pictureBoxObjectColor
+            // 
+            this.pictureBoxObjectColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxObjectColor.Location = new System.Drawing.Point(3, 57);
+            this.pictureBoxObjectColor.Name = "pictureBoxObjectColor";
+            this.pictureBoxObjectColor.Size = new System.Drawing.Size(372, 48);
+            this.pictureBoxObjectColor.TabIndex = 3;
+            this.pictureBoxObjectColor.TabStop = false;
             // 
             // tableLayoutPanel6
             // 
@@ -267,14 +276,15 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel6.Size = new System.Drawing.Size(378, 108);
             this.tableLayoutPanel6.TabIndex = 5;
             // 
-            // pictureBoxObjectColor
+            // LightColorButton
             // 
-            this.pictureBoxObjectColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxObjectColor.Location = new System.Drawing.Point(3, 57);
-            this.pictureBoxObjectColor.Name = "pictureBoxObjectColor";
-            this.pictureBoxObjectColor.Size = new System.Drawing.Size(372, 48);
-            this.pictureBoxObjectColor.TabIndex = 3;
-            this.pictureBoxObjectColor.TabStop = false;
+            this.LightColorButton.Location = new System.Drawing.Point(3, 3);
+            this.LightColorButton.Name = "LightColorButton";
+            this.LightColorButton.Size = new System.Drawing.Size(372, 46);
+            this.LightColorButton.TabIndex = 3;
+            this.LightColorButton.Text = "pick color of light";
+            this.LightColorButton.UseVisualStyleBackColor = true;
+            this.LightColorButton.Click += new System.EventHandler(this.LightColorButton_Click);
             // 
             // pictureBoxLightColor
             // 
@@ -284,6 +294,88 @@ namespace triangle_mesh_filler
             this.pictureBoxLightColor.Size = new System.Drawing.Size(372, 48);
             this.pictureBoxLightColor.TabIndex = 4;
             this.pictureBoxLightColor.TabStop = false;
+            // 
+            // tableLayoutPanel7
+            // 
+            this.tableLayoutPanel7.ColumnCount = 1;
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.Controls.Add(this.InterpolateVectors, 0, 1);
+            this.tableLayoutPanel7.Controls.Add(this.InterpolateColors, 0, 0);
+            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(393, 3);
+            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+            this.tableLayoutPanel7.RowCount = 2;
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(385, 455);
+            this.tableLayoutPanel7.TabIndex = 4;
+            // 
+            // InterpolateVectors
+            // 
+            this.InterpolateVectors.AutoSize = true;
+            this.InterpolateVectors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.InterpolateVectors.Location = new System.Drawing.Point(3, 230);
+            this.InterpolateVectors.Name = "InterpolateVectors";
+            this.InterpolateVectors.Size = new System.Drawing.Size(379, 222);
+            this.InterpolateVectors.TabIndex = 4;
+            this.InterpolateVectors.Text = "interpolate vectors";
+            this.InterpolateVectors.UseVisualStyleBackColor = true;
+            this.InterpolateVectors.Click += new System.EventHandler(this.InterpolateVectors_Click);
+            // 
+            // InterpolateColors
+            // 
+            this.InterpolateColors.AutoSize = true;
+            this.InterpolateColors.Checked = true;
+            this.InterpolateColors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.InterpolateColors.Location = new System.Drawing.Point(3, 3);
+            this.InterpolateColors.Name = "InterpolateColors";
+            this.InterpolateColors.Size = new System.Drawing.Size(379, 221);
+            this.InterpolateColors.TabIndex = 3;
+            this.InterpolateColors.TabStop = true;
+            this.InterpolateColors.Text = "interpolate colors";
+            this.InterpolateColors.UseVisualStyleBackColor = true;
+            this.InterpolateColors.Click += new System.EventHandler(this.InterpolateColors_Click);
+            // 
+            // tableLayoutPanel8
+            // 
+            this.tableLayoutPanel8.ColumnCount = 1;
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.Controls.Add(this.FillColor, 0, 0);
+            this.tableLayoutPanel8.Controls.Add(this.FillTexture, 0, 1);
+            this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel8.Location = new System.Drawing.Point(393, 464);
+            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
+            this.tableLayoutPanel8.RowCount = 2;
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(385, 456);
+            this.tableLayoutPanel8.TabIndex = 5;
+            // 
+            // FillColor
+            // 
+            this.FillColor.AutoSize = true;
+            this.FillColor.Checked = true;
+            this.FillColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FillColor.Location = new System.Drawing.Point(3, 3);
+            this.FillColor.Name = "FillColor";
+            this.FillColor.Size = new System.Drawing.Size(379, 222);
+            this.FillColor.TabIndex = 0;
+            this.FillColor.TabStop = true;
+            this.FillColor.Text = "fill with color";
+            this.FillColor.UseVisualStyleBackColor = true;
+            this.FillColor.Click += new System.EventHandler(this.FillColor_Click);
+            // 
+            // FillTexture
+            // 
+            this.FillTexture.AutoSize = true;
+            this.FillTexture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FillTexture.Location = new System.Drawing.Point(3, 231);
+            this.FillTexture.Name = "FillTexture";
+            this.FillTexture.Size = new System.Drawing.Size(379, 222);
+            this.FillTexture.TabIndex = 1;
+            this.FillTexture.Text = "fill with texture";
+            this.FillTexture.UseVisualStyleBackColor = true;
+            this.FillTexture.Click += new System.EventHandler(this.FillTexture_Click);
             // 
             // Form1
             // 
@@ -307,9 +399,13 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxObjectColor)).EndInit();
+            this.tableLayoutPanel6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLightColor)).EndInit();
+            this.tableLayoutPanel7.ResumeLayout(false);
+            this.tableLayoutPanel7.PerformLayout();
+            this.tableLayoutPanel8.ResumeLayout(false);
+            this.tableLayoutPanel8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -333,6 +429,12 @@ namespace triangle_mesh_filler
         private System.Windows.Forms.PictureBox pictureBoxObjectColor;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.PictureBox pictureBoxLightColor;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+        private System.Windows.Forms.RadioButton InterpolateVectors;
+        private System.Windows.Forms.RadioButton InterpolateColors;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
+        private System.Windows.Forms.RadioButton FillColor;
+        private System.Windows.Forms.RadioButton FillTexture;
     }
 }
 

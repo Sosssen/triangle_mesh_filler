@@ -49,6 +49,9 @@ namespace triangle_mesh_filler
 
         private Bitmap image = null;
         private Color[,] textureColors = null;
+
+        private int interpolationType = 0;
+        private int fillingType = 0;
         public Form1()
         {
             InitializeComponent();
@@ -104,8 +107,7 @@ namespace triangle_mesh_filler
             // load shape from *.obj file
             LoadShape();
 
-            // create sun
-            sun = new Sun(200.0, 400.0, 700.0, 20);
+            
 
             // find maximum z-coordinate
             double zMax = double.MinValue;
@@ -114,6 +116,9 @@ namespace triangle_mesh_filler
                 if (point.z > zMax) zMax = point.z;
             }
             Debug.WriteLine($"zMax: {zMax}");
+
+            // create sun
+            sun = new Sun(200.0, 400.0, zMax + 500.0, 20);
 
             // set values of sliders
             kd_slider.Value = (int)(kd * 100);
@@ -162,6 +167,8 @@ namespace triangle_mesh_filler
             //    drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             //    Canvas.Image = drawArea.Bitmap;
             //}
+
+            Debug.WriteLine($"interpolation type {interpolationType}, filling type {fillingType}");
 
             using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
             {
@@ -477,13 +484,33 @@ namespace triangle_mesh_filler
             minY = int.MaxValue;
             maxY = int.MinValue;
 
+            // Debug.WriteLine($"interpolation type {interpolationType}, filling type {fillingType}");
+
             // List<Color> verticesColors = new List<Color>() { 0, 0, 0 };
-            List<double> colorA = new List<double>() { 0, 0, 0 };
-            List<double> colorB = new List<double>() { 0, 0, 0 };
-            List<double> colorC = new List<double>() { 0, 0, 0 };
-            colorA = CountColorForPoint(polygon.points[0]);
-            colorB = CountColorForPoint(polygon.points[1]);
-            colorC = CountColorForPoint(polygon.points[2]);
+
+            List<double> colorA = null;
+            List<double> colorB = null;
+            List<double> colorC = null;
+
+            if (interpolationType == 0)
+            {
+                if (fillingType == 0)
+                {
+                    colorA = CountColorForPoint(polygon.points[0], null);
+                    colorB = CountColorForPoint(polygon.points[1], null);
+                    colorC = CountColorForPoint(polygon.points[2], null);
+                }
+                else
+                {
+                    Color color1 = textureColors[(int)polygon.points[0].x, (int)polygon.points[0].y];
+                    Color color2 = textureColors[(int)polygon.points[1].x, (int)polygon.points[1].y];
+                    Color color3 = textureColors[(int)polygon.points[2].x, (int)polygon.points[2].y];
+                    colorA = new List<double>() { color1.R / 255.0, color1.G / 255.0, color1.B / 255.0 };
+                    colorB = new List<double>() { color2.R / 255.0, color2.G / 255.0, color2.B / 255.0 };
+                    colorC = new List<double>() { color3.R / 255.0, color3.G / 255.0, color3.B / 255.0 };
+                }
+                
+            }
             // List<Color> verticesColors = FindColorsOfVertices(polygon);
             double area = getArea(polygon.points[0], polygon.points[1], polygon.points[2]);
 
@@ -573,7 +600,33 @@ namespace triangle_mesh_filler
                         {
                             for (int k = x1; k <= x2; k++)
                             {
-                                Color color = FindColorOfPixel(polygon, colorA, colorB, colorC, new MyPoint(k, i + minY), area);
+                                Color color = Color.White;
+                                if (area <= 0)
+                                {
+                                    color = Color.FromArgb(0, 0, 0);
+                                }
+                                else if (interpolationType == 0)
+                                {
+
+                                    color = FindColorOfPixel(polygon, colorA, colorB, colorC, new MyPoint(k, i + minY), area);
+
+                                }
+                                else if (interpolationType == 1)
+                                {
+                                    if (fillingType == 0)
+                                    {
+                                        MyPoint point = CountNormalVector(polygon, k, i + minY, area);
+                                        var colorVector = CountColorForPoint(point, null);
+                                        color = Color.FromArgb((int)(colorVector[0] * 255), (int)(colorVector[1] * 255), (int)(colorVector[2] * 255));
+                                    }
+                                    else if (fillingType == 1)
+                                    {
+                                        MyPoint point = CountNormalVector(polygon, k, i + minY, area);
+                                        var colorVector = CountColorForPoint(point, textureColors[k, i+minY]);
+                                        color = Color.FromArgb((int)(colorVector[0] * 255), (int)(colorVector[1] * 255), (int)(colorVector[2] * 255));
+                                    }
+                             
+                                }
                                 // TODO: if drawing using texture, use below
                                 // Color color = textureColors[k, i + minY];
                                 drawArea.SetPixel(k, i + minY, color);
@@ -618,8 +671,38 @@ namespace triangle_mesh_filler
             return ret;
         }
 
+        public MyPoint CountNormalVector(Polygon polygon, int x, int y, double area)
+        {
+            MyPoint point = new MyPoint(x, y);
+            if (x == (int)polygon.points[0].x && y == (int)polygon.points[0].y) return polygon.points[0];
+            if (x == (int)polygon.points[1].x && y == (int)polygon.points[1].y) return polygon.points[1];
+            if (x == (int)polygon.points[2].x && y == (int)polygon.points[2].y) return polygon.points[2];
+            double alfa = getArea(polygon.points[1], polygon.points[2], point) / area;
+            double beta = getArea(polygon.points[0], polygon.points[2], point) / area;
+            double gamma = 1 - alfa - beta;
+
+            List<double> normalVector = new List<double>() { 0, 0, 0 };
+
+            point.z = alfa * polygon.points[0].z + beta * polygon.points[1].z + gamma * polygon.points[2].z;
+            if (point.z < 0 || Double.IsNaN(point.z))
+                point.z = 0.0;
+            point.nx = alfa * polygon.points[0].nx + beta * polygon.points[1].nx + gamma * polygon.points[2].nx;
+            if (Double.IsNaN(point.nx))
+                point.nx = 0.0;
+            point.ny = alfa * polygon.points[0].ny + beta * polygon.points[1].ny + gamma * polygon.points[2].ny;
+            if (Double.IsNaN(point.ny)) 
+                point.ny = 0.0;
+            point.nz = alfa * polygon.points[0].nz + beta * polygon.points[1].nz + gamma * polygon.points[2].nz;
+            if (Double.IsNaN(point.nz)) 
+                point.nz = 0.0;
+            return point;
+        }
+
         public Color FindColorOfPixel(Polygon polygon, List<double> colorA, List<double> colorB, List<double> colorC, MyPoint point, double area)
         {
+            //if (point.x == (int)polygon.points[0].x && point.y == (int)polygon.points[0].y) return Color.FromArgb((int)colorA[0], (int)colorA[1], (int)colorA[2]);
+            //if (point.x == (int)polygon.points[1].x && point.y == (int)polygon.points[1].y) return Color.FromArgb((int)colorB[0], (int)colorB[1], (int)colorB[2]);
+            //if (point.x == (int)polygon.points[2].x && point.y == (int)polygon.points[2].y) return Color.FromArgb((int)colorC[0], (int)colorC[1], (int)colorC[2]);
             double alfa = getArea(polygon.points[1], polygon.points[2], point) / area;
             double beta = getArea(polygon.points[0], polygon.points[2], point) / area;
             // double gamma = getArea(polygon.points[0], polygon.points[1], point) / area;
@@ -644,8 +727,14 @@ namespace triangle_mesh_filler
             // return Color.FromArgb(0, 0, 0);
         }
 
-        public List<double> CountColorForPoint(MyPoint point)
+        public List<double> CountColorForPoint(MyPoint point, Color? pixelColor)
         {
+            if (fillingType == 1)
+            {
+                colorObject[0] = pixelColor.Value.R / 255.0;
+                colorObject[1] = pixelColor.Value.G / 255.0;
+                colorObject[2] = pixelColor.Value.B / 255.0;
+            }
             List<double> L = new List<double>() { 0, 0, 0 };
             L[0] = (sun.x - point.x);
             L[1] = (sun.y - point.y);
@@ -686,54 +775,6 @@ namespace triangle_mesh_filler
             return color;
         }
 
-        public List<Color> FindColorsOfVertices(Polygon polygon)
-        {
-            List<Color> colors = new List<Color>();
-            
-
-            foreach (var point in polygon.points)
-            {
-                List<double> L = new List<double>() { 0, 0, 0 };
-                L[0] = (sun.x - point.x);
-                L[1] = (sun.y - point.y);
-                L[2] = (sun.z - point.z);
-                // Debug.WriteLine($"L: {L[0]}, {L[1]}, {L[2]}");
-                double lenL = Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2]);
-                for (int i = 0; i < L.Count; i++)
-                {
-                    L[i] /= lenL;
-                }
-                // Debug.WriteLine($"new length: {Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2])}");
-                List<double> N = new List<double>() { point.nx, point.ny, point.nz };
-                
-                double lenN = Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2]);
-                for (int i = 0; i < N.Count; i++)
-                {
-                    N[i] /= lenN;
-                }
-                // Debug.WriteLine($"normal vector length: {Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2])}");
-                double cosNL = L[0] * N[0] + L[1] * N[1] + L[2] * N[2];
-                cosNL = cosNL < 0 ? 0 : cosNL;
-                // Debug.WriteLine($"cosNL: {cosNL}");
-                List<double> V = new List<double>() { 0, 0, 1 };
-                List<double> R = new List<double>() { 0, 0, 0 };
-                for (int i = 0; i < R.Count; i++)
-                {
-                    R[i] = 2 * cosNL * N[i] - L[i];
-                }
-                double cosVR = V[0] * R[0] + V[1] * R[1] + V[2] * R[2];
-                cosVR = cosVR < 0 ? 0 : cosVR;
-                List<double> color = new List<double>(){ 0, 0, 0 };
-                for (int i = 0; i < color.Count; i++)
-                {
-                    color[i] = kd * colorLight[i] * colorObject[i] * cosNL + ks * colorLight[i] * colorObject[i] * Math.Pow(cosVR, m);
-                }
-                // Debug.WriteLine($"color: {color[0]}, {color[1]}, {color[2]}");
-                colors.Add(Color.FromArgb(Math.Min((int)(color[0] * 255), 255), Math.Min((int)(color[1] * 255), 255), Math.Min((int)(color[2] * 255), 255)));
-            }
-            return colors;
-        }
-        
         public void DrawSun()
         {
             int x = (int)sun.x;
@@ -898,6 +939,30 @@ namespace triangle_mesh_filler
             colorLight[2] = cdLight.Color.B / 255.0;
             DrawCanvas();
             FillWithColor(pictureBoxLightColor, bmColorLight, cdLight.Color);
+        }
+
+        private void InterpolateColors_Click(object sender, EventArgs e)
+        {
+            interpolationType = 0;
+            DrawCanvas();
+        }
+
+        private void InterpolateVectors_Click(object sender, EventArgs e)
+        {
+            interpolationType = 1;
+            DrawCanvas();
+        }
+
+        private void FillColor_Click(object sender, EventArgs e)
+        {
+            fillingType = 0;
+            DrawCanvas();
+        }
+
+        private void FillTexture_Click(object sender, EventArgs e)
+        {
+            fillingType = 1;
+            DrawCanvas();
         }
     }
 
