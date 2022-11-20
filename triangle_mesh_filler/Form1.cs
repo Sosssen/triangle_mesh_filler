@@ -1125,6 +1125,16 @@ namespace triangle_mesh_filler
         private void InterpolateColors_MouseDown(object sender, MouseEventArgs e)
         {
             if (AnimationError()) return;
+            if (FillTexture.Checked)
+            {
+                MessageBox.Show("You can't interpolate colors while filling with texture.", "Interpolation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (NormalMapCheckbox.Checked)
+            {
+                MessageBox.Show("You can't interpolate colors while using normal map.", "Interpolation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void InterpolateVectors_MouseDown(object sender, MouseEventArgs e)
@@ -1165,6 +1175,11 @@ namespace triangle_mesh_filler
         private void FillTexture_MouseDown(object sender, MouseEventArgs e)
         {
             if (AnimationError()) return;
+            if (InterpolateColors.Checked)
+            {
+                MessageBox.Show("You can't fill with texture while interpolating colors.", "Interpolation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void DrawShapeCheckBox_MouseDown(object sender, MouseEventArgs e)
@@ -1175,6 +1190,11 @@ namespace triangle_mesh_filler
         private void NormalMapCheckbox_MouseDown(object sender, MouseEventArgs e)
         {
             if (AnimationError()) return;
+            if (InterpolateColors.Checked)
+            {
+                MessageBox.Show("You can't use normal map while interpolating colors.", "Interpolation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void DrawSunCheckBox_CheckedChanged(object sender, EventArgs e)
