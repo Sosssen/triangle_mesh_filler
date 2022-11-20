@@ -51,6 +51,8 @@ namespace triangle_mesh_filler
 
         private Bitmap image = null;
         private Color[,] textureColors = null;
+        private Bitmap normalMap = null;
+        private Color[,] normalMapColors = null;
 
         private int interpolationType = 0;
         private int fillingType = 0;
@@ -67,6 +69,7 @@ namespace triangle_mesh_filler
             // DrawCanvas();
             isReady = true;
             DrawCanvas();
+
         }
 
         public void Configuration()
@@ -102,7 +105,11 @@ namespace triangle_mesh_filler
 
             // load texture from file
             LoadTexture(@".\texture_files\wood.jpg");
-            
+
+            // load normalmap from file
+            LoadNormalMap(@".\nm_files\bricks.jpg");
+
+            // Canvas.Image = normalMap;
 
             // set values of sliders
             kd_slider.Value = (int)(kd * 100);
@@ -151,6 +158,8 @@ namespace triangle_mesh_filler
             //}
 
             if (!isReady) return;
+
+            // return;
 
             Debug.WriteLine($"interpolation type {interpolationType}, filling type {fillingType}");
 
@@ -708,6 +717,13 @@ namespace triangle_mesh_filler
             point.nz = alfa * polygon.points[0].nz + beta * polygon.points[1].nz + gamma * polygon.points[2].nz;
             if (Double.IsNaN(point.nz)) 
                 point.nz = 0.0;
+            if (NormalMapCheckbox.Checked)
+            {
+                var result = ModifyNormalVector(point);
+                point.nx = result[0];
+                point.ny = result[1];
+                point.nz = result[2];
+            }
             return point;
         }
 
@@ -1031,6 +1047,20 @@ namespace triangle_mesh_filler
             DrawCanvas();
         }
 
+        private void LoadNormalMap(string filename)
+        {
+            Size s = new Size(Canvas.Width, Canvas.Height);
+            normalMap = new Bitmap(new Bitmap(filename), s);
+            normalMapColors = new Color[Canvas.Width, Canvas.Height];
+            for (int i = 0; i < Canvas.Width; i++)
+            {
+                for (int j = 0; j < Canvas.Height; j++)
+                {
+                    normalMapColors[i, j] = normalMap.GetPixel(i, j);
+                }
+            }
+        }
+
         private void LoadShapeButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -1140,6 +1170,96 @@ namespace triangle_mesh_filler
         private void DrawSunCheckBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (AnimationError()) return;
+        }
+
+        private void LoadNormalMapButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = Environment.CurrentDirectory + @".\nm_files";
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                LoadNormalMap(filename);
+            }
+        }
+
+        private List<double> ModifyNormalVector(MyPoint point)
+        {
+            List<double> surfaceN = new List<double>() { point.nx, point.ny, point.nz };
+            List<double> textureN = new List<double>() { 0, 0, 0 };
+            Color test = Color.FromArgb(127, 127, 255);
+            textureN[0] = (1.0 * normalMapColors[(int)point.x, (int)point.y].R - 127.5) / 127.5;
+            textureN[1] = (1.0 * normalMapColors[(int)point.x, (int)point.y].G - 127.5) / 127.5;
+            textureN[2] = (1.0 * normalMapColors[(int)point.x, (int)point.y].B) / 255.0;
+            //textureN[0] = (1.0 * test.R - 127.5) / 127.5;
+            //textureN[1] = (1.0 * test.G - 127.5) / 127.5;
+            //textureN[2] = (1.0 * test.B) / 255.0;
+            double textureNLength = Math.Sqrt(textureN[0] * textureN[0] + textureN[1] * textureN[1] + textureN[2] * textureN[2]);
+            for (int i = 0; i < textureN.Count; i++)
+            {
+                textureN[i] /= textureNLength;
+            }
+            List<double> B = new List<double>() { 0, 0, 0 };
+            if (point.nx == 0.0 && point.ny == 0.0 && point.nz == 1.0)
+            {
+                B[1] = 1.0;
+            }
+            else
+            {
+                B = CrossProduct(surfaceN, new List<double>() { 0, 0, 1 });
+            }
+            // TODO: add NSurface
+            List<double> T = CrossProduct(B, surfaceN);
+            double[,] M = new double[3, 3];
+            M[0, 0] = T[0];
+            M[0, 1] = B[0];
+            M[0, 2] = surfaceN[0];
+            M[1, 0] = T[1];
+            M[1, 1] = B[1];
+            M[1, 2] = surfaceN[1];
+            M[2, 0] = T[2];
+            M[2, 1] = B[2];
+            M[2, 2] = surfaceN[2];
+            var result = MatrixMultiplication(M, textureN);
+            //for (int idx = 0; idx < result.Count; idx++)
+            //{
+            //    Debug.WriteLine(result[idx].ToString());
+            //}
+            return result;
+        }
+
+        private List<double> MatrixMultiplication(double[,] M, List<double> N)
+        {
+            return new List<double>() { M[0, 0] * N[0] + M[0, 1] * N[1] + M[0, 2] * N[2], M[1, 0] * N[0] + M[1, 1] * N[1] + M[1, 2] * N[2], M[2, 0] * N[0] + M[2, 1] * N[1] + M[2, 2] * N[2] };
+        }
+
+        private List<double> CrossProduct(List<double> a, List<double> b)
+        {
+            List<double> result = new List<double>() { 0, 0, 0 };
+            List<double> i = new List<double>() { 1, 0, 0 };
+            List<double> j = new List<double>() { 0, 1, 0 };
+            List<double> k = new List<double>() { 0, 0, 1 };
+            for (int idx = 0; idx < result.Count; idx++)
+            {
+                result[idx] = a[0] * b[1] * k[idx] + a[0] * b[2] * (-j[idx]) + a[1] * b[0] * (-k[idx]) + a[1] * b[2] * i[idx] + a[2] * b[0] * j[idx] + a[2] * b[1] * (-i[idx]);
+            }
+            return result;
+        }
+
+        private void NormalMapCheckbox_Click(object sender, EventArgs e)
+        {
+            if (NormalMapCheckbox.Checked)
+            {
+                foreach (var point in points)
+                {
+                    var result = ModifyNormalVector(point);
+                    point.nx = result[0];
+                    point.ny = result[1];
+                    point.nz = result[2];
+                }
+                DrawCanvas();
+            }
         }
     }
 

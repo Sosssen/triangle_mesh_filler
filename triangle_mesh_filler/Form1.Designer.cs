@@ -38,7 +38,7 @@ namespace triangle_mesh_filler
             this.InterpolateColors = new System.Windows.Forms.RadioButton();
             this.ObjectColorButton = new System.Windows.Forms.Button();
             this.LoadTextureButton = new System.Windows.Forms.Button();
-            this.LoadNormalMap = new System.Windows.Forms.Button();
+            this.LoadNormalMapButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -133,7 +133,7 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel4.Controls.Add(this.InterpolateColors, 0, 3);
             this.tableLayoutPanel4.Controls.Add(this.ObjectColorButton, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.LoadTextureButton, 0, 2);
-            this.tableLayoutPanel4.Controls.Add(this.LoadNormalMap, 0, 5);
+            this.tableLayoutPanel4.Controls.Add(this.LoadNormalMapButton, 0, 5);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 464);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -209,16 +209,17 @@ namespace triangle_mesh_filler
             this.LoadTextureButton.Click += new System.EventHandler(this.LoadTexture_Click);
             this.LoadTextureButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LoadTextureButton_MouseDown);
             // 
-            // LoadNormalMap
+            // LoadNormalMapButton
             // 
-            this.LoadNormalMap.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LoadNormalMap.Location = new System.Drawing.Point(3, 383);
-            this.LoadNormalMap.Name = "LoadNormalMap";
-            this.LoadNormalMap.Size = new System.Drawing.Size(378, 70);
-            this.LoadNormalMap.TabIndex = 5;
-            this.LoadNormalMap.Text = "load normal map";
-            this.LoadNormalMap.UseVisualStyleBackColor = true;
-            this.LoadNormalMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LoadNormalMap_MouseDown);
+            this.LoadNormalMapButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LoadNormalMapButton.Location = new System.Drawing.Point(3, 383);
+            this.LoadNormalMapButton.Name = "LoadNormalMapButton";
+            this.LoadNormalMapButton.Size = new System.Drawing.Size(378, 70);
+            this.LoadNormalMapButton.TabIndex = 5;
+            this.LoadNormalMapButton.Text = "load normal map";
+            this.LoadNormalMapButton.UseVisualStyleBackColor = true;
+            this.LoadNormalMapButton.Click += new System.EventHandler(this.LoadNormalMapButton_Click);
+            this.LoadNormalMapButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LoadNormalMap_MouseDown);
             // 
             // tableLayoutPanel9
             // 
@@ -517,6 +518,7 @@ namespace triangle_mesh_filler
             this.NormalMapCheckbox.TabIndex = 2;
             this.NormalMapCheckbox.Text = "use normal map";
             this.NormalMapCheckbox.UseVisualStyleBackColor = true;
+            this.NormalMapCheckbox.Click += new System.EventHandler(this.NormalMapCheckbox_Click);
             this.NormalMapCheckbox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NormalMapCheckbox_MouseDown);
             // 
             // AnimationCheckBox
@@ -605,7 +607,7 @@ namespace triangle_mesh_filler
         private System.Windows.Forms.Label m_label;
         private System.Windows.Forms.Label z_label;
         private System.Windows.Forms.Button LoadTextureButton;
-        private System.Windows.Forms.Button LoadNormalMap;
+        private System.Windows.Forms.Button LoadNormalMapButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
         private System.Windows.Forms.CheckBox NormalMapCheckbox;
         private System.Windows.Forms.Label label4;
