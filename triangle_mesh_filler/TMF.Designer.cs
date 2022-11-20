@@ -1,7 +1,7 @@
 ﻿
 namespace triangle_mesh_filler
 {
-    partial class Form1
+    partial class TMF
     {
         /// <summary>
         ///  Required designer variable.
@@ -511,8 +511,6 @@ namespace triangle_mesh_filler
             // NormalMapCheckbox
             // 
             this.NormalMapCheckbox.AutoSize = true;
-            this.NormalMapCheckbox.Checked = true;
-            this.NormalMapCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NormalMapCheckbox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NormalMapCheckbox.Location = new System.Drawing.Point(3, 383);
             this.NormalMapCheckbox.Name = "NormalMapCheckbox";
@@ -550,13 +548,13 @@ namespace triangle_mesh_filler
             this.DrawSunCheckBox.CheckedChanged += new System.EventHandler(this.DrawSunCheckBox_CheckedChanged);
             this.DrawSunCheckBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DrawSunCheckBox_MouseDown);
             // 
-            // Form1
+            // TMF
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1574, 929);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "Form1";
+            this.Name = "TMF";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);

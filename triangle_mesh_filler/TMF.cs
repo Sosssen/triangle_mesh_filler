@@ -11,17 +11,14 @@ using System.Windows.Forms;
 
 namespace triangle_mesh_filler
 {
-    public partial class Form1 : Form
+    public partial class TMF : Form
     {
         private bool isReady = false;
-        private string shapeFileName = @".\nm_files\bricks.jpg";
 
         private List<MyPoint> points = new List<MyPoint>();
         private List<double> normalVectorsX = new List<double>();
         private List<double> normalVectorsY = new List<double>();
         private List<double> normalVectorsZ = new List<double>();
-        //private List<List<MyPoint>> polygons = new();
-        //private List<List<Edge>> polygonsByEdges = new();
         private List<Polygon> polygons = new List<Polygon>();
 
 
@@ -57,20 +54,14 @@ namespace triangle_mesh_filler
 
         private int interpolationType = 1;
         private int fillingType = 1;
-        public Form1()
+        public TMF()
         {
             InitializeComponent();
 
             Configuration();
 
-            // TODO: move everything from the start of program to separate function
-
-
-
-            // DrawCanvas();
             isReady = true;
             DrawCanvas();
-
         }
 
         public void Configuration()
@@ -105,36 +96,29 @@ namespace triangle_mesh_filler
             LoadShape(@".\obj_files\object.obj");
 
             // load texture from file
-            LoadTexture(@".\texture_files\metal.jpg");
+            LoadTexture(@".\texture_files\wood.jpg");
 
             // load normalmap from file
             LoadNormalMap(@".\nm_files\mecha.jpg");
-
-            // Canvas.Image = normalMap;
 
             // set values of sliders
             kd_slider.Value = (int)(kd * 100);
             ks_slider.Value = (int)(ks * 100);
             m_slider.Value = m;
 
-            Debug.WriteLine($"z_slider: {z_slider.Minimum}, {z_slider.Maximum}, {z_slider.Value}");
-
-
-            Debug.WriteLine($"Canva size: {Canvas.Width}, {Canvas.Height}");
-
             // set values of colors
             cdObject.Color = Color.FromArgb((int)(colorObject[0] * 255.0), (int)(colorObject[1] * 255.0), (int)(colorObject[2] * 255.0));
             cdLight.Color = Color.FromArgb((int)(colorLight[0] * 255.0), (int)(colorLight[1] * 255.0), (int)(colorLight[2] * 255.0));
 
+            // set bitmaps for texture and normalmap
             bmColorObject = new Bitmap(pictureBoxObjectColor.Width, pictureBoxObjectColor.Height);
             pictureBoxObjectColor.Image = bmColorObject;
             bmColorLight = new Bitmap(pictureBoxLightColor.Width, pictureBoxLightColor.Height);
             pictureBoxLightColor.Image = bmColorLight;
 
+            // rectangles with chosen colors of light and object
             FillWithColor(pictureBoxObjectColor, bmColorObject, cdObject.Color);
             FillWithColor(pictureBoxLightColor, bmColorLight, cdLight.Color);
-
-            Debug.WriteLine($"all: {polygons.Count}");
         }
 
         public void FillWithColor(PictureBox pb, Bitmap bitmap, Color color)
@@ -150,27 +134,12 @@ namespace triangle_mesh_filler
 
         public void DrawCanvas()
         {
-            //if (animating)
-            //{
-            //    if (drawArea != null) drawArea.Dispose();
-
-            //    drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
-            //    Canvas.Image = drawArea.Bitmap;
-            //}
-
             if (!isReady) return;
-
-            // return;
-
-            Debug.WriteLine($"interpolation type {interpolationType}, filling type {fillingType}");
 
             using (Graphics g = Graphics.FromImage(drawArea.Bitmap))
             {
                 g.Clear(Color.White);
-            }
-
-            Debug.WriteLine($"sun koords {sun.x}, {sun.y}");
-            
+            }            
 
             foreach (var polygon in polygons)
             {
@@ -192,21 +161,18 @@ namespace triangle_mesh_filler
                 {
                     Canvas.Invoke((MethodInvoker)delegate
                     {
-                    // Running on the UI thread
                     if (Canvas.IsDisposed) return;
                         Canvas.Update();
                     });
                 }
                 catch
                 {
-                    Debug.WriteLine("Error while closing with animation.");
                 }
             }
             else
             {
                 Canvas.Update();
             }
-            
         }
 
         public void LoadShape(string str)
@@ -223,16 +189,12 @@ namespace triangle_mesh_filler
             {
                 string[] words = line.Split();
 
-                // Debug.WriteLine(words.Length);
-
                 if (words[0] == "v")
                 {
-                    // Debug.WriteLine("enter v");
                     points.Add(new MyPoint(Convert.ToDouble(words[1]), Convert.ToDouble(words[2]), Convert.ToDouble(words[3]), 0, 0, 0));
                 }
                 else if (words[0] == "vn")
                 {
-                    // Debug.WriteLine("enter vn");
                     normalVectorsX.Add(Convert.ToDouble(words[1]));
                     normalVectorsY.Add(Convert.ToDouble(words[2]));
                     normalVectorsZ.Add(Convert.ToDouble(words[3]));
@@ -321,7 +283,6 @@ namespace triangle_mesh_filler
             {
                 if (point.z > zMax) zMax = point.z;
             }
-            Debug.WriteLine($"zMax: {zMax}");
 
             if (sun == null)
             {
@@ -334,20 +295,6 @@ namespace triangle_mesh_filler
 
             z_slider.Minimum = (int)(1.1 * zMax);
             z_slider.Value = (int)sun.z;
-
-            //if (NormalMapCheckbox.Checked && fillingType == 0)
-            //{
-            //    foreach (var polygon in polygons)
-            //    {
-            //        foreach (var point in polygon.points)
-            //        {
-            //            var result = ModifyNormalVector(point);
-            //            point.nx = result[0];
-            //            point.ny = result[1];
-            //            point.nz = result[2];
-            //        }
-            //    }
-            //}
         }
 
         public void DrawShape()
@@ -389,14 +336,10 @@ namespace triangle_mesh_filler
             public EdgeBucket[] buckets = new EdgeBucket[maxVer];
         }
 
-        // TODO: move those tables to polygon - do not calculate it every frame
-
         private static EdgeTableTuple[] edgeTable;
-#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static EdgeTableTuple ActiveEdgeTuple = new EdgeTableTuple();
 
         public static EdgeTableTuple[] EdgeTable { get => edgeTable; set => edgeTable = value; }
-#pragma warning restore CA2211 // Non-constant fields should not be visible
 
         public static void InitEdgeTable()
         {
@@ -451,7 +394,6 @@ namespace triangle_mesh_filler
             InsertionSort(receiver);
 
             receiver.countEdgeBucket++;
-
         }
 
         public static void StoreEdgeInTable(int x1, int y1, int x2, int y2)
@@ -521,10 +463,6 @@ namespace triangle_mesh_filler
             minY = int.MaxValue;
             maxY = int.MinValue;
 
-            // Debug.WriteLine($"interpolation type {interpolationType}, filling type {fillingType}");
-
-            // List<Color> verticesColors = new List<Color>() { 0, 0, 0 };
-
             List<double> colorA = null;
             List<double> colorB = null;
             List<double> colorC = null;
@@ -548,7 +486,6 @@ namespace triangle_mesh_filler
                 }
                 
             }
-            // List<Color> verticesColors = FindColorsOfVertices(polygon);
             double area = getArea(polygon.points[0], polygon.points[1], polygon.points[2]);
 
             foreach (var edge in polygon.edges)
@@ -664,8 +601,6 @@ namespace triangle_mesh_filler
                                     }
                              
                                 }
-                                // TODO: if drawing using texture, use below
-                                // Color color = textureColors[k, i + minY];
                                 drawArea.SetPixel(k, i + minY, color);
                             }
                         }
@@ -674,13 +609,6 @@ namespace triangle_mesh_filler
                 }
                 Updatexbyslopeinv(ActiveEdgeTuple);
             }
-
-            //for (int a = 0; a < polygon.size; a++)
-            //{
-            //    using SolidBrush sb = new SolidBrush(verticesColors[a]);
-            //    using Graphics g = Graphics.FromImage(drawArea.Bitmap);
-            //    g.FillEllipse(sb, (int)polygon.points[a].x - sun.radius, (int)polygon.points[a].y - sun.radius, 2 * sun.radius, 2 * sun.radius);
-            //}
         }
 
         public double getArea(MyPoint A, MyPoint B, MyPoint C)
@@ -692,14 +620,6 @@ namespace triangle_mesh_filler
             int Cx = Convert.ToInt32(C.x);
             int Cy = Convert.ToInt32(C.y);
             return Math.Abs(Ax * (By - Cy) + Bx * (Cy - Ay) + Cx * (Ay - By)) / 2.0;
-            //return Math.Abs(Math.Round(A.x) * (Math.Round(B.y) - Math.Round(C.y)) + Math.Round(B.x) * (Math.Round(C.y) - Math.Round(A.y)) + Math.Round(C.x) * (Math.Round(A.y) - Math.Round(B.y))) / 2.0;
-            //double a = GetDistance(B, C);
-            //double b = GetDistance(A, C);
-            //double c = GetDistance(A, B);
-            //double s = (a + b + c) / 2.0;
-            //double tmp = s * (s - a) * (s - b) * (s - c);
-            //if (tmp <= 0) return 0;
-            //else return Math.Sqrt(tmp);
         }
 
         public double GetDistance(MyPoint A, MyPoint B)
@@ -744,31 +664,21 @@ namespace triangle_mesh_filler
 
         public Color FindColorOfPixel(Polygon polygon, List<double> colorA, List<double> colorB, List<double> colorC, MyPoint point, double area)
         {
-            //if (point.x == (int)polygon.points[0].x && point.y == (int)polygon.points[0].y) return Color.FromArgb((int)colorA[0], (int)colorA[1], (int)colorA[2]);
-            //if (point.x == (int)polygon.points[1].x && point.y == (int)polygon.points[1].y) return Color.FromArgb((int)colorB[0], (int)colorB[1], (int)colorB[2]);
-            //if (point.x == (int)polygon.points[2].x && point.y == (int)polygon.points[2].y) return Color.FromArgb((int)colorC[0], (int)colorC[1], (int)colorC[2]);
+            Color.FromArgb((int)colorC[0], (int)colorC[1], (int)colorC[2]);
             double alfa = getArea(polygon.points[1], polygon.points[2], point) / area;
             double beta = getArea(polygon.points[0], polygon.points[2], point) / area;
-            // double gamma = getArea(polygon.points[0], polygon.points[1], point) / area;
             double gamma = 1 - alfa - beta;
-            // if (gamma < 0) gamma = 0;
-
-            // Debug.WriteLine($"{alfa + beta + gamma}");
 
             List<double> color = new List<double>() { 0, 0, 0 };
             color[0] = Math.Min(alfa * colorA[0] + beta * colorB[0] + gamma * colorC[0], 1.0) * 255.0;
             color[1] = Math.Min(alfa * colorA[1] + beta * colorB[1] + gamma * colorC[1], 1.0) * 255.0;
             color[2] = Math.Min(alfa * colorA[2] + beta * colorB[2] + gamma * colorC[2], 1.0) * 255.0;
-            //color[0] = Math.Min((int)(alfa * colors[0].R + beta * colors[1].R + gamma * colors[2].R), 255);
-            //color[1] = Math.Min((int)(alfa * colors[0].G + beta * colors[1].G + gamma * colors[2].G), 255);
-            //color[2] = Math.Min((int)(alfa * colors[0].B + beta * colors[1].B + gamma * colors[2].B), 255);
 
             for (int i = 0; i < color.Count; i++)
             {
                 if (color[i] < 0.0 || Double.IsNaN(color[i])) color[i] = 0.0;
             }
             return Color.FromArgb((int)color[0], (int)color[1], (int)color[2]);
-            // return Color.FromArgb(0, 0, 0);
         }
 
         public List<double> CountColorForPoint(MyPoint point, Color? pixelColor)
@@ -783,13 +693,11 @@ namespace triangle_mesh_filler
             L[0] = (sun.x - point.x);
             L[1] = (sun.y - point.y);
             L[2] = (sun.z - point.z);
-            // Debug.WriteLine($"L: {L[0]}, {L[1]}, {L[2]}");
             double lenL = Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2]);
             for (int i = 0; i < L.Count; i++)
             {
                 L[i] /= lenL;
             }
-            // Debug.WriteLine($"new length: {Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2])}");
             List<double> N = new List<double>() { point.nx, point.ny, point.nz };
 
             double lenN = Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2]);
@@ -797,10 +705,8 @@ namespace triangle_mesh_filler
             {
                 N[i] /= lenN;
             }
-            // Debug.WriteLine($"normal vector length: {Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2])}");
             double cosNL = L[0] * N[0] + L[1] * N[1] + L[2] * N[2];
             cosNL = cosNL < 0 ? 0 : cosNL;
-            // Debug.WriteLine($"cosNL: {cosNL}");
             List<double> V = new List<double>() { 0, 0, 1 };
             List<double> R = new List<double>() { 0, 0, 0 };
             for (int i = 0; i < R.Count; i++)
@@ -828,12 +734,10 @@ namespace triangle_mesh_filler
 
             Bitmap sunImage = new Bitmap(@"C:\Users\Sosna\Desktop\sun.png");
             g.DrawImage(sunImage, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
-
         }
 
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
         {
-            // TODO: same for every other object!!!
             if (AnimationError()) return;
             sun.x = e.X;
             sun.y = e.Y;
@@ -953,14 +857,12 @@ namespace triangle_mesh_filler
                     sun.y += sign * 30.0;
                     if (sun.y - middleY >= animationRadius)
                     {
-                        Debug.WriteLine("wchodze1");
                         sun.y = middleY + animationRadius;
                         sun.x = middleX;
                         sign = -sign;
                     }
                     else if (sun.y - middleY <= -animationRadius)
                     {
-                        Debug.WriteLine("wchodze2");
                         sun.y = middleY - animationRadius;
                         sun.x = middleX;
                         sign = -sign;
@@ -1084,8 +986,8 @@ namespace triangle_mesh_filler
             DialogResult result = ofd.ShowDialog();
             if (result == DialogResult.OK)
             {
-                shapeFileName = ofd.FileName;
-                LoadShape(shapeFileName);
+                string filename = ofd.FileName;
+                LoadShape(filename);
                 DrawCanvas();
             }
         }
@@ -1228,9 +1130,6 @@ namespace triangle_mesh_filler
             textureN[0] = (1.0 * normalMapColors[(int)point.x, (int)point.y].R - 127.5) / 127.5;
             textureN[1] = (1.0 * normalMapColors[(int)point.x, (int)point.y].G - 127.5) / 127.5;
             textureN[2] = (1.0 * normalMapColors[(int)point.x, (int)point.y].B) / 255.0;
-            //textureN[0] = (1.0 * test.R - 127.5) / 127.5;
-            //textureN[1] = (1.0 * test.G - 127.5) / 127.5;
-            //textureN[2] = (1.0 * test.B) / 255.0;
             double textureNLength = Math.Sqrt(textureN[0] * textureN[0] + textureN[1] * textureN[1] + textureN[2] * textureN[2]);
             for (int i = 0; i < textureN.Count; i++)
             {
@@ -1245,7 +1144,6 @@ namespace triangle_mesh_filler
             {
                 B = CrossProduct(surfaceN, new List<double>() { 0, 0, 1 });
             }
-            // TODO: add NSurface
             List<double> T = CrossProduct(B, surfaceN);
             double[,] M = new double[3, 3];
             M[0, 0] = T[0];
@@ -1258,10 +1156,6 @@ namespace triangle_mesh_filler
             M[2, 1] = B[2];
             M[2, 2] = surfaceN[2];
             var result = MatrixMultiplication(M, textureN);
-            //for (int idx = 0; idx < result.Count; idx++)
-            //{
-            //    Debug.WriteLine(result[idx].ToString());
-            //}
             return result;
         }
 
@@ -1285,7 +1179,6 @@ namespace triangle_mesh_filler
 
         private void NormalMapCheckbox_Click(object sender, EventArgs e)
         {
-            // LoadShape(shapeFileName);
             DrawCanvas();
         }
     }
@@ -1337,17 +1230,12 @@ namespace triangle_mesh_filler
         public List<MyPoint> points;
         public List<Edge> edges;
         public int size;
-        static int index = 0;
-        int polygonIndex;
-
 
         public Polygon()
         {
             this.points = null;
             this.edges = null;
             this.size = 0;
-            this.polygonIndex = index;
-            Polygon.index++;
         }
 
         public Polygon(List<MyPoint> points, List<Edge> edges, int size)
@@ -1355,8 +1243,6 @@ namespace triangle_mesh_filler
             this.points = points;
             this.edges = edges;
             this.size = size;
-            this.polygonIndex = index;
-            Polygon.index++;
         }
     }
 
@@ -1396,9 +1282,7 @@ namespace triangle_mesh_filler
             return result;
         }
 
-#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
         public void Dispose()
-#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         {
             if (Disposed) return;
             Disposed = true;
