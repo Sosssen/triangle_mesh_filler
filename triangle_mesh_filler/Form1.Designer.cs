@@ -33,46 +33,48 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.DrawShapeCheckBox = new System.Windows.Forms.CheckBox();
-            this.AnimationCheckBox = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.ObjectColorButton = new System.Windows.Forms.Button();
-            this.pictureBoxObjectColor = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.LightColorButton = new System.Windows.Forms.Button();
-            this.pictureBoxLightColor = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.InterpolateVectors = new System.Windows.Forms.RadioButton();
+            this.pictureBoxObjectColor = new System.Windows.Forms.PictureBox();
             this.InterpolateColors = new System.Windows.Forms.RadioButton();
-            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
-            this.FillColor = new System.Windows.Forms.RadioButton();
-            this.FillTexture = new System.Windows.Forms.RadioButton();
+            this.ObjectColorButton = new System.Windows.Forms.Button();
+            this.LoadTexture = new System.Windows.Forms.Button();
+            this.LoadNormalMap = new System.Windows.Forms.Button();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.z_slider = new System.Windows.Forms.TrackBar();
             this.kd_slider = new System.Windows.Forms.TrackBar();
             this.m_slider = new System.Windows.Forms.TrackBar();
             this.ks_slider = new System.Windows.Forms.TrackBar();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.kd_label = new System.Windows.Forms.Label();
-            this.ks_label = new System.Windows.Forms.Label();
-            this.m_label = new System.Windows.Forms.Label();
+            this.pictureBoxLightColor = new System.Windows.Forms.PictureBox();
+            this.LightColorButton = new System.Windows.Forms.Button();
             this.z_label = new System.Windows.Forms.Label();
+            this.m_label = new System.Windows.Forms.Label();
+            this.ks_label = new System.Windows.Forms.Label();
+            this.LoadShapeButton = new System.Windows.Forms.Button();
+            this.kd_label = new System.Windows.Forms.Label();
+            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.AnimationCheckBox = new System.Windows.Forms.CheckBox();
+            this.DrawShapeCheckBox = new System.Windows.Forms.CheckBox();
+            this.FillTexture = new System.Windows.Forms.RadioButton();
+            this.FillColor = new System.Windows.Forms.RadioButton();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxObjectColor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLightColor)).BeginInit();
-            this.tableLayoutPanel7.SuspendLayout();
-            this.tableLayoutPanel8.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.z_slider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kd_slider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.m_slider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ks_slider)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLightColor)).BeginInit();
+            this.tableLayoutPanel10.SuspendLayout();
             this.SuspendLayout();
             // 
             // Canvas
@@ -104,15 +106,14 @@ namespace triangle_mesh_filler
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel4, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel7, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel8, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel9, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel9, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel10, 1, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(790, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -126,195 +127,90 @@ namespace triangle_mesh_filler
             // 
             this.tableLayoutPanel4.ColumnCount = 1;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.DrawShapeCheckBox, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.AnimationCheckBox, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 0, 2);
-            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel6, 0, 3);
+            this.tableLayoutPanel4.Controls.Add(this.InterpolateVectors, 0, 4);
+            this.tableLayoutPanel4.Controls.Add(this.pictureBoxObjectColor, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.InterpolateColors, 0, 3);
+            this.tableLayoutPanel4.Controls.Add(this.ObjectColorButton, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.LoadTexture, 0, 2);
+            this.tableLayoutPanel4.Controls.Add(this.LoadNormalMap, 0, 5);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 464);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 4;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(254, 456);
+            this.tableLayoutPanel4.RowCount = 6;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(384, 456);
             this.tableLayoutPanel4.TabIndex = 1;
-            // 
-            // DrawShapeCheckBox
-            // 
-            this.DrawShapeCheckBox.AutoSize = true;
-            this.DrawShapeCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DrawShapeCheckBox.Location = new System.Drawing.Point(3, 3);
-            this.DrawShapeCheckBox.Name = "DrawShapeCheckBox";
-            this.DrawShapeCheckBox.Size = new System.Drawing.Size(248, 108);
-            this.DrawShapeCheckBox.TabIndex = 0;
-            this.DrawShapeCheckBox.Text = "draw shape";
-            this.DrawShapeCheckBox.UseVisualStyleBackColor = true;
-            this.DrawShapeCheckBox.CheckedChanged += new System.EventHandler(this.DrawShapeCheckBox_CheckedChanged);
-            // 
-            // AnimationCheckBox
-            // 
-            this.AnimationCheckBox.AutoSize = true;
-            this.AnimationCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AnimationCheckBox.Location = new System.Drawing.Point(3, 117);
-            this.AnimationCheckBox.Name = "AnimationCheckBox";
-            this.AnimationCheckBox.Size = new System.Drawing.Size(248, 108);
-            this.AnimationCheckBox.TabIndex = 1;
-            this.AnimationCheckBox.Text = "animate sun";
-            this.AnimationCheckBox.UseVisualStyleBackColor = true;
-            this.AnimationCheckBox.CheckedChanged += new System.EventHandler(this.AnimationCheckBox_CheckedChanged);
-            // 
-            // tableLayoutPanel5
-            // 
-            this.tableLayoutPanel5.ColumnCount = 1;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Controls.Add(this.ObjectColorButton, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.pictureBoxObjectColor, 0, 1);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 231);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(248, 108);
-            this.tableLayoutPanel5.TabIndex = 4;
-            // 
-            // ObjectColorButton
-            // 
-            this.ObjectColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ObjectColorButton.Location = new System.Drawing.Point(3, 3);
-            this.ObjectColorButton.Name = "ObjectColorButton";
-            this.ObjectColorButton.Size = new System.Drawing.Size(242, 48);
-            this.ObjectColorButton.TabIndex = 2;
-            this.ObjectColorButton.Text = "pick color of object";
-            this.ObjectColorButton.UseVisualStyleBackColor = true;
-            this.ObjectColorButton.Click += new System.EventHandler(this.ObjectColorButton_Click);
-            // 
-            // pictureBoxObjectColor
-            // 
-            this.pictureBoxObjectColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxObjectColor.Location = new System.Drawing.Point(3, 57);
-            this.pictureBoxObjectColor.Name = "pictureBoxObjectColor";
-            this.pictureBoxObjectColor.Size = new System.Drawing.Size(242, 48);
-            this.pictureBoxObjectColor.TabIndex = 3;
-            this.pictureBoxObjectColor.TabStop = false;
-            // 
-            // tableLayoutPanel6
-            // 
-            this.tableLayoutPanel6.ColumnCount = 1;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 345);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 2;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(248, 108);
-            this.tableLayoutPanel6.TabIndex = 5;
-            // 
-            // LightColorButton
-            // 
-            this.LightColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LightColorButton.Location = new System.Drawing.Point(3, 328);
-            this.LightColorButton.Name = "LightColorButton";
-            this.LightColorButton.Size = new System.Drawing.Size(248, 59);
-            this.LightColorButton.TabIndex = 3;
-            this.LightColorButton.Text = "pick color of light";
-            this.LightColorButton.UseVisualStyleBackColor = true;
-            this.LightColorButton.Click += new System.EventHandler(this.LightColorButton_Click);
-            // 
-            // pictureBoxLightColor
-            // 
-            this.pictureBoxLightColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxLightColor.Location = new System.Drawing.Point(3, 393);
-            this.pictureBoxLightColor.Name = "pictureBoxLightColor";
-            this.pictureBoxLightColor.Size = new System.Drawing.Size(248, 59);
-            this.pictureBoxLightColor.TabIndex = 4;
-            this.pictureBoxLightColor.TabStop = false;
-            // 
-            // tableLayoutPanel7
-            // 
-            this.tableLayoutPanel7.ColumnCount = 1;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel7.Controls.Add(this.InterpolateVectors, 0, 1);
-            this.tableLayoutPanel7.Controls.Add(this.InterpolateColors, 0, 0);
-            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(263, 3);
-            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-            this.tableLayoutPanel7.RowCount = 2;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(254, 455);
-            this.tableLayoutPanel7.TabIndex = 4;
             // 
             // InterpolateVectors
             // 
             this.InterpolateVectors.AutoSize = true;
             this.InterpolateVectors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.InterpolateVectors.Location = new System.Drawing.Point(3, 230);
+            this.InterpolateVectors.Location = new System.Drawing.Point(3, 307);
             this.InterpolateVectors.Name = "InterpolateVectors";
-            this.InterpolateVectors.Size = new System.Drawing.Size(248, 222);
+            this.InterpolateVectors.Size = new System.Drawing.Size(378, 70);
             this.InterpolateVectors.TabIndex = 4;
             this.InterpolateVectors.Text = "interpolate vectors";
             this.InterpolateVectors.UseVisualStyleBackColor = true;
             this.InterpolateVectors.Click += new System.EventHandler(this.InterpolateVectors_Click);
+            // 
+            // pictureBoxObjectColor
+            // 
+            this.pictureBoxObjectColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxObjectColor.Location = new System.Drawing.Point(3, 79);
+            this.pictureBoxObjectColor.Name = "pictureBoxObjectColor";
+            this.pictureBoxObjectColor.Size = new System.Drawing.Size(378, 70);
+            this.pictureBoxObjectColor.TabIndex = 3;
+            this.pictureBoxObjectColor.TabStop = false;
             // 
             // InterpolateColors
             // 
             this.InterpolateColors.AutoSize = true;
             this.InterpolateColors.Checked = true;
             this.InterpolateColors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.InterpolateColors.Location = new System.Drawing.Point(3, 3);
+            this.InterpolateColors.Location = new System.Drawing.Point(3, 231);
             this.InterpolateColors.Name = "InterpolateColors";
-            this.InterpolateColors.Size = new System.Drawing.Size(248, 221);
+            this.InterpolateColors.Size = new System.Drawing.Size(378, 70);
             this.InterpolateColors.TabIndex = 3;
             this.InterpolateColors.TabStop = true;
             this.InterpolateColors.Text = "interpolate colors";
             this.InterpolateColors.UseVisualStyleBackColor = true;
             this.InterpolateColors.Click += new System.EventHandler(this.InterpolateColors_Click);
             // 
-            // tableLayoutPanel8
+            // ObjectColorButton
             // 
-            this.tableLayoutPanel8.ColumnCount = 1;
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.Controls.Add(this.FillColor, 0, 0);
-            this.tableLayoutPanel8.Controls.Add(this.FillTexture, 0, 1);
-            this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel8.Location = new System.Drawing.Point(263, 464);
-            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-            this.tableLayoutPanel8.RowCount = 2;
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(254, 456);
-            this.tableLayoutPanel8.TabIndex = 5;
+            this.ObjectColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ObjectColorButton.Location = new System.Drawing.Point(3, 3);
+            this.ObjectColorButton.Name = "ObjectColorButton";
+            this.ObjectColorButton.Size = new System.Drawing.Size(378, 70);
+            this.ObjectColorButton.TabIndex = 2;
+            this.ObjectColorButton.Text = "pick color of object";
+            this.ObjectColorButton.UseVisualStyleBackColor = true;
+            this.ObjectColorButton.Click += new System.EventHandler(this.ObjectColorButton_Click);
             // 
-            // FillColor
+            // LoadTexture
             // 
-            this.FillColor.AutoSize = true;
-            this.FillColor.Checked = true;
-            this.FillColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FillColor.Location = new System.Drawing.Point(3, 3);
-            this.FillColor.Name = "FillColor";
-            this.FillColor.Size = new System.Drawing.Size(248, 222);
-            this.FillColor.TabIndex = 0;
-            this.FillColor.TabStop = true;
-            this.FillColor.Text = "fill with color";
-            this.FillColor.UseVisualStyleBackColor = true;
-            this.FillColor.Click += new System.EventHandler(this.FillColor_Click);
+            this.LoadTexture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LoadTexture.Location = new System.Drawing.Point(3, 155);
+            this.LoadTexture.Name = "LoadTexture";
+            this.LoadTexture.Size = new System.Drawing.Size(378, 70);
+            this.LoadTexture.TabIndex = 4;
+            this.LoadTexture.Text = "load texture";
+            this.LoadTexture.UseVisualStyleBackColor = true;
             // 
-            // FillTexture
+            // LoadNormalMap
             // 
-            this.FillTexture.AutoSize = true;
-            this.FillTexture.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FillTexture.Location = new System.Drawing.Point(3, 231);
-            this.FillTexture.Name = "FillTexture";
-            this.FillTexture.Size = new System.Drawing.Size(248, 222);
-            this.FillTexture.TabIndex = 1;
-            this.FillTexture.Text = "fill with texture";
-            this.FillTexture.UseVisualStyleBackColor = true;
-            this.FillTexture.Click += new System.EventHandler(this.FillTexture_Click);
+            this.LoadNormalMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LoadNormalMap.Location = new System.Drawing.Point(3, 383);
+            this.LoadNormalMap.Name = "LoadNormalMap";
+            this.LoadNormalMap.Size = new System.Drawing.Size(378, 70);
+            this.LoadNormalMap.TabIndex = 5;
+            this.LoadNormalMap.Text = "load normal map";
+            this.LoadNormalMap.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel9
             // 
@@ -323,27 +219,32 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel9.Controls.Add(this.z_slider, 3, 0);
-            this.tableLayoutPanel9.Controls.Add(this.kd_slider, 0, 0);
-            this.tableLayoutPanel9.Controls.Add(this.m_slider, 2, 0);
-            this.tableLayoutPanel9.Controls.Add(this.ks_slider, 1, 0);
+            this.tableLayoutPanel9.Controls.Add(this.label4, 3, 0);
+            this.tableLayoutPanel9.Controls.Add(this.label3, 2, 0);
+            this.tableLayoutPanel9.Controls.Add(this.label2, 1, 0);
+            this.tableLayoutPanel9.Controls.Add(this.kd_slider, 0, 1);
+            this.tableLayoutPanel9.Controls.Add(this.ks_slider, 1, 1);
+            this.tableLayoutPanel9.Controls.Add(this.m_slider, 2, 1);
+            this.tableLayoutPanel9.Controls.Add(this.z_slider, 3, 1);
+            this.tableLayoutPanel9.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(523, 3);
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(393, 3);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-            this.tableLayoutPanel9.RowCount = 1;
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(255, 455);
+            this.tableLayoutPanel9.RowCount = 2;
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90F));
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(385, 455);
             this.tableLayoutPanel9.TabIndex = 6;
             // 
             // z_slider
             // 
             this.z_slider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.z_slider.Location = new System.Drawing.Point(192, 3);
+            this.z_slider.Location = new System.Drawing.Point(291, 48);
             this.z_slider.Maximum = 2000;
             this.z_slider.Minimum = 500;
             this.z_slider.Name = "z_slider";
             this.z_slider.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.z_slider.Size = new System.Drawing.Size(60, 449);
+            this.z_slider.Size = new System.Drawing.Size(91, 404);
             this.z_slider.SmallChange = 10;
             this.z_slider.TabIndex = 3;
             this.z_slider.Value = 500;
@@ -352,23 +253,23 @@ namespace triangle_mesh_filler
             // kd_slider
             // 
             this.kd_slider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kd_slider.Location = new System.Drawing.Point(3, 3);
+            this.kd_slider.Location = new System.Drawing.Point(3, 48);
             this.kd_slider.Maximum = 100;
             this.kd_slider.Name = "kd_slider";
             this.kd_slider.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.kd_slider.Size = new System.Drawing.Size(57, 449);
+            this.kd_slider.Size = new System.Drawing.Size(90, 404);
             this.kd_slider.TabIndex = 0;
             this.kd_slider.ValueChanged += new System.EventHandler(this.kd_slider_ValueChanged);
             // 
             // m_slider
             // 
             this.m_slider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_slider.Location = new System.Drawing.Point(129, 3);
+            this.m_slider.Location = new System.Drawing.Point(195, 48);
             this.m_slider.Maximum = 100;
             this.m_slider.Minimum = 1;
             this.m_slider.Name = "m_slider";
             this.m_slider.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.m_slider.Size = new System.Drawing.Size(57, 449);
+            this.m_slider.Size = new System.Drawing.Size(90, 404);
             this.m_slider.TabIndex = 2;
             this.m_slider.Value = 1;
             this.m_slider.ValueChanged += new System.EventHandler(this.m_slider_ValueChanged);
@@ -376,11 +277,11 @@ namespace triangle_mesh_filler
             // ks_slider
             // 
             this.ks_slider.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ks_slider.Location = new System.Drawing.Point(66, 3);
+            this.ks_slider.Location = new System.Drawing.Point(99, 48);
             this.ks_slider.Maximum = 100;
             this.ks_slider.Name = "ks_slider";
             this.ks_slider.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.ks_slider.Size = new System.Drawing.Size(57, 449);
+            this.ks_slider.Size = new System.Drawing.Size(90, 404);
             this.ks_slider.TabIndex = 1;
             this.ks_slider.ValueChanged += new System.EventHandler(this.ks_slider_ValueChanged);
             // 
@@ -393,7 +294,7 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel3.Controls.Add(this.z_label, 0, 4);
             this.tableLayoutPanel3.Controls.Add(this.m_label, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.ks_label, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.button1, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.LoadShapeButton, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.kd_label, 0, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
@@ -406,62 +307,208 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28571F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28571F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28571F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(254, 455);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(384, 455);
             this.tableLayoutPanel3.TabIndex = 7;
             // 
-            // button1
+            // pictureBoxLightColor
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button1.Location = new System.Drawing.Point(3, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(248, 59);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "load shape";
-            this.button1.UseVisualStyleBackColor = true;
+            this.pictureBoxLightColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxLightColor.Location = new System.Drawing.Point(3, 387);
+            this.pictureBoxLightColor.Name = "pictureBoxLightColor";
+            this.pictureBoxLightColor.Size = new System.Drawing.Size(378, 65);
+            this.pictureBoxLightColor.TabIndex = 4;
+            this.pictureBoxLightColor.TabStop = false;
             // 
-            // kd_label
+            // LightColorButton
             // 
-            this.kd_label.AutoSize = true;
-            this.kd_label.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kd_label.Location = new System.Drawing.Point(3, 65);
-            this.kd_label.Name = "kd_label";
-            this.kd_label.Size = new System.Drawing.Size(248, 65);
-            this.kd_label.TabIndex = 0;
-            this.kd_label.Text = "label1";
-            this.kd_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // ks_label
-            // 
-            this.ks_label.AutoSize = true;
-            this.ks_label.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ks_label.Location = new System.Drawing.Point(3, 130);
-            this.ks_label.Name = "ks_label";
-            this.ks_label.Size = new System.Drawing.Size(248, 65);
-            this.ks_label.TabIndex = 1;
-            this.ks_label.Text = "label2";
-            this.ks_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // m_label
-            // 
-            this.m_label.AutoSize = true;
-            this.m_label.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_label.Location = new System.Drawing.Point(3, 195);
-            this.m_label.Name = "m_label";
-            this.m_label.Size = new System.Drawing.Size(248, 65);
-            this.m_label.TabIndex = 2;
-            this.m_label.Text = "label3";
-            this.m_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LightColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LightColorButton.Location = new System.Drawing.Point(3, 323);
+            this.LightColorButton.Name = "LightColorButton";
+            this.LightColorButton.Size = new System.Drawing.Size(378, 58);
+            this.LightColorButton.TabIndex = 3;
+            this.LightColorButton.Text = "pick color of light";
+            this.LightColorButton.UseVisualStyleBackColor = true;
+            this.LightColorButton.Click += new System.EventHandler(this.LightColorButton_Click);
             // 
             // z_label
             // 
             this.z_label.AutoSize = true;
             this.z_label.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.z_label.Location = new System.Drawing.Point(3, 260);
+            this.z_label.Location = new System.Drawing.Point(3, 256);
             this.z_label.Name = "z_label";
-            this.z_label.Size = new System.Drawing.Size(248, 65);
+            this.z_label.Size = new System.Drawing.Size(378, 64);
             this.z_label.TabIndex = 3;
             this.z_label.Text = "label4";
             this.z_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // m_label
+            // 
+            this.m_label.AutoSize = true;
+            this.m_label.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.m_label.Location = new System.Drawing.Point(3, 192);
+            this.m_label.Name = "m_label";
+            this.m_label.Size = new System.Drawing.Size(378, 64);
+            this.m_label.TabIndex = 2;
+            this.m_label.Text = "label3";
+            this.m_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ks_label
+            // 
+            this.ks_label.AutoSize = true;
+            this.ks_label.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ks_label.Location = new System.Drawing.Point(3, 128);
+            this.ks_label.Name = "ks_label";
+            this.ks_label.Size = new System.Drawing.Size(378, 64);
+            this.ks_label.TabIndex = 1;
+            this.ks_label.Text = "label2";
+            this.ks_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LoadShapeButton
+            // 
+            this.LoadShapeButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LoadShapeButton.Location = new System.Drawing.Point(3, 3);
+            this.LoadShapeButton.Name = "LoadShapeButton";
+            this.LoadShapeButton.Size = new System.Drawing.Size(378, 58);
+            this.LoadShapeButton.TabIndex = 0;
+            this.LoadShapeButton.Text = "load shape";
+            this.LoadShapeButton.UseVisualStyleBackColor = true;
+            // 
+            // kd_label
+            // 
+            this.kd_label.AutoSize = true;
+            this.kd_label.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kd_label.Location = new System.Drawing.Point(3, 64);
+            this.kd_label.Name = "kd_label";
+            this.kd_label.Size = new System.Drawing.Size(378, 64);
+            this.kd_label.TabIndex = 0;
+            this.kd_label.Text = "label1";
+            this.kd_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel10
+            // 
+            this.tableLayoutPanel10.ColumnCount = 1;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel10.Controls.Add(this.AnimationCheckBox, 0, 3);
+            this.tableLayoutPanel10.Controls.Add(this.DrawShapeCheckBox, 0, 2);
+            this.tableLayoutPanel10.Controls.Add(this.FillTexture, 0, 1);
+            this.tableLayoutPanel10.Controls.Add(this.FillColor, 0, 0);
+            this.tableLayoutPanel10.Controls.Add(this.checkBox1, 0, 4);
+            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(393, 464);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 5;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(385, 456);
+            this.tableLayoutPanel10.TabIndex = 8;
+            // 
+            // AnimationCheckBox
+            // 
+            this.AnimationCheckBox.AutoSize = true;
+            this.AnimationCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AnimationCheckBox.Location = new System.Drawing.Point(3, 276);
+            this.AnimationCheckBox.Name = "AnimationCheckBox";
+            this.AnimationCheckBox.Size = new System.Drawing.Size(379, 85);
+            this.AnimationCheckBox.TabIndex = 1;
+            this.AnimationCheckBox.Text = "animate sun";
+            this.AnimationCheckBox.UseVisualStyleBackColor = true;
+            this.AnimationCheckBox.CheckedChanged += new System.EventHandler(this.AnimationCheckBox_CheckedChanged);
+            // 
+            // DrawShapeCheckBox
+            // 
+            this.DrawShapeCheckBox.AutoSize = true;
+            this.DrawShapeCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DrawShapeCheckBox.Location = new System.Drawing.Point(3, 185);
+            this.DrawShapeCheckBox.Name = "DrawShapeCheckBox";
+            this.DrawShapeCheckBox.Size = new System.Drawing.Size(379, 85);
+            this.DrawShapeCheckBox.TabIndex = 0;
+            this.DrawShapeCheckBox.Text = "draw shape";
+            this.DrawShapeCheckBox.UseVisualStyleBackColor = true;
+            this.DrawShapeCheckBox.CheckedChanged += new System.EventHandler(this.DrawShapeCheckBox_CheckedChanged);
+            // 
+            // FillTexture
+            // 
+            this.FillTexture.AutoSize = true;
+            this.FillTexture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FillTexture.Location = new System.Drawing.Point(3, 94);
+            this.FillTexture.Name = "FillTexture";
+            this.FillTexture.Size = new System.Drawing.Size(379, 85);
+            this.FillTexture.TabIndex = 1;
+            this.FillTexture.Text = "fill with texture";
+            this.FillTexture.UseVisualStyleBackColor = true;
+            this.FillTexture.Click += new System.EventHandler(this.FillTexture_Click);
+            // 
+            // FillColor
+            // 
+            this.FillColor.AutoSize = true;
+            this.FillColor.Checked = true;
+            this.FillColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FillColor.Location = new System.Drawing.Point(3, 3);
+            this.FillColor.Name = "FillColor";
+            this.FillColor.Size = new System.Drawing.Size(379, 85);
+            this.FillColor.TabIndex = 0;
+            this.FillColor.TabStop = true;
+            this.FillColor.Text = "fill with color";
+            this.FillColor.UseVisualStyleBackColor = true;
+            this.FillColor.Click += new System.EventHandler(this.FillColor_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkBox1.Location = new System.Drawing.Point(3, 367);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(379, 86);
+            this.checkBox1.TabIndex = 2;
+            this.checkBox1.Text = "use normal map";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(90, 45);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "kd";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Location = new System.Drawing.Point(99, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(90, 45);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "ks";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Location = new System.Drawing.Point(195, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 45);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "m";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Location = new System.Drawing.Point(291, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(91, 45);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "z";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Form1
             // 
@@ -478,13 +525,7 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxObjectColor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLightColor)).EndInit();
-            this.tableLayoutPanel7.ResumeLayout(false);
-            this.tableLayoutPanel7.PerformLayout();
-            this.tableLayoutPanel8.ResumeLayout(false);
-            this.tableLayoutPanel8.PerformLayout();
             this.tableLayoutPanel9.ResumeLayout(false);
             this.tableLayoutPanel9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.z_slider)).EndInit();
@@ -493,6 +534,9 @@ namespace triangle_mesh_filler
             ((System.ComponentModel.ISupportInitialize)(this.ks_slider)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLightColor)).EndInit();
+            this.tableLayoutPanel10.ResumeLayout(false);
+            this.tableLayoutPanel10.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -510,24 +554,28 @@ namespace triangle_mesh_filler
         private System.Windows.Forms.CheckBox AnimationCheckBox;
         private System.Windows.Forms.Button ObjectColorButton;
         private System.Windows.Forms.Button LightColorButton;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.PictureBox pictureBoxObjectColor;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.PictureBox pictureBoxLightColor;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
         private System.Windows.Forms.RadioButton InterpolateVectors;
         private System.Windows.Forms.RadioButton InterpolateColors;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private System.Windows.Forms.RadioButton FillColor;
         private System.Windows.Forms.RadioButton FillTexture;
         private System.Windows.Forms.TrackBar kd_slider;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button LoadShapeButton;
         private System.Windows.Forms.Label kd_label;
         private System.Windows.Forms.Label ks_label;
         private System.Windows.Forms.Label m_label;
         private System.Windows.Forms.Label z_label;
+        private System.Windows.Forms.Button LoadTexture;
+        private System.Windows.Forms.Button LoadNormalMap;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }
 

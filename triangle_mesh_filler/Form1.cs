@@ -816,6 +816,8 @@ namespace triangle_mesh_filler
         {
             kd = kd_slider.Value / 100.0;
             kd_label.Text = "kd = " + kd.ToString();
+            kd_label.Invalidate();
+            kd_label.Update();
             DrawCanvas();
         }
 
@@ -823,6 +825,8 @@ namespace triangle_mesh_filler
         {
             ks = ks_slider.Value / 100.0;
             ks_label.Text = "ks = " + ks.ToString();
+            ks_label.Invalidate();
+            ks_label.Update();
             DrawCanvas();
         }
 
@@ -830,6 +834,8 @@ namespace triangle_mesh_filler
         {
             m = m_slider.Value;
             m_label.Text = "m = " + m.ToString();
+            m_label.Invalidate();
+            m_label.Update();
             DrawCanvas();
         }
 
@@ -837,6 +843,8 @@ namespace triangle_mesh_filler
         {
             sun.z = z_slider.Value;
             z_label.Text = "z = " + sun.z.ToString();
+            z_label.Invalidate();
+            z_label.Update();
             DrawCanvas();
         }
 
