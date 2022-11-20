@@ -37,7 +37,7 @@ namespace triangle_mesh_filler
             this.pictureBoxObjectColor = new System.Windows.Forms.PictureBox();
             this.InterpolateColors = new System.Windows.Forms.RadioButton();
             this.ObjectColorButton = new System.Windows.Forms.Button();
-            this.LoadTexture = new System.Windows.Forms.Button();
+            this.LoadTextureButton = new System.Windows.Forms.Button();
             this.LoadNormalMap = new System.Windows.Forms.Button();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
@@ -131,7 +131,7 @@ namespace triangle_mesh_filler
             this.tableLayoutPanel4.Controls.Add(this.pictureBoxObjectColor, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.InterpolateColors, 0, 3);
             this.tableLayoutPanel4.Controls.Add(this.ObjectColorButton, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.LoadTexture, 0, 2);
+            this.tableLayoutPanel4.Controls.Add(this.LoadTextureButton, 0, 2);
             this.tableLayoutPanel4.Controls.Add(this.LoadNormalMap, 0, 5);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 464);
@@ -192,15 +192,16 @@ namespace triangle_mesh_filler
             this.ObjectColorButton.UseVisualStyleBackColor = true;
             this.ObjectColorButton.Click += new System.EventHandler(this.ObjectColorButton_Click);
             // 
-            // LoadTexture
+            // LoadTextureButton
             // 
-            this.LoadTexture.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LoadTexture.Location = new System.Drawing.Point(3, 155);
-            this.LoadTexture.Name = "LoadTexture";
-            this.LoadTexture.Size = new System.Drawing.Size(378, 70);
-            this.LoadTexture.TabIndex = 4;
-            this.LoadTexture.Text = "load texture";
-            this.LoadTexture.UseVisualStyleBackColor = true;
+            this.LoadTextureButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LoadTextureButton.Location = new System.Drawing.Point(3, 155);
+            this.LoadTextureButton.Name = "LoadTextureButton";
+            this.LoadTextureButton.Size = new System.Drawing.Size(378, 70);
+            this.LoadTextureButton.TabIndex = 4;
+            this.LoadTextureButton.Text = "load texture";
+            this.LoadTextureButton.UseVisualStyleBackColor = true;
+            this.LoadTextureButton.Click += new System.EventHandler(this.LoadTexture_Click);
             // 
             // LoadNormalMap
             // 
@@ -569,7 +570,7 @@ namespace triangle_mesh_filler
         private System.Windows.Forms.Label ks_label;
         private System.Windows.Forms.Label m_label;
         private System.Windows.Forms.Label z_label;
-        private System.Windows.Forms.Button LoadTexture;
+        private System.Windows.Forms.Button LoadTextureButton;
         private System.Windows.Forms.Button LoadNormalMap;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
         private System.Windows.Forms.CheckBox checkBox1;

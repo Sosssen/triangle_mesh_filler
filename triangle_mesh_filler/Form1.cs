@@ -13,6 +13,7 @@ namespace triangle_mesh_filler
 {
     public partial class Form1 : Form
     {
+        private bool isReady = false;
 
         private List<MyPoint> points = new List<MyPoint>();
         private List<double> normalVectorsX = new List<double>();
@@ -60,9 +61,11 @@ namespace triangle_mesh_filler
 
             // TODO: move everything from the start of program to separate function
 
-            
+
 
             // DrawCanvas();
+            isReady = true;
+            DrawCanvas();
         }
 
         public void Configuration()
@@ -93,16 +96,7 @@ namespace triangle_mesh_filler
             drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             Canvas.Image = drawArea.Bitmap;
 
-            Size s = new Size(Canvas.Width, Canvas.Height);
-            image = new Bitmap(new Bitmap("C:\\Users\\Sosna\\Desktop\\img_files\\landscape.jpg"), s);
-            textureColors = new Color[Canvas.Width, Canvas.Height];
-            for (int i = 0; i < Canvas.Width; i++)
-            {
-                for (int j = 0; j < Canvas.Height; j++)
-                {
-                    textureColors[i, j] = image.GetPixel(i, j);
-                }
-            }
+            LoadTexture(@"C:\Users\Sosna\Desktop\img_files\landscape.jpg");
 
             // load shape from *.obj file
             LoadShape(@"C:\Users\Sosna\Desktop\obj_files\objectAVG.obj");
@@ -167,6 +161,8 @@ namespace triangle_mesh_filler
             //    drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             //    Canvas.Image = drawArea.Bitmap;
             //}
+
+            if (!isReady) return;
 
             Debug.WriteLine($"interpolation type {interpolationType}, filling type {fillingType}");
 
@@ -981,6 +977,21 @@ namespace triangle_mesh_filler
             DrawCanvas();
         }
 
+        private void LoadTexture(string filename)
+        {
+            Size s = new Size(Canvas.Width, Canvas.Height);
+            image = new Bitmap(new Bitmap(filename), s);
+            textureColors = new Color[Canvas.Width, Canvas.Height];
+            for (int i = 0; i < Canvas.Width; i++)
+            {
+                for (int j = 0; j < Canvas.Height; j++)
+                {
+                    textureColors[i, j] = image.GetPixel(i, j);
+                }
+            }
+            DrawCanvas();
+        }
+
         private void LoadShapeButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -990,6 +1001,18 @@ namespace triangle_mesh_filler
                 string filename = ofd.FileName;
                 LoadShape(filename);
                 DrawCanvas();
+            }
+        }
+
+        private void LoadTexture_Click(object sender, EventArgs e)
+        {
+            Debug.WriteLine("aaaaa");
+            OpenFileDialog ofd = new OpenFileDialog();
+            DialogResult result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filename = ofd.FileName;
+                LoadTexture(filename);
             }
         }
     }
