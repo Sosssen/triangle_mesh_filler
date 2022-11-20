@@ -96,12 +96,11 @@ namespace triangle_mesh_filler
             drawArea = new DirectBitmap(Canvas.Width, Canvas.Height);
             Canvas.Image = drawArea.Bitmap;
 
-            LoadTexture(@"C:\Users\Sosna\Desktop\img_files\landscape.jpg");
-
             // load shape from *.obj file
-            LoadShape(@"C:\Users\Sosna\Desktop\obj_files\objectAVG.obj");
+            LoadShape(@".\obj_files\object.obj");
 
-            
+            // load texture from file
+            LoadTexture(@".\texture_files\wood.jpg");
 
             // find maximum z-coordinate
             double zMax = double.MinValue;
@@ -208,10 +207,10 @@ namespace triangle_mesh_filler
             
         }
 
-        public void LoadShape(string filename)
+        public void LoadShape(string str)
         {
+            string[] lines = System.IO.File.ReadAllLines(str);
 
-            string[] lines = System.IO.File.ReadAllLines(filename);
             points = new List<MyPoint>();
             normalVectorsX = new List<double>();
             normalVectorsY = new List<double>();
@@ -222,12 +221,16 @@ namespace triangle_mesh_filler
             {
                 string[] words = line.Split();
 
+                // Debug.WriteLine(words.Length);
+
                 if (words[0] == "v")
                 {
+                    // Debug.WriteLine("enter v");
                     points.Add(new MyPoint(Convert.ToDouble(words[1]), Convert.ToDouble(words[2]), Convert.ToDouble(words[3]), 0, 0, 0));
                 }
                 else if (words[0] == "vn")
                 {
+                    // Debug.WriteLine("enter vn");
                     normalVectorsX.Add(Convert.ToDouble(words[1]));
                     normalVectorsY.Add(Convert.ToDouble(words[2]));
                     normalVectorsZ.Add(Convert.ToDouble(words[3]));
@@ -988,6 +991,9 @@ namespace triangle_mesh_filler
         private void FillColor_Click(object sender, EventArgs e)
         {
             fillingType = 0;
+            colorObject[0] = cdObject.Color.R / 255.0;
+            colorObject[1] = cdObject.Color.G / 255.0;
+            colorObject[2] = cdObject.Color.B / 255.0;
             DrawCanvas();
         }
 
@@ -1015,6 +1021,8 @@ namespace triangle_mesh_filler
         private void LoadShapeButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            Debug.WriteLine(Environment.CurrentDirectory);
+            ofd.InitialDirectory = Environment.CurrentDirectory + @".\obj_files";
             DialogResult result = ofd.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -1027,6 +1035,7 @@ namespace triangle_mesh_filler
         private void LoadTexture_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = Environment.CurrentDirectory + @".\texture_files";
             DialogResult result = ofd.ShowDialog();
             if (result == DialogResult.OK)
             {
