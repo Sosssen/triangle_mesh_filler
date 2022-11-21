@@ -732,7 +732,7 @@ namespace triangle_mesh_filler
 
             using Graphics g = Graphics.FromImage(drawArea.Bitmap);
 
-            Bitmap sunImage = new Bitmap(@"C:\Users\Sosna\Desktop\sun.png");
+            Bitmap sunImage = new Bitmap(@".\sun.png");
             g.DrawImage(sunImage, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
         }
 
