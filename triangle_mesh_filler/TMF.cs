@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Jakub Sosnowski, Triangle Mesh Filler
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,8 +45,8 @@ namespace triangle_mesh_filler
 
         private ColorDialog cdObject = new ColorDialog();
         private ColorDialog cdLight = new ColorDialog();
-        private List<double> colorObject = new List<double>() { 1, 0, 0 };
-        private List<double> colorLight = new List<double>() { 1, 1, 1 };
+        private double[] colorObject = new double[3] { 1, 0, 0 };
+        private double[] colorLight = new double[3] { 1, 1, 1 };
         private Bitmap bmColorObject = null;
         private Bitmap bmColorLight = null;
 
@@ -55,6 +57,10 @@ namespace triangle_mesh_filler
 
         private int interpolationType = 1;
         private int fillingType = 1;
+
+        private double[] i = new double[3] { 1, 0, 0 };
+        private double[] j = new double[3] { 0, 1, 0 };
+        private double[] k = new double[3] { 0, 0, 1 };
         public TMF()
         {
             InitializeComponent();
@@ -464,9 +470,9 @@ namespace triangle_mesh_filler
             minY = int.MaxValue;
             maxY = int.MinValue;
 
-            List<double> colorA = null;
-            List<double> colorB = null;
-            List<double> colorC = null;
+            double[] colorA = null;
+            double[] colorB = null;
+            double[] colorC = null;
 
             if (interpolationType == 0)
             {
@@ -481,9 +487,9 @@ namespace triangle_mesh_filler
                     Color color1 = textureColors[(int)polygon.points[0].x, (int)polygon.points[0].y];
                     Color color2 = textureColors[(int)polygon.points[1].x, (int)polygon.points[1].y];
                     Color color3 = textureColors[(int)polygon.points[2].x, (int)polygon.points[2].y];
-                    colorA = new List<double>() { color1.R / 255.0, color1.G / 255.0, color1.B / 255.0 };
-                    colorB = new List<double>() { color2.R / 255.0, color2.G / 255.0, color2.B / 255.0 };
-                    colorC = new List<double>() { color3.R / 255.0, color3.G / 255.0, color3.B / 255.0 };
+                    colorA = new double[3] { color1.R / 255.0, color1.G / 255.0, color1.B / 255.0 };
+                    colorB = new double[3] { color2.R / 255.0, color2.G / 255.0, color2.B / 255.0 };
+                    colorC = new double[3] { color3.R / 255.0, color3.G / 255.0, color3.B / 255.0 };
                 }
                 
             }
@@ -639,7 +645,7 @@ namespace triangle_mesh_filler
             double beta = getArea(polygon.points[0], polygon.points[2], point) / area;
             double gamma = 1 - alfa - beta;
 
-            List<double> normalVector = new List<double>() { 0, 0, 0 };
+            double[] normalVector = new double[3] { 0, 0, 0 };
 
             point.z = alfa * polygon.points[0].z + beta * polygon.points[1].z + gamma * polygon.points[2].z;
             if (point.z < 0 || Double.IsNaN(point.z))
@@ -663,26 +669,26 @@ namespace triangle_mesh_filler
             return point;
         }
 
-        public Color FindColorOfPixel(Polygon polygon, List<double> colorA, List<double> colorB, List<double> colorC, MyPoint point, double area)
+        public Color FindColorOfPixel(Polygon polygon, double[] colorA, double[] colorB, double[] colorC, MyPoint point, double area)
         {
             Color.FromArgb((int)colorC[0], (int)colorC[1], (int)colorC[2]);
             double alfa = getArea(polygon.points[1], polygon.points[2], point) / area;
             double beta = getArea(polygon.points[0], polygon.points[2], point) / area;
             double gamma = 1 - alfa - beta;
 
-            List<double> color = new List<double>() { 0, 0, 0 };
+            double[] color = new double[3] { 0, 0, 0 };
             color[0] = Math.Min(alfa * colorA[0] + beta * colorB[0] + gamma * colorC[0], 1.0) * 255.0;
             color[1] = Math.Min(alfa * colorA[1] + beta * colorB[1] + gamma * colorC[1], 1.0) * 255.0;
             color[2] = Math.Min(alfa * colorA[2] + beta * colorB[2] + gamma * colorC[2], 1.0) * 255.0;
 
-            for (int i = 0; i < color.Count; i++)
+            for (int i = 0; i < color.Length; i++)
             {
                 if (color[i] < 0.0 || Double.IsNaN(color[i])) color[i] = 0.0;
             }
             return Color.FromArgb((int)color[0], (int)color[1], (int)color[2]);
         }
 
-        public List<double> CountColorForPoint(MyPoint point, Color? pixelColor)
+        public double[] CountColorForPoint(MyPoint point, Color? pixelColor)
         {
             if (fillingType == 1)
             {
@@ -690,34 +696,34 @@ namespace triangle_mesh_filler
                 colorObject[1] = pixelColor.Value.G / 255.0;
                 colorObject[2] = pixelColor.Value.B / 255.0;
             }
-            List<double> L = new List<double>() { 0, 0, 0 };
+            double[] L = new double[3] { 0, 0, 0 };
             L[0] = (sun.x - point.x);
             L[1] = (sun.y - point.y);
             L[2] = (sun.z - point.z);
             double lenL = Math.Sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2]);
-            for (int i = 0; i < L.Count; i++)
+            for (int i = 0; i < L.Length; i++)
             {
                 L[i] /= lenL;
             }
-            List<double> N = new List<double>() { point.nx, point.ny, point.nz };
+            double[] N = new double[3] { point.nx, point.ny, point.nz };
 
             double lenN = Math.Sqrt(N[0] * N[0] + N[1] * N[1] + N[2] * N[2]);
-            for (int i = 0; i < N.Count; i++)
+            for (int i = 0; i < N.Length; i++)
             {
                 N[i] /= lenN;
             }
             double cosNL = L[0] * N[0] + L[1] * N[1] + L[2] * N[2];
             cosNL = cosNL < 0 ? 0 : cosNL;
-            List<double> V = new List<double>() { 0, 0, 1 };
-            List<double> R = new List<double>() { 0, 0, 0 };
-            for (int i = 0; i < R.Count; i++)
+            double[] V = new double[3] { 0, 0, 1 };
+            double[] R = new double[3] { 0, 0, 0 };
+            for (int i = 0; i < R.Length; i++)
             {
                 R[i] = 2 * cosNL * N[i] - L[i];
             }
             double cosVR = V[0] * R[0] + V[1] * R[1] + V[2] * R[2];
             cosVR = cosVR < 0 ? 0 : cosVR;
-            List<double> color = new List<double>() { 0, 0, 0 };
-            for (int i = 0; i < color.Count; i++)
+            double[] color = new double[3] { 0, 0, 0 };
+            for (int i = 0; i < color.Length; i++)
             {
                 color[i] = kd * colorLight[i] * colorObject[i] * cosNL + ks * colorLight[i] * colorObject[i] * Math.Pow(cosVR, m);
                 color[i] = Math.Min(color[i], 1.0);
@@ -1123,29 +1129,29 @@ namespace triangle_mesh_filler
             DrawCanvas();
         }
 
-        private List<double> ModifyNormalVector(MyPoint point)
+        private double[] ModifyNormalVector(MyPoint point)
         {
-            List<double> surfaceN = new List<double>() { point.nx, point.ny, point.nz };
-            List<double> textureN = new List<double>() { 0, 0, 0 };
+            double[] surfaceN = new double[3] { point.nx, point.ny, point.nz };
+            double[] textureN = new double[3]{ 0, 0, 0 };
             Color test = Color.FromArgb(127, 127, 255);
             textureN[0] = (1.0 * normalMapColors[(int)point.x, (int)point.y].R - 127.5) / 127.5;
             textureN[1] = (1.0 * normalMapColors[(int)point.x, (int)point.y].G - 127.5) / 127.5;
             textureN[2] = (1.0 * normalMapColors[(int)point.x, (int)point.y].B) / 255.0;
             double textureNLength = Math.Sqrt(textureN[0] * textureN[0] + textureN[1] * textureN[1] + textureN[2] * textureN[2]);
-            for (int i = 0; i < textureN.Count; i++)
+            for (int i = 0; i < textureN.Length; i++)
             {
                 textureN[i] /= textureNLength;
             }
-            List<double> B = new List<double>() { 0, 0, 0 };
+            double[] B = new double[3] { 0, 0, 0 };
             if (point.nx == 0.0 && point.ny == 0.0 && point.nz == 1.0)
             {
                 B[1] = 1.0;
             }
             else
             {
-                B = CrossProduct(surfaceN, new List<double>() { 0, 0, 1 });
+                B = CrossProduct(surfaceN, new double[3] { 0, 0, 1 });
             }
-            List<double> T = CrossProduct(B, surfaceN);
+            double[] T = CrossProduct(B, surfaceN);
             double[,] M = new double[3, 3];
             M[0, 0] = T[0];
             M[0, 1] = B[0];
@@ -1160,18 +1166,16 @@ namespace triangle_mesh_filler
             return result;
         }
 
-        private List<double> MatrixMultiplication(double[,] M, List<double> N)
+        private double[] MatrixMultiplication(double[,] M, double[] N)
         {
-            return new List<double>() { M[0, 0] * N[0] + M[0, 1] * N[1] + M[0, 2] * N[2], M[1, 0] * N[0] + M[1, 1] * N[1] + M[1, 2] * N[2], M[2, 0] * N[0] + M[2, 1] * N[1] + M[2, 2] * N[2] };
+            return new double[3] { M[0, 0] * N[0] + M[0, 1] * N[1] + M[0, 2] * N[2], M[1, 0] * N[0] + M[1, 1] * N[1] + M[1, 2] * N[2], M[2, 0] * N[0] + M[2, 1] * N[1] + M[2, 2] * N[2] };
         }
 
-        private List<double> CrossProduct(List<double> a, List<double> b)
+        private double[] CrossProduct(double[] a, double[] b)
         {
-            List<double> result = new List<double>() { 0, 0, 0 };
-            List<double> i = new List<double>() { 1, 0, 0 };
-            List<double> j = new List<double>() { 0, 1, 0 };
-            List<double> k = new List<double>() { 0, 0, 1 };
-            for (int idx = 0; idx < result.Count; idx++)
+            double[] result = new double[3] { 0, 0, 0 };
+
+            for (int idx = 0; idx < result.Length; idx++)
             {
                 result[idx] = a[0] * b[1] * k[idx] + a[0] * b[2] * (-j[idx]) + a[1] * b[0] * (-k[idx]) + a[1] * b[2] * i[idx] + a[2] * b[0] * j[idx] + a[2] * b[1] * (-i[idx]);
             }
