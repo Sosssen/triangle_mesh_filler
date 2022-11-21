@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -93,13 +94,13 @@ namespace triangle_mesh_filler
             Canvas.Image = drawArea.Bitmap;
 
             // load shape from *.obj file
-            LoadShape(@".\obj_files\object.obj");
+            LoadShape(@".\lib\obj_files\object.obj");
 
             // load texture from file
-            LoadTexture(@".\texture_files\wood.jpg");
+            LoadTexture(@".\lib\texture_files\wood.jpg");
 
             // load normalmap from file
-            LoadNormalMap(@".\nm_files\mecha.jpg");
+            LoadNormalMap(@".\lib\nm_files\mecha.jpg");
 
             // set values of sliders
             kd_slider.Value = (int)(kd * 100);
@@ -191,13 +192,13 @@ namespace triangle_mesh_filler
 
                 if (words[0] == "v")
                 {
-                    points.Add(new MyPoint(Convert.ToDouble(words[1]), Convert.ToDouble(words[2]), Convert.ToDouble(words[3]), 0, 0, 0));
+                    points.Add(new MyPoint(Convert.ToDouble(words[1], CultureInfo.InvariantCulture), Convert.ToDouble(words[2], CultureInfo.InvariantCulture), Convert.ToDouble(words[3], CultureInfo.InvariantCulture), 0, 0, 0));
                 }
                 else if (words[0] == "vn")
                 {
-                    normalVectorsX.Add(Convert.ToDouble(words[1]));
-                    normalVectorsY.Add(Convert.ToDouble(words[2]));
-                    normalVectorsZ.Add(Convert.ToDouble(words[3]));
+                    normalVectorsX.Add(Convert.ToDouble(words[1], CultureInfo.InvariantCulture));
+                    normalVectorsY.Add(Convert.ToDouble(words[2], CultureInfo.InvariantCulture));
+                    normalVectorsZ.Add(Convert.ToDouble(words[3], CultureInfo.InvariantCulture));
                 }
 
             }
@@ -732,7 +733,7 @@ namespace triangle_mesh_filler
 
             using Graphics g = Graphics.FromImage(drawArea.Bitmap);
 
-            Bitmap sunImage = new Bitmap(@".\sun.png");
+            Bitmap sunImage = new Bitmap(@".\lib\sun.png");
             g.DrawImage(sunImage, x - sun.radius, y - sun.radius, 2 * sun.radius, 2 * sun.radius);
         }
 
@@ -982,7 +983,7 @@ namespace triangle_mesh_filler
         {
             OpenFileDialog ofd = new OpenFileDialog();
             Debug.WriteLine(Environment.CurrentDirectory);
-            ofd.InitialDirectory = Environment.CurrentDirectory + @".\obj_files";
+            ofd.InitialDirectory = Environment.CurrentDirectory + @".\lib\obj_files";
             DialogResult result = ofd.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -995,7 +996,7 @@ namespace triangle_mesh_filler
         private void LoadTexture_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.InitialDirectory = Environment.CurrentDirectory + @".\texture_files";
+            ofd.InitialDirectory = Environment.CurrentDirectory + @".\lib\texture_files";
             DialogResult result = ofd.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -1112,7 +1113,7 @@ namespace triangle_mesh_filler
         private void LoadNormalMapButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.InitialDirectory = Environment.CurrentDirectory + @".\nm_files";
+            ofd.InitialDirectory = Environment.CurrentDirectory + @".\lib\nm_files";
             DialogResult result = ofd.ShowDialog();
             if (result == DialogResult.OK)
             {

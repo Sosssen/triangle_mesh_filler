@@ -187,6 +187,7 @@ namespace triangle_mesh_filler
             // ObjectColorButton
             // 
             this.ObjectColorButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ObjectColorButton.Enabled = false;
             this.ObjectColorButton.Location = new System.Drawing.Point(3, 3);
             this.ObjectColorButton.Name = "ObjectColorButton";
             this.ObjectColorButton.Size = new System.Drawing.Size(378, 70);
@@ -199,7 +200,6 @@ namespace triangle_mesh_filler
             // LoadTextureButton
             // 
             this.LoadTextureButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LoadTextureButton.Enabled = false;
             this.LoadTextureButton.Location = new System.Drawing.Point(3, 155);
             this.LoadTextureButton.Name = "LoadTextureButton";
             this.LoadTextureButton.Size = new System.Drawing.Size(378, 70);
