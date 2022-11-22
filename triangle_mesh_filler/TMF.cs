@@ -1133,7 +1133,6 @@ namespace triangle_mesh_filler
         {
             double[] surfaceN = new double[3] { point.nx, point.ny, point.nz };
             double[] textureN = new double[3]{ 0, 0, 0 };
-            Color test = Color.FromArgb(127, 127, 255);
             textureN[0] = (1.0 * normalMapColors[(int)point.x, (int)point.y].R - 127.5) / 127.5;
             textureN[1] = (1.0 * normalMapColors[(int)point.x, (int)point.y].G - 127.5) / 127.5;
             textureN[2] = (1.0 * normalMapColors[(int)point.x, (int)point.y].B) / 255.0;
